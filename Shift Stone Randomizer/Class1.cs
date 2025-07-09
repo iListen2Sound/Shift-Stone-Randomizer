@@ -23,7 +23,7 @@ namespace Shift_Stone_Randomizer
         private ShiftStone[] shiftStones;
         private int[] blackList = {-2};
         private int keepStone = -1;
-        private bool activateEffectOnEquip = true;
+        private bool _activateEffectOnEquip = true;
         private bool physicalGUI = true;
 
         private GameObject glasses;
@@ -173,25 +173,33 @@ namespace Shift_Stone_Randomizer
             var equipedStones = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
             // shuffle stones list
             randomStones = randomStones.OrderBy(x => random.Next()).ToArray();
-            // remove unwanted items 
-            randomStones = randomStones.Except(equipedStones).ToArray();
-            randomStones = randomStones.Except(blackList).ToArray();
+			// remove unwanted items 
+			randomStones = randomStones.Except(blackList).ToArray();
+			randomStones = randomStones.Except(equipedStones).ToArray();
+			
+                
+            
 
-            if (keepStone == -1)
+
+			if (keepStone == -1)
             {
-                EquipStones(randomStones[0], randomStones[1], activateEffectOnEquip, true);
-               
+                EquipStones(randomStones[0], randomStones[1], _activateEffectOnEquip, true);
             }
             if (keepStone == 0)
             {
-                EquipStones(randomStones[0], -1, activateEffectOnEquip, false);
+                EquipStones(randomStones[0], -1, _activateEffectOnEquip, false);
             }
             if (keepStone == 1)
             {
-                EquipStones(-1, randomStones[1], activateEffectOnEquip, false);
+                EquipStones(-1, randomStones[1], _activateEffectOnEquip ,false);
             }
         }
-
+		/// <summary>
+		/// Equips the stones to the player.
+		/// </summary>
+		/// <param name="leftstone">-1 to not equip shiftstone</param>
+		/// <param name="rightstone">-1 to not equip shiftstone</param>
+		/// <param name="isempty"></param>
 		private void EquipStones(int leftstone, int rightstone, bool effect, bool isempty)
         {
             
