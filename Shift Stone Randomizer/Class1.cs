@@ -23,7 +23,7 @@ namespace Shift_Stone_Randomizer
         private ShiftStone[] shiftStones;
         private int[] blackList = {-2};
         private int keepStone = -1;
-        private bool _activateEffectOnEquip = true;
+        private bool equipEffect = true;
         private bool physicalGUI = true;
 
         private GameObject glasses;
@@ -70,7 +70,11 @@ namespace Shift_Stone_Randomizer
             shiftStones = new ShiftStone[] {
                 AdamantStone, ChargeStone, FlowStone, GuardStone, StubbornStone, SurgeStone, VigorStone, VolatileStone,
             };
-        }
+            foreach(ShiftStone stone in shiftStones)
+            {
+                stone.transform.position = new Vector3(0f, -1000f, 0f);
+			}
+		}
 
         private void CreateButtonsForAll()
         {
@@ -116,7 +120,12 @@ namespace Shift_Stone_Randomizer
 
         private void BlackListStones(int[] Stones)
         {
-            for (int i = 0; i < Stones.Length; i++)
+            if(blackList.Length + Stones.Length > 7)
+            {
+                MelonLogger.Warning("Reached stone blacklist count");
+                return;
+			}
+			for (int i = 0; i < Stones.Length; i++)
             {
                 if (blackList.Contains(Stones[i]))
                 {
@@ -166,32 +175,52 @@ namespace Shift_Stone_Randomizer
                 RandomizeStones();
             });
         }
-
-        private void RandomizeStones()
+		/// <summary>
+		/// Randomizes shift stones
+		/// Avoids currently equipped stones
+		/// Should enable equipping currently equipped stones if available stones are less than 4
+		/// </summary>
+		private void RandomizeStones()
         {
             int[] randomStones = {0,1,2,3,4,5,6,7};
             var equipedStones = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
             // shuffle stones list
             randomStones = randomStones.OrderBy(x => random.Next()).ToArray();
-			// remove unwanted items 
+			// remove blacklisted stones
 			randomStones = randomStones.Except(blackList).ToArray();
-			randomStones = randomStones.Except(equipedStones).ToArray();
-			
-                
-            
-
-
+            if(randomStones.Length < 2)
+            {
+                MelonLogger.Warning("Not enough stones to randomize, using equipped stones instead.");
+                return;
+			}
 			if (keepStone == -1)
             {
-                EquipStones(randomStones[0], randomStones[1], _activateEffectOnEquip, true);
+                if(randomStones.Length > 4)
+				    randomStones = randomStones.Except(equipedStones).ToArray();
+                else
+                {
+                    MelonLogger.Warning("Too few stones to disallow repeats.");
+                }
+            }
+            else
+            {
+                if(randomStones.Length > 2)
+                    randomStones = randomStones.Except(equipedStones).ToArray();
+				else
+					MelonLogger.Warning("Too few stones to disallow repeats.");
+			}
+
+            if (keepStone == -1)
+            {
+                EquipStones(randomStones[0], randomStones[1], equipEffect, true);
             }
             if (keepStone == 0)
             {
-                EquipStones(randomStones[0], -1, _activateEffectOnEquip, false);
+                EquipStones(randomStones[0], -1, equipEffect, false);
             }
             if (keepStone == 1)
             {
-                EquipStones(-1, randomStones[1], _activateEffectOnEquip ,false);
+                EquipStones(-1, randomStones[1], equipEffect,false);
             }
         }
 		/// <summary>
@@ -205,6 +234,7 @@ namespace Shift_Stone_Randomizer
             
             if (isempty)// If is empty is true then i want -1 to be an epty spot so remove all equiped stones
             {
+
                 Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(0, true, true);
                 Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(1, true, true);
             }
@@ -234,7 +264,7 @@ namespace Shift_Stone_Randomizer
             Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveAndReattachShiftstones(true, true);
 
             if (effect)
-            {// Only do the efect if the stone got changed or exists at all
+            {// Only do the effect if the stone got changed or exists at all
                 if (leftstone > -1)
                 {
                     Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Left);

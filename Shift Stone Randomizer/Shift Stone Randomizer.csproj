@@ -697,4 +697,7 @@
     <EmbeddedResource Include="assets\glasses" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "G:\SteamLibrary\steamapps\common\RUMBLE\Mods\$(TargetFileName)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
