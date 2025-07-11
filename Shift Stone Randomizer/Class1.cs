@@ -16,15 +16,20 @@ using HarmonyLib;
 using Type = Il2CppSystem.Type;
 using Action = System.Action;
 using Il2CppRUMBLE.Managers;
+using MelonLoader.Utils;
+using System.Collections.Generic;
 
 namespace Shift_Stone_Randomizer
 {
 	public class Class1 : MelonMod
 	{
+		private string userData = "Userdata/Shift_Stone_Randomizer/";
+		private string blackListFile = "blacklist.txt";
 		private System.Random random = new System.Random();
 		private ShiftStone[] shiftStones;
-		private int[] blackList = { -2 };
-		
+		private int[] blackList = new int[0];
+
+
 		private bool equipEffect = true;
 		private bool physicalGUI = true;
 		private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand
@@ -53,19 +58,37 @@ namespace Shift_Stone_Randomizer
 			}
 			AddCosmetics();
 			haptics = PlayerManager.instance.playerControllerPrefab.gameObject.GetComponent<PlayerHaptics>();
-		}
 
-		private int i = 0;
-		private int a = 0;
-		public override void OnUpdate()
-		{ // i hate this so much
-			i++;
-			if (i > 400)
+			if (!Directory.Exists(userData))
 			{
-				i = 0;
-				CreateButtonsForAll();
+				Directory.CreateDirectory(userData);
+			}
+			if (File.Exists(Path.Combine(userData, blackListFile)))
+			{
+				string[] lines = File.ReadAllLines(Path.Combine(userData, blackListFile));
+				blackList = new int[lines.Length];
+				for (int i = 0; i < lines.Length; i++)
+				{
+					foreach (ShiftStone stone in shiftStones)
+					{
+						if (stone.name == lines[i])
+						{
+							blackList[i] = System.Array.IndexOf(shiftStones, stone);
+							Log($"Blacklisted stone from file: {stone.name.Replace("Stone", "")}");
+						}
+					}
+				}
+			}
+			else
+			{
+
+				Log("No blacklist file found");
 			}
 		}
+
+
+
+		
 
 		private void InitializeShiftStones()
 		{
@@ -81,61 +104,26 @@ namespace Shift_Stone_Randomizer
 			shiftStones = new ShiftStone[] {
 				AdamantStone, ChargeStone, FlowStone, GuardStone, StubbornStone, SurgeStone, VigorStone, VolatileStone,
 			};
+
+
 			foreach (ShiftStone stone in shiftStones)
 			{
 				stone.transform.position = new Vector3(0f, -1000f, 0f);
+				Log($"Loaded Shiftstone: {stone.name.Replace("Stone", "")}");
 			}
 		}
 
-		private void CreateButtonsForAll()
-		{
-			var swappers = GameObject.FindObjectsOfType<GameObject>().Where(go => go.name == "ShiftstoneQuickswapper").ToArray();
-			foreach (var swapper in swappers)
-			{
-				//Dont add more then 1 button
-				if (swapper.transform.GetChild(0).GetChildCount() < 4)
-				{
-					CreateQSSRandomButton(swapper);
-				}
-			}
-		}
 
-		private void CreatePhysicalGUI()
-		{
-			var Button = GameObject.Find("ShiftstoneQuickswapper").transform.GetChild(0).GetChild(2).gameObject;
-			//GameObject blackListLabel = Calls.Create.NewText();
-			//GameObject keepHandLabel = Calls.Create.NewText();
 
-			GameObject blackListButton = GameObject.Instantiate(Button);
-			blackListButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
-			blackListButton.transform.localPosition = new Vector3(-0.0509f, 1.6473f, 0.6836f);
-			blackListButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
-			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
-			GameObject keepHandButton = GameObject.Instantiate(Button);
-			keepHandButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
-			keepHandButton.transform.localPosition = new Vector3(-0.0509f, 1.4037f, 0.6836f);
-			keepHandButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
-			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
-			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
-			{
-				BlackListStones(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
-			});
-
-			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
-			{
-				CycleHandLock();
-			});
-		}
-
+		/// <summary>
+		/// Blacklists stones and writes to file.
+		/// </summary>
+		/// <param name="Stones">Equipped stones</param>
 		private void BlackListStones(int[] Stones)
 		{
-			if (blackList.Length + Stones.Length > 7)
-			{
-				MelonLogger.Warning("Reached stone blacklist count");
-				return;
-			}
+
 			for (int i = 0; i < Stones.Length; i++)
 			{
 				if (blackList.Contains(Stones[i]))
@@ -146,16 +134,31 @@ namespace Shift_Stone_Randomizer
 				}
 				else
 				{
+					if (blackList.Length + Stones.Length > 7)
+					{
+						Log("Reached stone blacklist count");
+						return;
+					}
 					// add equiped stones to the blacklist
 					blackList = blackList.Append(Stones[i]).ToArray();
+					EquipStones(-1, -1, false, true);
 				}
 			}
-			EquipStones(-1, -1, false, true);
+
+			Log("Blacklisted stones: ");
+			string blackListOut = "";
+			foreach (int i in blackList)
+			{
+
+				blackListOut += shiftStones[i].name + "\n";
+				Log($"\t\t {shiftStones[i].name.Replace("Stone", "")}");
+			}
+			File.WriteAllText(Path.Combine(userData, blackListFile), blackListOut);
 		}
 
-		
 
-		
+
+
 		private void CycleHandLock()
 		{
 			lockedHand++;
@@ -165,7 +168,7 @@ namespace Shift_Stone_Randomizer
 			}
 
 			HandLock hand = (HandLock)lockedHand;
-			MelonLogger.Msg($"Hand lock set to: {hand}");
+			Log($"Hand lock set to: {hand}");
 
 
 			switch (hand)
@@ -180,26 +183,9 @@ namespace Shift_Stone_Randomizer
 					haptics.PlayControllerHaptics(0, 0, 1, 1);
 					break;
 			}
-
-
-			
 		}
 
-		private void CreateQSSRandomButton(GameObject swapper)
-		{
-			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
 
-			GameObject RandomButton = GameObject.Instantiate(Button);
-			RandomButton.transform.parent = swapper.transform.GetChild(0);
-			RandomButton.transform.localPosition = new Vector3(-0.096f, 0.069f, -0.02f);
-			RandomButton.transform.localRotation = Quaternion.Euler(296.57f, 84.038f, 359.9f);
-			RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
-
-			RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
-			{
-				RandomizeStones();
-			});
-		}
 		/// <summary>
 		/// Randomizes shift stones
 		/// Avoids currently equipped stones
@@ -214,13 +200,14 @@ namespace Shift_Stone_Randomizer
 			// remove blacklisted stones
 			randomStones = randomStones.Except(blackList).ToArray();
 
-			
+
 			if (randomStones.Length < 2)
 			{
-				MelonLogger.Warning("Not enough stones to randomize, using equipped stones instead.");
+				Log("Not enough stones to randomize, using equipped stones instead.");
 				return;
 			}
-			if ( lockedHand == -1)
+			//TODO: Have not considered having less than 2 stones equipped currently
+			if (lockedHand == -1)
 			{
 				if (randomStones.Length > 4)
 					randomStones = randomStones.Except(equipedStones).ToArray();
@@ -229,6 +216,8 @@ namespace Shift_Stone_Randomizer
 					MelonLogger.Warning("Too few stones to disallow repeats.");
 				}
 			}
+
+
 			else
 			{
 				if (randomStones.Length > 2)
@@ -237,7 +226,7 @@ namespace Shift_Stone_Randomizer
 					MelonLogger.Warning("Too few stones to disallow repeats.");
 			}
 
-			switch(lockedHand)
+			switch (lockedHand)
 			{
 				case -1:
 					EquipStones(randomStones[0], randomStones[1], equipEffect, true);
@@ -246,13 +235,13 @@ namespace Shift_Stone_Randomizer
 					EquipStones(-1, randomStones[0], equipEffect, false);
 					break;
 				case 1:
-					
+
 					EquipStones(randomStones[0], -1, equipEffect, false);
 					break;
 			}
-
-			
 		}
+
+
 		/// <summary>
 		/// Equips the stones to the player.
 		/// </summary>
@@ -306,6 +295,84 @@ namespace Shift_Stone_Randomizer
 			}
 		}
 
+		private void Log(string message)
+		{
+			LoggerInstance.Msg(message);
+		}
+
+		#region UI
+		private int i = 0;
+		private int a = 0;
+		public override void OnUpdate()
+		{ // i hate this so much
+			i++;
+			if (i > 400)
+			{
+				i = 0;
+				CreateButtonsForAll();
+			}
+		}
+
+		private void CreateButtonsForAll()
+		{
+			var swappers = GameObject.FindObjectsOfType<GameObject>().Where(go => go.name == "ShiftstoneQuickswapper").ToArray();
+			foreach (var swapper in swappers)
+			{
+				//Dont add more then 1 button
+				if (swapper.transform.GetChild(0).GetChildCount() < 4)
+				{
+					CreateQSSRandomButton(swapper);
+				}
+			}
+		}
+
+		
+		private void CreatePhysicalGUI()
+		{
+			var Button = GameObject.Find("ShiftstoneQuickswapper").transform.GetChild(0).GetChild(2).gameObject;
+			//GameObject blackListLabel = Calls.Create.NewText();
+			//GameObject keepHandLabel = Calls.Create.NewText();
+
+			GameObject blackListButton = GameObject.Instantiate(Button);
+			blackListButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
+			blackListButton.transform.localPosition = new Vector3(-0.0509f, 1.6473f, 0.6836f);
+			blackListButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
+
+			GameObject keepHandButton = GameObject.Instantiate(Button);
+			keepHandButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
+			keepHandButton.transform.localPosition = new Vector3(-0.0509f, 1.4037f, 0.6836f);
+			keepHandButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
+
+			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			{
+				BlackListStones(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+			});
+
+			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			{
+				CycleHandLock();
+
+			});
+		}
+
+		private void CreateQSSRandomButton(GameObject swapper)
+		{
+			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
+
+			GameObject RandomButton = GameObject.Instantiate(Button);
+			RandomButton.transform.parent = swapper.transform.GetChild(0);
+			RandomButton.transform.localPosition = new Vector3(-0.096f, 0.069f, -0.02f);
+			RandomButton.transform.localRotation = Quaternion.Euler(296.57f, 84.038f, 359.9f);
+			RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
+
+			RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			{
+				RandomizeStones();
+			});
+		}
+		#endregion
 
 		#region Easter Egg
 		private void CreateCosmetics()
