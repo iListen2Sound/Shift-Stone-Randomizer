@@ -19,6 +19,7 @@ using Il2CppRUMBLE.Managers;
 using MelonLoader.Utils;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.InputSystem.Utilities;
 
 class StoneItem
 {
@@ -76,22 +77,30 @@ namespace Shift_Stone_Randomizer
 	{
 		private string userData = "Userdata/Shift_Stone_Randomizer/";
 		private string blackListFile = "blacklist.txt";
+		private string loadoutFile = "loadout.txt";
 		private System.Random random = new System.Random();
 		//private ShiftStone[] shiftStones;
 		private StoneItem[] stones;
+		private StoneItem[] defaultStones = new StoneItem[] {
+			new StoneItem(), // Empty slot
+			new StoneItem(), // Empty slot
+		};
 		//private int[] blackList = new int[0];
 
-
+		private bool firstLoad = false;
+		private bool isInGym = false;
 
 		private bool equipEffect = true;
 		private bool physicalGUI = true;
-		private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand
+		private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
 		private enum HandLock
 		{
 			None = -1,
 			Left = 0,
 			Right = 1
 		}
+
+
 		private PlayerHaptics haptics;
 
 		private GameObject glasses;
@@ -110,10 +119,17 @@ namespace Shift_Stone_Randomizer
 		{
 			InitializeShiftStones();
 			CreateButtonsForAll();
-			if (sceneName == "Gym" && physicalGUI)
+			
+			if (sceneName == "Gym")
 			{
+				isInGym = true;
 				CreatePhysicalGUI();
 			}
+			else
+				isInGym = false;
+
+
+
 			AddCosmetics();
 			haptics = PlayerManager.instance.playerControllerPrefab.gameObject.GetComponent<PlayerHaptics>();
 
@@ -142,26 +158,44 @@ namespace Shift_Stone_Randomizer
 			}
 			else
 			{
-
 				Log("No blacklist file found");
 			}
-			if (File.Exists(Path.Combine(userData, "config.txt")))
+			if (firstLoad)
+				LoadLoadout();
+			firstLoad = true;
+		}
+
+		private void LoadLoadout()
+		{
+			if (firstLoad) //Read from file on first load but use default[] for subsequent loads
 			{
-				string[] config = File.ReadAllLines(Path.Combine(userData, "config.txt"));
-				foreach (string line in config)
+				if (File.Exists(Path.Combine(userData, loadoutFile)))
 				{
+					string[] config = File.ReadAllLines(Path.Combine(userData, loadoutFile));
+					for (int i = 0; i < 2; i++)
+					{
+						if (config[i] == "None")
+						{
+							defaultStones[i] = new StoneItem();
+						}
+						else
+						{
+							foreach (StoneItem stone in stones)
+							{
+								if (stone.Name == config[i])
+								{
+									defaultStones[i] = stone;
+									Log($"Loaded {stone.Name} from file");
+								}
+							}
+						}
+					}
 
 				}
 			}
-			else
-			{
 
-			}
+			EquipStones(defaultStones);
 		}
-
-
-
-
 
 		private void InitializeShiftStones()
 		{
@@ -189,15 +223,10 @@ namespace Shift_Stone_Randomizer
 			};
 		}
 
-
-
-
-
 		/// <summary>
 		/// Blacklists stones and writes to file.
 		/// </summary>
 		/// <param name="Stones">Equipped stones</param>
-		/// <remarks>Breaks when one hand is empty out of bounds exception</remarks>
 		private void BlackListStones(int[] Hand)
 		{
 			bool hasEnabledEquipedStones = false;
@@ -231,44 +260,8 @@ namespace Shift_Stone_Randomizer
 					blackListOut += stone.Name + "\n";
 				}	
 			}
-
-
-
 			File.WriteAllText(Path.Combine(userData, blackListFile), blackListOut);
-/*
-			for (int i = 0; i < Stones.Length; i++)
-			{
-				if (blackList.Contains(Stones[i]))
-				{
-					int stoneIndex = System.Array.IndexOf(blackList, Stones[i]);
-					// remove equiped stones from the blacklist 
-					blackList = blackList.Where((val, idx) => idx != stoneIndex).ToArray();
-				}
-				else
-				{
-					if (blackList.Length + Stones.Length > 7)
-					{
-						Log("Reached stone blacklist count");
-						return;
-					}
-					// add equiped stones to the blacklist
-					blackList = blackList.Append(Stones[i]).ToArray();
-					EquipStones(new StoneItem(), new StoneItem());
-				}
-			}
-
-			Log("Blacklisted stones: ");
-			foreach (int i in blackList)
-			{
-
-				blackListOut += shiftStones[i].name + "\n";
-				Log($"\t\t {shiftStones[i].name.Replace("Stone", "")}");
-			}
-			File.WriteAllText(Path.Combine(userData, blackListFile), blackListOut);*/
 		}
-
-
-
 
 		private void CycleHandLock()
 		{
@@ -299,16 +292,34 @@ namespace Shift_Stone_Randomizer
 
 		private void LoadOutButton_Pressed(int[] Equipped)
 		{
+			if(isInGym)
+			{
+				StoneItem left;
+				StoneItem right;
+				if (Equipped[0] == -1)
+					left = new StoneItem();
+				else
+					left = stones[Equipped[0]];
+
+				if (Equipped[1] == -1)
+					right = new StoneItem();
+				else
+					right = stones[Equipped[1]];
+				File.WriteAllText(Path.Combine(userData, loadoutFile), left.Name + "\n" + right.Name);
+			}
+			else
+			{
+				LoadLoadout();
+			}
+			
 
 		}
-
 
 		/// <summary>
 		/// Randomizes shift stones
 		/// Avoids currently equipped stones
 		/// Should enable equipping currently equipped stones if available stones are less than 4
 		/// </summary>
-		/// <remarks>Equips empty slot sometimes; might be from the equip stones method</remarks>>
 		private void RandomizeStones(int[] Equipped)
 		{
 			List<StoneItem> randomStones = new List<StoneItem>();
@@ -361,16 +372,20 @@ namespace Shift_Stone_Randomizer
 					break;
 			}
 		}
+
+		private void EquipStones(StoneItem[] StonesToEquip)
+		{
+			EquipStones(StonesToEquip[0], StonesToEquip[1]);
+		}
 		/// <summary>
 		/// Pass null to ignore hand. Pass new StoneItem() to equip empty stone slot.
 		/// Will break if you pass null to the right hand and you equip a stone to the left hand that is already equipped in the right hand.
 		/// </summary>
 		/// <param name="leftStone"></param>
 		/// <param name="rightStone"></param>
-		/// <remarks>Last test showed that sometimes shiftstones get unequipped. Adding remove shiftstone call. Unable to test as of 07-12</remarks>
 		private void EquipStones(StoneItem leftStone, StoneItem rightStone)
 		{
-			Log("Equipping stones: " + (leftStone != null ? leftStone.Name : "Null") + " | " + (rightStone != null ? rightStone.Name : "Null"), true);
+			Log("Equipping stones: " + (leftStone != null ? leftStone.Name : "Null") + " | " + (rightStone != null ? rightStone.Name : "Null"), false);
 		
 			if (rightStone != null) //Makes sure you don't equip a stone on the left hand if it's already equipped in the right hand
 				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(1, true, true);
@@ -399,67 +414,8 @@ namespace Shift_Stone_Randomizer
 					Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Right);
 				}
 			}
-
-
-			
-
-			
 		}
 
-
-		/*/// <summary>
-			/// Equips the stones to the player.
-			/// </summary>
-			/// <param name="leftstone">-1 to not equip shiftstone</param>
-			/// <param name="rightstone">-1 to not equip shiftstone</param>
-			/// <param name="isempty"></param>
-			/// TODO: Add overload for equipping stones using shiftstone objects directly. 
-		private void EquipStones(int leftstone, int rightstone, bool effect, bool isempty)
-		{
-
-			if (isempty)// If is empty is true then i want -1 to be an epty spot so remove all equiped stones
-			{
-
-				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(0, true, true);
-				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(1, true, true);
-			}
-			else
-			{// If is empty is false then i want -1 to leave the stone unchanged so only remove stones if there is actualy a stone to replace it
-				if (leftstone > -1)
-				{
-					Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(0, true, true);
-				}
-				if (rightstone > -1)
-				{
-					Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(1, true, true);
-				}
-			}
-
-			// Dont equip stones if the index is -1
-			if (leftstone > -1)
-			{
-				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().AttachShiftStone(shiftStones[leftstone], 0, true, true);
-			}
-			if (rightstone > -1)
-			{
-				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().AttachShiftStone(shiftStones[rightstone], 1, true, true);
-			}
-
-			// This ensures that the stones exist
-			Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveAndReattachShiftstones(true, true);
-
-			if (effect)
-			{// Only do the effect if the stone got changed or exists at all
-				if (leftstone > -1)
-				{
-					Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Left);
-				}
-				if (rightstone > -1)
-				{
-					Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Right);
-				}
-			}
-		}*/
 
 		IEnumerator HapticImpulse(bool left, bool right)
 		{
