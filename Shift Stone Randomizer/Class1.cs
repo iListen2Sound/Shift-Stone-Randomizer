@@ -75,9 +75,10 @@ namespace Shift_Stone_Randomizer
 {
 	public class Class1 : MelonMod
 	{
-		private string userData = "Userdata/Shift_Stone_Randomizer/";
-		private string blackListFile = "blacklist.txt";
-		private string loadoutFile = "loadout.txt";
+		private const string USER_DATA = "Userdata/Shift_Stone_Randomizer/";
+		private const string BLACKLIST_FILE = "blacklist.txt";
+		private const string LOADOUT_FILE = "loadout.txt";
+		private const string DEBUG_FILE = "debug.txt";
 		private System.Random random = new System.Random();
 		//private ShiftStone[] shiftStones;
 		private StoneItem[] stones;
@@ -87,11 +88,9 @@ namespace Shift_Stone_Randomizer
 		};
 		//private int[] blackList = new int[0];
 
-		private bool firstLoad = false;
+		private bool firstLoad = true;
 		private bool isInGym = false;
 
-		private bool equipEffect = true;
-		private bool physicalGUI = true;
 		private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
 		private enum HandLock
 		{
@@ -108,6 +107,8 @@ namespace Shift_Stone_Randomizer
 		public override void OnLateInitializeMelon()
 		{
 			CreateCosmetics();
+			Calls.onMatchEnded += CreateButtonsForAll;
+			
 		}
 		/// <summary>
 		/// 
@@ -124,22 +125,32 @@ namespace Shift_Stone_Randomizer
 			{
 				isInGym = true;
 				CreatePhysicalGUI();
+				if (firstLoad)
+				{
+					LoadLoadout();
+					LoadBlackListFile();
+				}
+				firstLoad = false;
 			}
 			else
 				isInGym = false;
 
-
-
 			AddCosmetics();
 			haptics = PlayerManager.instance.playerControllerPrefab.gameObject.GetComponent<PlayerHaptics>();
+			LoadBlackListFile();
 
-			if (!Directory.Exists(userData))
+
+		}
+
+		private void LoadBlackListFile()
+		{
+			if (!Directory.Exists(USER_DATA))
 			{
-				Directory.CreateDirectory(userData);
+				Directory.CreateDirectory(USER_DATA);
 			}
-			if (File.Exists(Path.Combine(userData, blackListFile)))
+			if (File.Exists(Path.Combine(USER_DATA, BLACKLIST_FILE)))
 			{
-				string[] lines = File.ReadAllLines(Path.Combine(userData, blackListFile));
+				string[] lines = File.ReadAllLines(Path.Combine(USER_DATA, BLACKLIST_FILE));
 				//blackList = new int[lines.Length];
 				//Broken: no longer reading from file
 				Log("BlackListing stones from file");
@@ -160,19 +171,29 @@ namespace Shift_Stone_Randomizer
 			{
 				Log("No blacklist file found");
 			}
-			if (firstLoad)
-				LoadLoadout();
-			firstLoad = true;
 		}
 
 		private void LoadLoadout()
 		{
-			if (firstLoad) //Read from file on first load but use default[] for subsequent loads
+			if (firstLoad) //Read from file on first load then store in defaultStones[]. Subsequent loads will just use the defaultStones array.
 			{
-				if (File.Exists(Path.Combine(userData, loadoutFile)))
+				if (File.Exists(Path.Combine(USER_DATA, LOADOUT_FILE)))
 				{
-					string[] config = File.ReadAllLines(Path.Combine(userData, loadoutFile));
-					for (int i = 0; i < 2; i++)
+					string[] config = File.ReadAllLines(Path.Combine(USER_DATA, LOADOUT_FILE));
+					bool parsed = System.Enum.TryParse(config[0], out HandLock handLock);
+					Log($"Parsed string:\n {string.Join("\n\t ", config)}");
+					if(!parsed)
+					{
+						Log($"Failed to parse hand lock from file: {config[0]}. Defaulting to None.");
+						handLock = HandLock.None;
+					}
+					else
+					{
+						Log($"Parsed hand lock from file: {handLock}", true);
+						lockedHand = (int)handLock;
+					}
+					//Run through the lines in the conf file. Skip the first line which is the hand lock
+					for (int i = 1; i < 3; i++)
 					{
 						if (config[i] == "None")
 						{
@@ -184,13 +205,12 @@ namespace Shift_Stone_Randomizer
 							{
 								if (stone.Name == config[i])
 								{
-									defaultStones[i] = stone;
+									defaultStones[i-1] = stone;
 									Log($"Loaded {stone.Name} from file");
 								}
 							}
 						}
 					}
-
 				}
 			}
 
@@ -199,27 +219,18 @@ namespace Shift_Stone_Randomizer
 
 		private void InitializeShiftStones()
 		{
-			ShiftStone StubbornStone = Calls.Managers.GetPoolManager().GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>();
-			ShiftStone VolatileStone = Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>();
-			ShiftStone AdamantStone = Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>();
-			ShiftStone ChargeStone = Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>();
-			ShiftStone GuardStone = Calls.Managers.GetPoolManager().GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>();
-			ShiftStone SurgeStone = Calls.Managers.GetPoolManager().GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>();
-			ShiftStone VigorStone = Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>();
-			ShiftStone FlowStone = Calls.Managers.GetPoolManager().GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>();
-
 			/*shiftStones = new ShiftStone[] {
 				AdamantStone, ChargeStone, FlowStone, GuardStone, StubbornStone, SurgeStone, VigorStone, VolatileStone,
 			};*/
 			stones = new StoneItem[] {
-				new StoneItem(AdamantStone),
-				new StoneItem(ChargeStone),
-				new StoneItem(FlowStone),
-				new StoneItem(GuardStone),
-				new StoneItem(StubbornStone),
-				new StoneItem(SurgeStone),
-				new StoneItem(VigorStone),
-				new StoneItem(VolatileStone)
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
 			};
 		}
 
@@ -260,7 +271,7 @@ namespace Shift_Stone_Randomizer
 					blackListOut += stone.Name + "\n";
 				}	
 			}
-			File.WriteAllText(Path.Combine(userData, blackListFile), blackListOut);
+			File.WriteAllText(Path.Combine(USER_DATA, BLACKLIST_FILE), blackListOut);
 		}
 
 		private void CycleHandLock()
@@ -274,11 +285,9 @@ namespace Shift_Stone_Randomizer
 			HandLock hand = (HandLock)lockedHand;
 			Log($"Hand lock set to: {hand}");
 
-
 			switch (hand)
 			{
 				case HandLock.None:
-
 					MelonCoroutines.Start(HapticImpulse(true, true));
 					break;
 				case HandLock.Left:
@@ -305,14 +314,12 @@ namespace Shift_Stone_Randomizer
 					right = new StoneItem();
 				else
 					right = stones[Equipped[1]];
-				File.WriteAllText(Path.Combine(userData, loadoutFile), left.Name + "\n" + right.Name);
+				File.WriteAllText(Path.Combine(USER_DATA, LOADOUT_FILE), $"{(HandLock)lockedHand} \n{left.Name}\n{right.Name}");
 			}
 			else
 			{
 				LoadLoadout();
 			}
-			
-
 		}
 
 		/// <summary>
@@ -416,29 +423,30 @@ namespace Shift_Stone_Randomizer
 			}
 		}
 
-
+		
 		IEnumerator HapticImpulse(bool left, bool right)
 		{
+			Log("Haptic: ", true);
 			if (left)
 			{
 				haptics.PlayControllerHaptics(1f, 1f, 0, 0);
-				Log("Haptic Left", true);
+				Log("\t Left", true);
 			}
 			if (right)
 			{
 				haptics.PlayControllerHaptics(0, 0, 1f, 1f);
-				Log("Haptic Right", true);
+				Log("\t Right", true);
 			}
 			yield return new WaitForSeconds(0.2f);
 			if (left)
 			{
 				haptics.PlayControllerHaptics(1f, 1f, 0, 0);
-				Log("Haptic Left", true);
+				Log("\t Left", true);
 			}
 			if (right)
 			{
 				haptics.PlayControllerHaptics(0, 0, 1f, 1f);
-				Log("Haptic Right", true);
+				Log("\t Right", true);
 			}
 		}
 		private void Log(string message, bool debugOnly = false)
@@ -446,19 +454,8 @@ namespace Shift_Stone_Randomizer
 			LoggerInstance.Msg(message);
 			
 		}
-
+		
 		#region UI
-		private int i = 0;
-		private int a = 0;
-		public override void OnUpdate()
-		{ // i hate this so much
-			i++;
-			if (i > 400)
-			{
-				i = 0;
-				CreateButtonsForAll();
-			}
-		}
 
 		private void CreateButtonsForAll()
 		{
@@ -503,7 +500,7 @@ namespace Shift_Stone_Randomizer
 
 			});
 		}
-
+		
 		private void CreateQSSRandomButton(GameObject swapper)
 		{
 			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
