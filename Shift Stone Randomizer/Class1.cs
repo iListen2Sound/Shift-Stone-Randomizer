@@ -507,8 +507,10 @@ namespace Shift_Stone_Randomizer
 
 			GameObject RandomButton = GameObject.Instantiate(Button);
 			RandomButton.transform.parent = swapper.transform.GetChild(0);
-			RandomButton.transform.localPosition = new Vector3(-0.096f, 0.069f, -0.02f);
-			RandomButton.transform.localRotation = Quaternion.Euler(296.57f, 84.038f, 359.9f);
+			//-0.096 0.064 - 0.025
+			RandomButton.transform.localPosition = new Vector3(-0.096f, 0.064f, -0.025f);
+			//298.0022 83.3369 359.8999
+			RandomButton.transform.localRotation = Quaternion.Euler(298.0022f, 83.3369f, 359.8999f);
 			RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
 			RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
@@ -529,6 +531,19 @@ namespace Shift_Stone_Randomizer
 			loadOutButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
 				LoadOutButton_Pressed(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+			});
+
+			//-0.0634 -0.0571 -0.0366
+			//332.1686 247.6016 193.0708
+			GameObject Button3 = swapper.transform.GetChild(0).GetChild(2).gameObject;
+			GameObject ClearStones  = GameObject.Instantiate(Button3);
+			ClearStones.transform.parent = swapper.transform.GetChild(0);
+			ClearStones.transform.localPosition = new Vector3(-0.0634f, -0.0571f, -0.0366f);
+			ClearStones.transform.localRotation = Quaternion.Euler(332.1686f, 247.6016f, 193.0708f);
+			ClearStones.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
+			ClearStones.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			{
+				EquipStones(new StoneItem(), new StoneItem());
 			});
 
 
