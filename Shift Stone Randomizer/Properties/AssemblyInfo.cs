@@ -10,11 +10,11 @@ using Shift_Stone_Randomizer;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Shift Stone Randomizer")]
+[assembly: AssemblyTitle("ShiftStoneRandomizer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Shift Stone Randomizer")]
+[assembly: AssemblyProduct("ShiftStoneRandomizer")]
 [assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
