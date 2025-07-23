@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using MelonLoader;
-using Shift_Stone_Randomizer;
+using ShiftStoneRandomizer;
 
 [assembly: MelonInfo(typeof(Class1), "Shift Stone Randomizer", "1.0.0", "Darkener")]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
