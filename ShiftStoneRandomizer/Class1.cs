@@ -105,7 +105,7 @@ namespace ShiftStoneRandomizer
 		public override void OnLateInitializeMelon()
 		{
 			//CreateCosmetics();
-			Calls.onMatchEnded += CreateButtonsForAll;
+			//Calls.onMatchEnded += CreateButtonsForAll;
 			Calls.onMapInitialized += SceneReady;
 		}
 		private void SceneReady()
@@ -457,6 +457,17 @@ namespace ShiftStoneRandomizer
 
 		#region UI
 
+		private int i = 0;
+		private int a = 0;
+		public override void OnUpdate()
+		{ // i hate this so much
+			i++;
+			if (i > 400)
+			{
+				i = 0;
+				CreateButtonsForAll();
+			}
+		}
 		private void CreateButtonsForAll()
 		{
 			var swappers = GameObject.FindObjectsOfType<GameObject>().Where(go => go.name == "ShiftstoneQuickswapper").ToArray();
