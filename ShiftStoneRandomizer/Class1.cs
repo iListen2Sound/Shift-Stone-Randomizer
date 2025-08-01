@@ -2,24 +2,21 @@
 using Il2CppPhoton.Realtime;
 using Il2CppRUMBLE.Combat.ShiftStones;
 using Il2CppRUMBLE.Interactions.InteractionBase;
-using Il2CppRUMBLE.Players;
+using Il2CppRUMBLE.Managers;
 using Il2CppRUMBLE.Players.Subsystems;
 using Il2CppSystem;
 using MelonLoader;
 using RumbleModdingAPI;
-using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
-
 using UnityEngine.SceneManagement;
 using HarmonyLib;
 using Type = Il2CppSystem.Type;
 using Action = System.Action;
-using Il2CppRUMBLE.Managers;
 using MelonLoader.Utils;
-using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.InputSystem.Utilities;
 
@@ -61,9 +58,8 @@ namespace ShiftStoneRandomizer
 
 		public StoneItem(ShiftStone shiftStone)
 		{
-
-			ShiftStone = shiftStone;
 			shiftStone.gameObject.SetActive(false);// Disable the stone so it doesn't show up in the game
+			ShiftStone = shiftStone;
 			IsEnabled = true;
 		}
 		/// <summary>
@@ -116,9 +112,10 @@ namespace ShiftStoneRandomizer
 		{
 			InitializeShiftStones();
 			CreateButtonsForAll();
-
+			LoadBlackListFile();
 			if (CurrentScene == "Gym")
 			{
+				CreatePhysicalGUI();
 				if (firstLoad)
 				{
 					/*RandomizerAssets = LoadAsset();
@@ -126,18 +123,11 @@ namespace ShiftStoneRandomizer
 					RandomizerAssets.SetActive(false);*/
 
 					LoadLoadOut(true);
-
-					LoadBlackListFile();
 				}
 				firstLoad = false;
 			}
 
 			//AddCosmetics();
-            CreatePhysicalGUI();
-
-
-            haptics = PlayerManager.instance.playerControllerPrefab.gameObject.GetComponent<PlayerHaptics>();
-			LoadBlackListFile();
 
 
 		}
@@ -196,48 +186,46 @@ namespace ShiftStoneRandomizer
 
 		private void LoadLoadOut(bool dontEquip = false)
 		{
-			if (firstLoad) //Read from file on first load then store in defaultStones[]. Subsequent loads will just use the defaultStones array.
+			if (File.Exists(Path.Combine(USER_DATA, LOADOUT_FILE)))
 			{
-				if (File.Exists(Path.Combine(USER_DATA, LOADOUT_FILE)))
-				{
-					string[] config = File.ReadAllLines(Path.Combine(USER_DATA, LOADOUT_FILE));
-					bool parsed = System.Enum.TryParse(config[0], out HandLock handLock);
+				string[] config = File.ReadAllLines(Path.Combine(USER_DATA, LOADOUT_FILE));
+				bool parsed = System.Enum.TryParse(config[0], out HandLock handLock);
 
-					Log($"Parsed string:\n {string.Join("\n\t ", config)}", true);
-					if (!parsed)
-					{
-						Log($"Failed to parse hand lock from file: {config[0]}. Defaulting to None.", true);
-						handLock = HandLock.Neither;
-					}
+				Log($"Parsed string:\n {string.Join("\n\t ", config)}", true);
+				if (!parsed)
+				{
+					Log($"Failed to parse hand lock from file: {config[0]}. Defaulting to None.", true);
+					handLock = HandLock.Neither;
+				}
+				else
+				{
+					Log($"Parsed hand lock from file: {handLock}", true);
+					lockedHand = (int)handLock;
+				}
+				//Run through the lines in the conf file. Skip the first line which is the hand lock
+				for (int i = 1; i < config.Length; i++)
+				{
+					if (config[i] == "Empty")
+						defaultStones[i - 1] = new StoneItem();
 					else
 					{
-						Log($"Parsed hand lock from file: {handLock}", true);
-						lockedHand = (int)handLock;
-					}
-					//Run through the lines in the conf file. Skip the first line which is the hand lock
-					for (int i = 1; i < config.Length; i++)
-					{
-						if (config[i] == "Empty")
-							defaultStones[i - 1] = new StoneItem();
-						else
+						foreach (StoneItem stone in stones)
 						{
-							foreach (StoneItem stone in stones)
+							if (stone.Name == config[i])
 							{
-								if (stone.Name == config[i])
-								{
-									defaultStones[i - 1] = stone;
-									Log($"Loaded {stone.Name} from file", true);
-								}
+								defaultStones[i - 1] = stone;
+								Log($"Loaded {stone.Name} from file", true);
 							}
 						}
 					}
 				}
 			}
 
-			if (!dontEquip)
-			{
-				EquipStones(defaultStones); 
-			}
+
+			if (dontEquip)
+				return;
+			EquipStones(defaultStones);
+
 		}
 
 		private void InitializeShiftStones()
@@ -245,7 +233,8 @@ namespace ShiftStoneRandomizer
 			/*shiftStones = new ShiftStone[] {
 				AdamantStone, ChargeStone, FlowStone, GuardStone, StubbornStone, SurgeStone, VigorStone, VolatileStone,
 			};*/
-			stones = new StoneItem[] {
+			stones = new StoneItem[] 
+			{
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
@@ -312,15 +301,15 @@ namespace ShiftStoneRandomizer
 			switch (hand)
 			{
 				case HandLock.Neither:
-					
+
 					ActivateEffect(true, true);
 					break;
 				case HandLock.Left:
-					
+
 					ActivateEffect(true, false);
 					break;
 				case HandLock.Right:
-					
+
 					ActivateEffect(false, true);
 					break;
 			}
@@ -348,20 +337,10 @@ namespace ShiftStoneRandomizer
 
 		private void ActivateEffect(bool left, bool right)
 		{
-
 			if (left)
-			{
-				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Left); 
-			}
+				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Left);
 			if (right)
-			{
-				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Right); 
-			}
-		}
-
-		private void LoadOutButton_Pressed(int[] Equipped)
-		{
-			LoadLoadOut();
+				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Right);
 		}
 
 		/// <summary>
@@ -438,9 +417,6 @@ namespace ShiftStoneRandomizer
 
 			if (rightStone != null) //Makes sure you don't equip a stone on the left hand if it's already equipped in the right hand
 				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(1, true, true);
-
-
-
 			if (leftStone != null)
 			{
 
@@ -488,9 +464,8 @@ namespace ShiftStoneRandomizer
 			{
 				//Dont add more then 1 button
 				if (swapper.transform.GetChild(0).GetChildCount() < 4)
-				{
 					CreateQSSRandomButton(swapper);
-				}
+
 			}
 		}
 
@@ -535,8 +510,8 @@ namespace ShiftStoneRandomizer
 				SaveLoadOut(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
 			});
 
-			/*
-			GameObject Cabinet = Calls.GameObjects.Gym.Logic.HeinhouserProducts.ShiftstoneCabinet.Cabinet.GetGameObject();
+
+			/*GameObject Cabinet = Calls.GameObjects.Gym.Logic.HeinhouserProducts.ShiftstoneCabinet.Cabinet.GetGameObject();
 			for (int i = 0; i < 8; i++)
 			{
 				GameObject child = Cabinet.transform.GetChild(i).gameObject;
@@ -575,7 +550,7 @@ namespace ShiftStoneRandomizer
 
 			loadOutButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				EquipStones(defaultStones);
+				LoadLoadOut();
 			});
 
 			//-0.0634 -0.0571 -0.0366

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using MelonLoader;
 using ShiftStoneRandomizer;
 
-[assembly: MelonInfo(typeof(Class1), "Shift Stone Randomizer", "1.0.0", "Darkener")]
+[assembly: MelonInfo(typeof(Class1), "Shift Stone Randomizer", "1.0.0", "iListen2Sound, Darkener")]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
 
 // General Information about an assembly is controlled through the following
