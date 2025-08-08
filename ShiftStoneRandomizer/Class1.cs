@@ -19,6 +19,8 @@ using Action = System.Action;
 using MelonLoader.Utils;
 using System.Collections;
 using UnityEngine.InputSystem.Utilities;
+using Il2CppRUMBLE.CharacterCreation.Interactable;
+using Il2CppSystem.Data;
 
 namespace ShiftStoneRandomizer
 {
@@ -90,6 +92,7 @@ namespace ShiftStoneRandomizer
 		private string CurrentScene;
 		private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
 		private GameObject RandomizerAssets;
+		GameObject indicators;
 		private enum HandLock
 		{
 			Neither = -1,
@@ -105,8 +108,13 @@ namespace ShiftStoneRandomizer
 		public override void OnLateInitializeMelon()
 		{
 			//CreateCosmetics();
-			//Calls.onMatchEnded += CreateButtonsForAll;
 			Calls.onMapInitialized += SceneReady;
+			Calls.onMatchEnded += CreateButtonsForAll;//CreateButtonsForAll;
+			
+		}
+		public void logOnMatchEnded()
+		{	
+			Log("Match Ended", true);
 		}
 		private void SceneReady()
 		{
@@ -115,15 +123,18 @@ namespace ShiftStoneRandomizer
 			LoadBlackListFile();
 			if (CurrentScene == "Gym")
 			{
-				CreatePhysicalGUI();
+				
 				if (firstLoad)
 				{
+					indicators = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
+					GameObject.DontDestroyOnLoad(indicators);
 					/*RandomizerAssets = LoadAsset();
 					GameObject.DontDestroyOnLoad(RandomizerAssets);
 					RandomizerAssets.SetActive(false);*/
 
 					LoadLoadOut(true);
 				}
+				CreatePhysicalGUI();
 				firstLoad = false;
 			}
 
@@ -457,17 +468,18 @@ namespace ShiftStoneRandomizer
 
 		#region UI
 
-		private int i = 0;
-		private int a = 0;
-		public override void OnUpdate()
-		{ // i hate this so much
-			i++;
-			if (i > 400)
-			{
-				i = 0;
-				CreateButtonsForAll();
-			}
-		}
+		/*		private int i = 0;
+				private int a = 0;
+				public override void OnUpdate()
+				{ // i hate this so much
+					i++;
+					if (i > 50)
+					{
+						i = 0;
+						CreateButtonsForAll();
+					}
+				}*/
+		
 		private void CreateButtonsForAll()
 		{
 			var swappers = GameObject.FindObjectsOfType<GameObject>().Where(go => go.name == "ShiftstoneQuickswapper").ToArray();
@@ -520,6 +532,21 @@ namespace ShiftStoneRandomizer
 			{
 				SaveLoadOut(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
 			});
+
+
+
+			//nameBendingObject = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "NameBending.assets.namebending", "NameBending"));
+			GameObject Cabinet = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.GetGameObject();
+			GameObject box = Cabinet.transform.GetChild(0).gameObject;
+			
+			indicators.SetActive(true);
+			GameObject blackListIcon = indicators.transform.GetChild(0).gameObject;
+			blackListIcon.transform.SetParent(box.transform,false);
+			blackListIcon.transform.localScale = Vector3.one * 0.001f;
+			blackListIcon.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
+			//Local position: -0.04 0 0
+			// scale: 0.0002 0.0002 0.0002
+
 
 
 			/*GameObject Cabinet = Calls.GameObjects.Gym.Logic.HeinhouserProducts.ShiftstoneCabinet.Cabinet.GetGameObject();

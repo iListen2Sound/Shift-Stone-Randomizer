@@ -326,7 +326,7 @@
       <HintPath>D:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net6\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="RumbleModdingAPI">
-      <HintPath>D:\SteamLibrary\steamapps\common\RUMBLE\Mods\RumbleModdingAPI.dll</HintPath>
+      <HintPath>G:\SteamLibrary\steamapps\common\RUMBLE\Mods\RumbleModdingAPI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.ConfigurationManager">
@@ -697,7 +697,7 @@
     <EmbeddedResource Include="assets\glasses" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\randomizer" />
+    <EmbeddedResource Include="assets\randomizer" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
