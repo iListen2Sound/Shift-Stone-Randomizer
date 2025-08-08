@@ -21,9 +21,16 @@ using System.Collections;
 using UnityEngine.InputSystem.Utilities;
 using Il2CppRUMBLE.CharacterCreation.Interactable;
 using Il2CppSystem.Data;
+using Il2CppInterop.Runtime.Runtime.VersionSpecific.Class;
 
 namespace ShiftStoneRandomizer
-{
+{ 
+	/// <summary>
+	/// Represents an item associated with a shift stone, providing functionality to manage its state and behavior.
+	/// </summary>
+	/// <remarks>A <see cref="StoneItem"/> can either represent a valid shift stone or an empty slot.  It provides
+	/// properties to manage the stone's state, such as enabling or disabling it,  and tracks the number of disabled stones
+	/// globally through <see cref="BlackListCount"/>.</remarks>
 	class StoneItem
 	{
 		private static int _blacklistCount = 0;
@@ -50,19 +57,26 @@ namespace ShiftStoneRandomizer
 			{
 				_isEnabled = value;
 
+				//MelonLogger.Msg($"{Name} Icon: {_icon.active}");
+
 				if (value)
 					_blacklistCount++;
 
 				else
 					_blacklistCount--;
+				if (_icon == null)
+					return;
+				_icon.SetActive(!_isEnabled);
 			}
 		}
 
+		private GameObject _icon;
+		public GameObject Icon { set { _icon = value; _icon.SetActive(false); } }
 		public StoneItem(ShiftStone shiftStone)
 		{
 			shiftStone.gameObject.SetActive(false);// Disable the stone so it doesn't show up in the game
 			ShiftStone = shiftStone;
-			IsEnabled = true;
+			_isEnabled = true;
 		}
 		/// <summary>
 		/// No arguments to indicate empty stone slot
@@ -92,7 +106,7 @@ namespace ShiftStoneRandomizer
 		private string CurrentScene;
 		private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
 		private GameObject RandomizerAssets;
-		GameObject indicators;
+		GameObject IndicatorsBase;
 		private enum HandLock
 		{
 			Neither = -1,
@@ -110,37 +124,36 @@ namespace ShiftStoneRandomizer
 			//CreateCosmetics();
 			Calls.onMapInitialized += SceneReady;
 			Calls.onMatchEnded += CreateButtonsForAll;//CreateButtonsForAll;
-			
+
 		}
 		public void logOnMatchEnded()
-		{	
+		{
 			Log("Match Ended", true);
 		}
 		private void SceneReady()
 		{
 			InitializeShiftStones();
-			CreateButtonsForAll();
-			LoadBlackListFile();
 			if (CurrentScene == "Gym")
 			{
-				
+				CreatePhysicalGUI();
 				if (firstLoad)
 				{
-					indicators = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
-					GameObject.DontDestroyOnLoad(indicators);
-					/*RandomizerAssets = LoadAsset();
-					GameObject.DontDestroyOnLoad(RandomizerAssets);
-					RandomizerAssets.SetActive(false);*/
-
-					LoadLoadOut(true);
+					IndicatorsBase = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
+					GameObject.DontDestroyOnLoad(IndicatorsBase);
+					IndicatorsBase.SetActive(false);
 				}
-				CreatePhysicalGUI();
+
 				firstLoad = false;
+
+			
+				GameObject Cabinet = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.GetGameObject();
+				for (int i = 0; i < stones.Length; i++)
+				{
+					stones[i].Icon = CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject);
+				}
 			}
-
-			//AddCosmetics();
-
-
+			CreateButtonsForAll();
+			LoadBlackListFile();
 		}
 		/// <summary>
 		/// 
@@ -238,13 +251,15 @@ namespace ShiftStoneRandomizer
 			EquipStones(defaultStones);
 
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <remarks>
+		/// Blacklist icons are added at sceneready and only in the gym
+		/// </remarks>
 		private void InitializeShiftStones()
 		{
-			/*shiftStones = new ShiftStone[] {
-				AdamantStone, ChargeStone, FlowStone, GuardStone, StubbornStone, SurgeStone, VigorStone, VolatileStone,
-			};*/
-			stones = new StoneItem[] 
+			stones = new StoneItem[]
 			{
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
@@ -255,6 +270,7 @@ namespace ShiftStoneRandomizer
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
 			};
+
 		}
 
 		/// <summary>
@@ -479,7 +495,7 @@ namespace ShiftStoneRandomizer
 						CreateButtonsForAll();
 					}
 				}*/
-		
+
 		private void CreateButtonsForAll()
 		{
 			var swappers = GameObject.FindObjectsOfType<GameObject>().Where(go => go.name == "ShiftstoneQuickswapper").ToArray();
@@ -491,8 +507,29 @@ namespace ShiftStoneRandomizer
 
 			}
 		}
+		/// <summary>
+		/// Create blacklist icons for each stone in the blacklist. Game object is disabled by default
+		/// </summary>
+		/// <param name="TargetParent">Box to parent the icons to</param>
+		/// <returns>Reference to the blacklist icon for the shiftstone</returns>
+		private GameObject CreateBlackListIcons(GameObject TargetParent)
+		{
 
+			//indicator.SetActive(false);
 
+			//nameBendingObject = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "NameBending.assets.namebending", "NameBending"));
+
+			//GameObject box = Cabinet.transform.GetChild(0).gameObject;
+
+			GameObject blackListIcon = GameObject.Instantiate(IndicatorsBase.transform.GetChild(0).gameObject);
+			//GameObject blackListIcon = indicator;//.transform.GetChild(0).gameObject;
+			blackListIcon.SetActive(false);
+			blackListIcon.transform.SetParent(TargetParent.transform, false);
+			blackListIcon.transform.localScale = Vector3.one * 0.0002f;
+			blackListIcon.transform.localRotation = Quaternion.Euler(5f, 90f, 90f);
+			blackListIcon.transform.localPosition = new Vector3(-0.04f, 0f, 0f);
+			return blackListIcon;
+		}
 		private void CreatePhysicalGUI()
 		{
 			var Button = GameObject.Find("ShiftstoneQuickswapper").transform.GetChild(0).GetChild(2).gameObject;
@@ -532,31 +569,6 @@ namespace ShiftStoneRandomizer
 			{
 				SaveLoadOut(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
 			});
-
-
-
-			//nameBendingObject = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "NameBending.assets.namebending", "NameBending"));
-			GameObject Cabinet = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.GetGameObject();
-			GameObject box = Cabinet.transform.GetChild(0).gameObject;
-			
-			indicators.SetActive(true);
-			GameObject blackListIcon = indicators.transform.GetChild(0).gameObject;
-			blackListIcon.transform.SetParent(box.transform,false);
-			blackListIcon.transform.localScale = Vector3.one * 0.001f;
-			blackListIcon.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
-			//Local position: -0.04 0 0
-			// scale: 0.0002 0.0002 0.0002
-
-
-
-			/*GameObject Cabinet = Calls.GameObjects.Gym.Logic.HeinhouserProducts.ShiftstoneCabinet.Cabinet.GetGameObject();
-			for (int i = 0; i < 8; i++)
-			{
-				GameObject child = Cabinet.transform.GetChild(i).gameObject;
-				GameObject iconCopy = GameObject.Instantiate(RandomizerAssets.transform.GetChild(0).gameObject);
-				iconCopy.SetActive(true);
-				iconCopy.transform.SetParent(child.transform);
-			}*/
 		}
 
 		private void CreateQSSRandomButton(GameObject swapper)
