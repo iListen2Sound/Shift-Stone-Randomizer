@@ -1,31 +1,33 @@
-﻿using Il2CppInterop.Runtime.InteropTypes.Arrays;
+﻿using HarmonyLib;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Runtime.Runtime.VersionSpecific.Class;
 using Il2CppPhoton.Realtime;
+using Il2CppRootMotion;
+using Il2CppRUMBLE.CharacterCreation.Interactable;
 using Il2CppRUMBLE.Combat.ShiftStones;
 using Il2CppRUMBLE.Interactions.InteractionBase;
 using Il2CppRUMBLE.Managers;
 using Il2CppRUMBLE.Players.Subsystems;
 using Il2CppSystem;
+using Il2CppSystem.Data;
+using Il2CppTMPro;
 using MelonLoader;
+using MelonLoader.Utils;
 using RumbleModdingAPI;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEngine;
 using UnityEditor;
-using UnityEngine.SceneManagement;
-using HarmonyLib;
-using Type = Il2CppSystem.Type;
-using Action = System.Action;
-using MelonLoader.Utils;
-using System.Collections;
+using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
-using Il2CppRUMBLE.CharacterCreation.Interactable;
-using Il2CppSystem.Data;
-using Il2CppInterop.Runtime.Runtime.VersionSpecific.Class;
-using Il2CppTMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Action = System.Action;
+using Type = Il2CppSystem.Type;
 
 namespace ShiftStoneRandomizer
-{ 
+{
 	/// <summary>
 	/// Represents an item associated with a shift stone, providing functionality to manage its state and behavior.
 	/// </summary>
@@ -107,14 +109,18 @@ namespace ShiftStoneRandomizer
 		private string CurrentScene;
 		private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
 		private GameObject RandomizerAssets;
-		GameObject IndicatorsBase;
+		private GameObject IndicatorsBase;
+		private GameObject leftHand;
+		private GameObject rightHand;
+
+
 		private enum HandLock
 		{
 			Neither = -1,
 			Left = 0,
 			Right = 1
 		}
-
+		private GameObject dropSign;
 
 		private PlayerHaptics haptics;
 
@@ -136,22 +142,25 @@ namespace ShiftStoneRandomizer
 			InitializeShiftStones();
 			if (CurrentScene == "Gym")
 			{
-				CreatePhysicalGUI();
+
 				if (firstLoad)
 				{
 					IndicatorsBase = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
 					GameObject.DontDestroyOnLoad(IndicatorsBase);
 					IndicatorsBase.SetActive(false);
 				}
-
+				CreatePhysicalGUI();
 				firstLoad = false;
 
-			
+
+
 				GameObject Cabinet = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.GetGameObject();
 				for (int i = 0; i < stones.Length; i++)
 				{
 					stones[i].Icon = CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject);
 				}
+				LoadLoadOut(true);
+
 			}
 			CreateButtonsForAll();
 			LoadBlackListFile();
@@ -211,6 +220,7 @@ namespace ShiftStoneRandomizer
 
 		private void LoadLoadOut(bool dontEquip = false)
 		{
+
 			if (File.Exists(Path.Combine(USER_DATA, LOADOUT_FILE)))
 			{
 				string[] config = File.ReadAllLines(Path.Combine(USER_DATA, LOADOUT_FILE));
@@ -227,6 +237,7 @@ namespace ShiftStoneRandomizer
 					Log($"Parsed hand lock from file: {handLock}", true);
 					lockedHand = (int)handLock;
 				}
+				ShowHandLock();
 				//Run through the lines in the conf file. Skip the first line which is the hand lock
 				for (int i = 1; i < config.Length; i++)
 				{
@@ -322,24 +333,57 @@ namespace ShiftStoneRandomizer
 			{
 				lockedHand = -1;
 			}
-
 			HandLock hand = (HandLock)lockedHand;
 			Log($"Hand lock set to: {hand}");
 
 			switch (hand)
 			{
 				case HandLock.Neither:
-
 					ActivateEffect(true, true);
 					break;
 				case HandLock.Left:
-
 					ActivateEffect(true, false);
 					break;
 				case HandLock.Right:
-
 					ActivateEffect(false, true);
 					break;
+			}
+
+			ShowHandLock();
+		}
+
+		private void ShowHandLock()
+		{
+			HandLock hand = (HandLock)lockedHand;
+			Color disabled = new Color(1f, 1f, 1f, 0.2f);
+			Color enabled = new Color(1f, 1f, 1f, 1f);
+			switch (hand)
+			{
+				case HandLock.Neither:
+					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
+					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
+					break;
+				case HandLock.Left:
+					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
+					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
+					break;
+				case HandLock.Right:
+					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
+					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
+					break;
+			}
+		}
+
+		private void SignFall()
+		{
+			string[] layers = new string[] { "Player", "Floor", "PedestalFloor", "CombatFloor", "Environment", "Clouds" };
+
+			if (random.Next(10) > -1)
+			{
+				Rigidbody rb = dropSign.AddComponent<Rigidbody>();
+				rb.AddForce(new Vector3(0.5f, 1f, 0), ForceMode.Impulse);
+				rb.angularVelocity = new Vector3(0, 0, -20f);
+				rb.includeLayers = new LayerMask().AddToMask(layers);
 			}
 		}
 		private void SaveLoadOut(int[] Equipped)
@@ -358,9 +402,10 @@ namespace ShiftStoneRandomizer
 			File.WriteAllText(Path.Combine(USER_DATA, LOADOUT_FILE), $"{(HandLock)lockedHand} \n{left.Name}\n{right.Name}");
 			defaultStones[0] = left;
 			defaultStones[1] = right;
-
-
 			ActivateEffect(true, true);
+
+			SignFall();
+
 		}
 
 		private void ActivateEffect(bool left, bool right)
@@ -537,7 +582,7 @@ namespace ShiftStoneRandomizer
 			var Button = GameObject.Find("ShiftstoneQuickswapper").transform.GetChild(0).GetChild(2).gameObject;
 			GameObject titleBar = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.MatchConsole.MatchmakingSettings.TitleBar.GetGameObject());
 			GameObject titleText = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.MatchConsole.MatchmakingSettings.TitleText.GetGameObject());
-			
+
 			titleText.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
 			titleText.transform.localPosition = new Vector3(-0.09f, 0.736f, 0.0002f);
 			titleText.transform.localScale = new Vector3(6.8f, 4.9f, 1f);
@@ -548,12 +593,12 @@ namespace ShiftStoneRandomizer
 			blackListButton.transform.localPosition = new Vector3(-0.0509f, 1.6473f, 0.6836f);
 			blackListButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
 			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
-			
+
 			GameObject blackListLabel = GameObject.Instantiate(titleBar);
-			blackListLabel.transform.SetParent(blackListButton.transform.GetChild(0), false);
+			blackListLabel.transform.SetParent(blackListButton.transform, false);
 			blackListLabel.transform.localScale = new Vector3(0.09f, 0.3f, 0.3f);
-			blackListLabel.transform.localPosition = new Vector3(0.118f, -0.055f, 0.212f);
-			blackListLabel.transform.localRotation = Quaternion.Euler(0.3f, 83.491f, 270.6874f);
+			blackListLabel.transform.localPosition = new Vector3(0.118f, 0f, 0.212f);
+			blackListLabel.transform.localRotation = Quaternion.Euler(0.3f, 83.491f, 275.6874f);
 			blackListLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Blacklist";
 
 
@@ -564,11 +609,33 @@ namespace ShiftStoneRandomizer
 			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
 			GameObject keepHandLabel = GameObject.Instantiate(titleBar);
-			keepHandLabel.transform.SetParent(keepHandButton.transform.GetChild(0), false);
+			keepHandLabel.transform.SetParent(keepHandButton.transform, false);
 			keepHandLabel.transform.localScale = new Vector3(0.09f, 0.3f, 0.3f);
-			keepHandLabel.transform.localPosition = new Vector3(0.168f, -0.055f, 0.212f);
+			keepHandLabel.transform.localPosition = new Vector3(0.168f, 0.02f, 0.212f);
 			keepHandLabel.transform.localRotation = Quaternion.Euler(1.9346f, 97f, 268.269f);
-			keepHandLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Keep Hand";
+			keepHandLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Lock Hand";
+
+			leftHand = GameObject.Instantiate(IndicatorsBase.transform.GetChild(2).gameObject);
+
+			rightHand = GameObject.Instantiate(IndicatorsBase.transform.GetChild(1).gameObject);
+
+			leftHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
+			leftHand.transform.localPosition = new Vector3(-0.13f, 0.01f, 0.06f);
+			leftHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+			leftHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
+
+
+
+
+
+			rightHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
+			rightHand.transform.localPosition = new Vector3(-0.13f, 0.01f, -0.09f);
+			rightHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+			rightHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
+			//position -0.13 0.01 -0.06
+			//Rotation 90 90 0
+			//0.0003 0.0003 0.0003
+
 
 
 			GameObject saveLoadOutButton = GameObject.Instantiate(Button);
@@ -578,11 +645,27 @@ namespace ShiftStoneRandomizer
 			saveLoadOutButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
 			GameObject saveLoadOutLabel = GameObject.Instantiate(titleBar);
-			saveLoadOutLabel.transform.SetParent(saveLoadOutButton.transform.GetChild(0), false);
-			saveLoadOutLabel.transform.localPosition = new Vector3(0.128f, -0.055f, 0.212f);
+			saveLoadOutLabel.transform.SetParent(saveLoadOutButton.transform, false);
+			saveLoadOutLabel.transform.localPosition = new Vector3(0.128f, 0.025f, 0.212f);
 			saveLoadOutLabel.transform.localScale = new Vector3(0.09f, 0.3f, 0.3f);
 			saveLoadOutLabel.transform.localRotation = Quaternion.Euler(5.0254f, 87.0001f, 271.7236f);
 			saveLoadOutLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Loadout";
+
+			GameObject saveLabel = GameObject.Instantiate(titleBar);
+			saveLabel.transform.SetParent(saveLoadOutButton.transform.GetChild(0), false);
+			saveLabel.transform.localPosition = new Vector3(0.208f, -0.05f, 0.212f);
+			saveLabel.transform.localScale = new Vector3(0.09f, 0.2f, 0.3f);
+			saveLabel.transform.localRotation = Quaternion.Euler(5.0254f, 82.3274f, 274.8562f);
+			saveLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Save";
+			saveLabel.transform.GetChild(0).gameObject.transform.localScale = new Vector3(9.7f, 4.9f, 1f);
+
+			dropSign = saveLabel;
+			//Local Position 0.208 -0.05 0.212
+			//Rotation 5.0254 82.3274 274.8562
+			//Scale 0.09 0.2 0.3
+
+			//Text Scale 9.7 4.9 1
+
 
 			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
@@ -596,9 +679,9 @@ namespace ShiftStoneRandomizer
 
 			saveLoadOutButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 		  	{
-				SaveLoadOut(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
-			});
-			
+				  SaveLoadOut(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+			  });
+
 		}
 
 		private void CreateQSSRandomButton(GameObject swapper)
