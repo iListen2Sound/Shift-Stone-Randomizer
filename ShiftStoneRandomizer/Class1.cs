@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using AsmResolver.PE.DotNet.Cil;
+using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppInterop.Runtime.Runtime.VersionSpecific.Class;
 using Il2CppPhoton.Realtime;
@@ -12,6 +13,7 @@ using Il2CppSystem;
 using Il2CppSystem.Data;
 using Il2CppTMPro;
 using MelonLoader;
+using MelonLoader.TinyJSON;
 using MelonLoader.Utils;
 using RumbleModdingAPI;
 using System.Collections;
@@ -218,7 +220,7 @@ namespace ShiftStoneRandomizer
 				Log("No blacklist file found");
 		}
 
-		private void LoadLoadOut(bool dontEquip = false)
+		private void LoadLoadOut(bool dontEquip = false, bool skipLock = false)
 		{
 
 			if (File.Exists(Path.Combine(USER_DATA, LOADOUT_FILE)))
@@ -226,17 +228,21 @@ namespace ShiftStoneRandomizer
 				string[] config = File.ReadAllLines(Path.Combine(USER_DATA, LOADOUT_FILE));
 				bool parsed = System.Enum.TryParse(config[0], out HandLock handLock);
 
-				Log($"Parsed string:\n {string.Join("\n\t ", config)}", true);
-				if (!parsed)
+				if ( !skipLock)
 				{
-					Log($"Failed to parse hand lock from file: {config[0]}. Defaulting to None.", true);
-					handLock = HandLock.Neither;
+					Log($"Parsed string:\n {string.Join("\n\t ", config)}", true);
+					if (!parsed)
+					{
+						Log($"Failed to parse hand lock from file: {config[0]}. Defaulting to None.", true);
+						handLock = HandLock.Neither;
+					}
+					else
+					{
+						Log($"Parsed hand lock from file: {handLock}", true);
+						lockedHand = (int)handLock;
+					}
 				}
-				else
-				{
-					Log($"Parsed hand lock from file: {handLock}", true);
-					lockedHand = (int)handLock;
-				}
+				
 				ShowHandLock();
 				//Run through the lines in the conf file. Skip the first line which is the hand lock
 				for (int i = 1; i < config.Length; i++)
@@ -360,16 +366,16 @@ namespace ShiftStoneRandomizer
 			switch (hand)
 			{
 				case HandLock.Neither:
-					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
-					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
+					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
+					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
 					break;
 				case HandLock.Left:
-					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
-					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
-					break;
-				case HandLock.Right:
 					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
 					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
+					break;
+				case HandLock.Right:
+					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
+					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
 					break;
 			}
 		}
@@ -378,11 +384,14 @@ namespace ShiftStoneRandomizer
 		{
 			string[] layers = new string[] { "Player", "Floor", "PedestalFloor", "CombatFloor", "Environment", "Clouds" };
 
-			if (random.Next(20) == 1)
+			if (random.Next(20) > -1)
 			{
 				Rigidbody rb = dropSign.AddComponent<Rigidbody>();
-				rb.AddForce(new Vector3(0.5f, 1f, 0), ForceMode.Impulse);
-				rb.angularVelocity = new Vector3(0, 0, -20f);
+				rb.AddForce(new Vector3(1.5f, 1f, 0), ForceMode.Impulse);
+
+				// I don't think either of these work
+				rb.angularVelocity = new Vector3(0, 0, 0);
+				rb.AddRelativeTorque(new Vector3(0, -100000, -100000), ForceMode.Impulse);
 				rb.includeLayers = new LayerMask().AddToMask(layers);
 			}
 		}
@@ -399,13 +408,17 @@ namespace ShiftStoneRandomizer
 				right = new StoneItem();
 			else
 				right = stones[Equipped[1]];
-			File.WriteAllText(Path.Combine(USER_DATA, LOADOUT_FILE), $"{(HandLock)lockedHand} \n{left.Name}\n{right.Name}");
+			string loadout = $"{(HandLock)lockedHand} \n{left.Name}\n{right.Name}";
+			
+			File.WriteAllText(Path.Combine(USER_DATA, LOADOUT_FILE), loadout);
+			Log($"Saved loadout: {loadout}", true);
+
 			defaultStones[0] = left;
 			defaultStones[1] = right;
 			ActivateEffect(true, true);
 
-			SignFall();
 
+			SignFall();
 		}
 
 		private void ActivateEffect(bool left, bool right)
@@ -509,7 +522,6 @@ namespace ShiftStoneRandomizer
 				{
 					Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().AttachShiftStone(rightStone.ShiftStone, 1, true, true);
 					Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveAndReattachShiftstones(true, true);
-
 				}
 			}
 			ActivateEffect(leftStone != null, rightStone != null);
@@ -713,7 +725,7 @@ namespace ShiftStoneRandomizer
 
 			loadOutButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				LoadLoadOut();
+				LoadLoadOut(false, true);
 			});
 
 
