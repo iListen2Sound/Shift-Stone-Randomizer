@@ -94,7 +94,7 @@ namespace ShiftStoneRandomizer
 
 	public class Class1 : MelonMod
 	{
-		private const string USER_DATA = "Userdata/Shift_Stone_Randomizer/";
+		private const string USER_DATA = "Userdata/ShiftStoneRandomizer/";
 		private const string BLACKLIST_FILE = "blacklist.txt";
 		private const string LOADOUT_FILE = "loadout.txt";
 		private const string DEBUG_FILE = ".debug";
@@ -384,7 +384,7 @@ namespace ShiftStoneRandomizer
 		{
 			string[] layers = new string[] { "Player", "Floor", "PedestalFloor", "CombatFloor", "Environment", "Clouds" };
 
-			if (random.Next(20) > -1)
+			if (random.Next(50) == 1)
 			{
 				Rigidbody rb = dropSign.AddComponent<Rigidbody>();
 				rb.AddForce(new Vector3(1.5f, 1f, 0), ForceMode.Impulse);
@@ -579,13 +579,15 @@ namespace ShiftStoneRandomizer
 
 			//GameObject box = Cabinet.transform.GetChild(0).gameObject;
 
+			System.Random jitter = new System.Random(TargetParent.GetHashCode());
+
 			GameObject blackListIcon = GameObject.Instantiate(IndicatorsBase.transform.GetChild(0).gameObject);
 			//GameObject blackListIcon = indicator;//.transform.GetChild(0).gameObject;
 			blackListIcon.SetActive(false);
 			blackListIcon.transform.SetParent(TargetParent.transform, false);
 			blackListIcon.transform.localScale = Vector3.one * 0.0002f;
-			blackListIcon.transform.localRotation = Quaternion.Euler(5f, 90f, 90f);
-			blackListIcon.transform.localPosition = new Vector3(-0.04f, 0f, 0f);
+			blackListIcon.transform.localRotation = Quaternion.Euler(-0f, 90f * jitter.Next(1, 2), (90f * jitter.Next(4)) + jitter.Next(-10, 10));
+			blackListIcon.transform.localPosition = new Vector3(-0.053f, 0f + jitter.Next(-100, 100) * 0.0001f, 0f + jitter.Next(-100, 100) * 0.0001f);
 			return blackListIcon;
 		}
 
