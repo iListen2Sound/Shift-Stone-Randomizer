@@ -243,7 +243,7 @@ namespace ShiftStoneRandomizer
 					}
 				}
 				
-				ShowHandLock();
+
 				//Run through the lines in the conf file. Skip the first line which is the hand lock
 				for (int i = 1; i < config.Length; i++)
 				{
