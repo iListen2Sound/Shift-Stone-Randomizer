@@ -378,7 +378,7 @@ namespace ShiftStoneRandomizer
 		{
 			string[] layers = new string[] { "Player", "Floor", "PedestalFloor", "CombatFloor", "Environment", "Clouds" };
 
-			if (random.Next(10) > -1)
+			if (random.Next(20) == 1)
 			{
 				Rigidbody rb = dropSign.AddComponent<Rigidbody>();
 				rb.AddForce(new Vector3(0.5f, 1f, 0), ForceMode.Impulse);
@@ -620,7 +620,7 @@ namespace ShiftStoneRandomizer
 			rightHand = GameObject.Instantiate(IndicatorsBase.transform.GetChild(1).gameObject);
 
 			leftHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
-			leftHand.transform.localPosition = new Vector3(-0.13f, 0.01f, 0.06f);
+			leftHand.transform.localPosition = new Vector3(-0.14f, 0.01f, 0.07f);
 			leftHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
 			leftHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
 
@@ -629,7 +629,7 @@ namespace ShiftStoneRandomizer
 
 
 			rightHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
-			rightHand.transform.localPosition = new Vector3(-0.13f, 0.01f, -0.09f);
+			rightHand.transform.localPosition = new Vector3(-0.14f, 0.01f, -0.07f);
 			rightHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
 			rightHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
 			//position -0.13 0.01 -0.06
