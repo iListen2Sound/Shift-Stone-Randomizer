@@ -150,9 +150,10 @@ namespace ShiftStoneRandomizer
 					IndicatorsBase = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
 					GameObject.DontDestroyOnLoad(IndicatorsBase);
 					IndicatorsBase.SetActive(false);
+					
 				}
 				CreatePhysicalGUI();
-				firstLoad = false;
+				
 
 
 
@@ -161,8 +162,9 @@ namespace ShiftStoneRandomizer
 				{
 					stones[i].Icon = CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject);
 				}
-				LoadLoadOut(true);
-
+				LoadLoadOut(true, !firstLoad);
+				ShowHandLock();
+				firstLoad = false;
 			}
 			CreateButtonsForAll();
 			LoadBlackListFile();
@@ -361,7 +363,7 @@ namespace ShiftStoneRandomizer
 		private void ShowHandLock()
 		{
 			HandLock hand = (HandLock)lockedHand;
-			Color disabled = new Color(1f, 1f, 1f, 0.2f);
+			Color disabled = new Color(1f, 1f, 0f, 0.5f);
 			Color enabled = new Color(1f, 1f, 1f, 1f);
 			switch (hand)
 			{
