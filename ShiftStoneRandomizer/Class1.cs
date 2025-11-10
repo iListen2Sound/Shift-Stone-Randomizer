@@ -57,10 +57,25 @@ namespace ShiftStoneRandomizer
 
 		private enum HandLock
 		{
-			Neither = -1,
+			Both = -1,
 			Left = 0,
 			Right = 1
 		}
+
+		private enum ShiftStonePrefs
+		{
+			Empty = -2,
+			Random = -1,
+			Adamant = 0,
+			Charge,
+			Flow,
+			Guard,
+			Stubborn,
+			Surge,
+			Vigor,
+			Volitile
+		}
+
 		private GameObject dropSign;
 
 		private PlayerHaptics haptics;
@@ -107,6 +122,8 @@ namespace ShiftStoneRandomizer
 			}
 			CreateButtonsForAll();
 			LoadBlackListFile();
+
+			
 		}
 		/// <summary>
 		/// 
@@ -231,6 +248,8 @@ namespace ShiftStoneRandomizer
 			};
 
 		}
+
+
 
 		/// <summary>
 		/// Blacklists stones and writes to file.
@@ -466,6 +485,61 @@ namespace ShiftStoneRandomizer
 				}
 			}
 			ActivateEffect(leftStone != null, rightStone != null);
+		}
+
+		private void EquipStones (ShiftStonePrefs left, ShiftStonePrefs right)
+		{
+			StoneItem leftStone;
+			StoneItem rightStone;
+
+			if(left = ShiftStonePrefs.Empty)
+			{
+				leftStone = new StoneItem();
+			}
+			else if(left = ShiftStonePrefs.Random)
+			{
+				leftStone = PickRandomStoneExcept(rightStone;)
+			}
+			else
+			{
+				leftStone = stones[(int) left];
+			}
+
+			if(right = ShiftStonePrefs.Empty)
+			{
+				rightStone = new StoneItem();
+			}
+			else if(right = ShiftStonePrefs.Random)
+			{
+				rightStone = PickRandomStoneExcept(leftStone;)
+			}
+			else
+			{
+				rightStone = stones[(int) right];
+			}
+
+			EquipStones(leftStone, rightStone);
+
+			
+		}
+
+		private StoneItem PickRandomStoneExcept(StoneItem excludeStone = null)
+		{
+			//TODO: Create select random enabled stone function
+			StoneItem selectedStone = null;
+			IEnumerable<StoneItem> possibleStones = stones.Where(s => s.IsEnabled = true);
+			if(possibleStones.Count >= 2)
+			{
+				do{
+					selectedStone = possibleStones[random.Next(0, possibleStones.Count)];
+					
+				}while (selectedStone.Name == excludeStone.Name);
+				return selectedStone;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		private void Log(string message, bool debugOnly = false)

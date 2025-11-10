@@ -90,19 +90,68 @@ namespace ShiftStoneRandomizer
 
             CatMap0 = MelonPreferences.CreateCategory("Ring Automation Settings");
             CatMap0.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-            PrefMap0HostLeft = CatMap0.CreateEntry("Ring Left Hand for Host: ", "Random", null, "Preferred Stone, Random, Empty");
-            PrefMap0HostRight = CatMap0.CreateEntry("Ring Right Hand for Host: ", "Random", null, "Preferred Stone, Random, Empty");
-            PrefMap0ClientLeft = CatMap0.CreateEntry("Ring Left Hand for Client: ", "Random", null, "Preferred Stone, Random, Empty");
-            PrefMap0ClientRight = CatMap0.CreateEntry("Ring Right Hand for Client: ", "Random", null, "Preferred Stone, Random, Empty");
+            PrefMap0HostLeft = CatMap0.CreateEntry("Ring Left Hand for Host: ", "Random", null, "[Preferred Stone], Random, Empty");
+            PrefMap0HostRight = CatMap0.CreateEntry("Ring Right Hand for Host: ", "Random", null, "[Preferred Stone], Random, Empty");
+            PrefMap0ClientLeft = CatMap0.CreateEntry("Ring Left Hand for Client: ", "Random", null, "[Preferred Stone], Random, Empty");
+            PrefMap0ClientRight = CatMap0.CreateEntry("Ring Right Hand for Client: ", "Random", null, "[Preferred Stone], Random, Empty");
 
             CatMap1 = MelonPreferences.CreateCategory("Pit Automation Settings");
             CatMap1.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-            PrefMap1HostLeft = CatMap1.CreateEntry("Pit Left Hand for Host: ", "Random", null, "Preferred Stone, Random, Empty");
-            PrefMap1HostRight = CatMap1.CreateEntry("Pit Right Hand for Host: ", "Random", null, "Preferred Stone, Random, Empty");
-            PrefMap1ClientLeft = CatMap1.CreateEntry("Pit Left Hand for Client: ", "Random", null, "Preferred Stone, Random, Empty");
-            PrefMap1ClientRight = CatMap1.CreateEntry("Pit Right Hand for Client: ", "Random", null, "Preferred Stone, Random, Empty");
+            PrefMap1HostLeft = CatMap1.CreateEntry("Pit Left Hand for Host: ", "Random", null, "[Preferred Stone], Random, Empty");
+            PrefMap1HostRight = CatMap1.CreateEntry("Pit Right Hand for Host: ", "Random", null, "[Preferred Stone], Random, Empty");
+            PrefMap1ClientLeft = CatMap1.CreateEntry("Pit Left Hand for Client: ", "Random", null, "[Preferred Stone], Random, Empty");
+            PrefMap1ClientRight = CatMap1.CreateEntry("Pit Right Hand for Client: ", "Random", null, "[Preferred Stone], Random, Empty");
             
 
+        }
+
+        private void ReadPrefs()
+        {
+            CatSettings.ReadFromFile();
+            CatEnabledStones.ReadFromFile();
+            CatMap0.ReadFromFile();
+            CatMap1.ReadFromFile();
+        }
+
+        private void SavePrefs()
+        {
+            CatSettings.SaveToFile();
+            CatEnabledStones.SaveToFile();
+            CatMap0.SaveToFile();
+            CatMap1.SaveToFile();
+        }
+
+        private void ApplyPrefsToState()
+        {
+            stones[0].IsEnabled = PrefAdamant.Value;
+            stones[1].IsEnabled = PrefCharge.Value;
+            stones[2].IsEnabled = PrefFlow.Value;
+            stones[3].IsEnabled = PrefGuard.Value;
+            stones[4].IsEnabled = PrefStubborn.Value;
+            stones[5].IsEnabled = PrefSurge.Value;
+            stones[6].IsEnabled = PrefVigor.Value;
+            stones[7].IsEnabled = PrefVolitile.Value;
+
+            if(!(Enum.TryParse(PrefEnabledHand.Value, out lockedHand)))
+
+            {
+                Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
+            }
+
+        }
+
+        private void UpdatePrefsFromState()
+        {
+           PrefAdamant.Value = stones[0].IsEnabled;    
+           PrefCharge.Value = stones[1].IsEnabled;
+           PrefFlow.Value = stones[2].IsEnabled;
+           PrefGuard.Value = stones[3].IsEnabled;
+           PrefStubborn.Value = stones[4].IsEnabled;  
+           PrefSurge.Value = stones[5].IsEnabled;
+           PrefVigor.Value = stones[6].IsEnabled;
+           PrefVolitile.Value = stones[7].IsEnabled;  
+
+           PrefEnabledHand = lockedHand.ToString();
         }
     }
 }
