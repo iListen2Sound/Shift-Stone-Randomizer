@@ -92,7 +92,7 @@ namespace ShiftStoneRandomizer
 		}
 	}
 
-	public class Class1 : MelonMod
+	public partial class Class1 : MelonMod
 	{
 		private const string USER_DATA = "Userdata/ShiftStoneRandomizer/";
 		private const string BLACKLIST_FILE = "blacklist.txt";

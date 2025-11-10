@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using MelonLoader;
 using ShiftStoneRandomizer;
 
-[assembly: MelonInfo(typeof(Class1), "ShiftStoneRandomizer", "1.0.0", "iListen2Sound, Darkener")]
+[assembly: MelonInfo(typeof(Class1), "ShiftStoneRandomizer", "1.1.0", "iListen2Sound, Darkener")]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
 [assembly: MelonAuthorColor(255, 87, 166, 80)]
 [assembly: MelonColor(255, 87, 166, 80)]
