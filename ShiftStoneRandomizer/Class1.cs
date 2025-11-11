@@ -248,6 +248,9 @@ namespace ShiftStoneRandomizer
 					break;
 			}
 
+			PrefEnabledHand.Value = EnabledHand.ToString();
+			CatSettings.SaveToFile();
+
 			ShowRandomedHand();
 		}
 
@@ -288,31 +291,7 @@ namespace ShiftStoneRandomizer
 				rb.includeLayers = new LayerMask().AddToMask(layers);
 			}
 		}
-		/*private void SaveLoadOut(int[] Equipped)
-		{
-			StoneItem left;
-			StoneItem right;
-			if (Equipped[0] == -1)
-				left = new StoneItem();
-			else
-				left = stones[Equipped[0]];
-
-			if (Equipped[1] == -1)
-				right = new StoneItem();
-			else
-				right = stones[Equipped[1]];
-			//string loadout = $"{(RandomedHand)lockedHand} \n{left.Name}\n{right.Name}";
-
-			File.WriteAllText(Path.Combine(USER_DATA, LOADOUT_FILE), loadout);
-			Log($"Saved loadout: {loadout}", true);
-
-			defaultStones[0] = left;
-			defaultStones[1] = right;
-			ActivateEffect(true, true);
-
-
-			SignFall();
-		}*/
+		
 
 		private void ActivateEffect(bool left, bool right)
 		{

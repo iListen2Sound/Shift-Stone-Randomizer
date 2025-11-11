@@ -15,8 +15,8 @@ namespace ShiftStoneRandomizer
 
 	public enum ShiftStonePrefs
 	{
-		Empty = -2,
-		Random = -1,
+		Random = -2,
+		Empty = -1,
 		Adamant = 0,
 		Charge,
 		Flow,

@@ -39,6 +39,10 @@ namespace ShiftStoneRandomizer
 		private MelonPreferences_Entry<string> PrefMap1ClientLeft;
 		private MelonPreferences_Entry<string> PrefMap1ClientRight;
 
+		private MelonPreferences_Category CatLoadOutButton;
+		private MelonPreferences_Entry<string> PrefLobLeft;
+		private MelonPreferences_Entry<string> PrefLobRight;
+
 		AutomationPrefs AutomationMode;
 
 
@@ -80,6 +84,10 @@ namespace ShiftStoneRandomizer
 			PrefMap1HostRight = CatMap1.CreateEntry("Pit Right Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Empty");
 			PrefMap1ClientLeft = CatMap1.CreateEntry("Pit Left Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Empty");
 			PrefMap1ClientRight = CatMap1.CreateEntry("Pit Right Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Empty");
+
+			CatLoadOutButton = MelonPreferences.CreateCategory("Load Out Button Selection");
+			PrefLobLeft = CatLoadOutButton.CreateEntry("Left Hand: ", "Empty", null, "[Preferred Stone] | Empty");
+			PrefLobRight = CatLoadOutButton.CreateEntry("Right Hand: ", "Empty", null, "[Preferred Stone] | Empty");
 		}
 
 		private void ReadPrefs()
@@ -120,8 +128,6 @@ namespace ShiftStoneRandomizer
 			stones[6].IsEnabled = PrefVigor.Value;
 			stones[7].IsEnabled = PrefVolitile.Value;
 
-			// Fix for CS1503: Use Il2CppSystem.Type and Il2CppSystem.Object
-
 			if (!System.Enum.TryParse<RandomedHand>(PrefEnabledHand.Value, out EnabledHand)) ;
 			{
 				Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
@@ -140,13 +146,50 @@ namespace ShiftStoneRandomizer
 			PrefVolitile.Value = stones[7].IsEnabled;
 
 			PrefEnabledHand.Value = EnabledHand.ToString();
+
 		}
 
-		private void LoadLoadOut(bool dontEquip = false, bool skipLock = false)
+
+		private void ApplyLoadOut()
 		{
+			ShiftStonePrefs left;
+			ShiftStonePrefs right;
 
+			if(!System.Enum.TryParse<ShiftStonePrefs>(PrefLobLeft.Value, out left))
+			{
+				Log("Failed to parse Left hand loadout from config file");
+			}
+			if(!System.Enum.TryParse<ShiftStonePrefs>(PrefLobRight.Value, out right))
+			{
+				Log("Failed to parse Right hand loadout from config file");
+			}
+			EquipStones(left, right);
+		}
+
+		private void SaveLoadOut(int[] Equipped)
+		{
+			StoneItem left;
+			StoneItem right;
+			if (Equipped[0] == -1)
+				left = new StoneItem();
+			else
+				left = stones[Equipped[0]];
+
+			if (Equipped[1] == -1)
+				right = new StoneItem();
+			else
+				right = stones[Equipped[1]];
+
+
+			PrefLobLeft.Value = left.Name;
+			PrefLobRight.Value = right.Name;
+
+			CatLoadOutButton.SaveToFile();
 			
+			ActivateEffect(true, true);
 
+
+			SignFall();
 		}
 	}
 }

@@ -75,6 +75,18 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
+		private ShiftStonePrefs GetEnum()
+		{
+			ShiftStonePrefs result;
+			if(!System.Enum.TryParse<ShiftStonePrefs>(Name, out result))
+			{
+				Log("Error: Failed to parse stone item enum");
+				return null;
+			}
+
+			return result;
+		}
+
 		private GameObject _icon;
 		public GameObject Icon { set { _icon = value; _icon.SetActive(false); } }
 		public StoneItem(ShiftStone shiftStone)

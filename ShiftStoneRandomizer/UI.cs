@@ -220,7 +220,7 @@ namespace ShiftStoneRandomizer
 
 			loadOutButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				//LoadLoadOut(false, true);
+				ApplyLoadOut();
 			});
 
 
