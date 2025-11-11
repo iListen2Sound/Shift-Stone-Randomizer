@@ -31,7 +31,7 @@ using Type = Il2CppSystem.Type;
 namespace ShiftStoneRandomizer
 {
 
-	public partial class Class1 : MelonMod
+	public partial class ShiftStoneRandomizer : MelonMod
 	{
 		//private const string USER_DATA = "Userdata/ShiftStoneRandomizer/";
 		private const string BLACKLIST_FILE = "blacklist.txt";
@@ -72,7 +72,7 @@ namespace ShiftStoneRandomizer
 		}
 		public void logOnMatchEnded()
 		{
-			Log("Match Ended", true);
+			Debug.Log("Match Ended", true);
 		}
 		private void SceneReady()
 		{
@@ -97,7 +97,7 @@ namespace ShiftStoneRandomizer
 				{
 					stones[i].Icon = CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject);
 				}
-				LoadLoadOut(true, !firstLoad);
+				
 				ShowRandomedHand();
 				firstLoad = false;
 			}
@@ -127,12 +127,12 @@ namespace ShiftStoneRandomizer
 			if (File.Exists(Path.Combine(USER_DATA, DEBUG_FILE)))
 			{
 				debugMode = true;
-				Log("Debug mode enabled");
+				Debug.Log("Debug mode enabled");
 			}
 			else
 			{
 				debugMode = false;
-				Log("Debug mode disabled");
+				Debug.Log("Debug mode disabled");
 			}
 
 
@@ -141,7 +141,7 @@ namespace ShiftStoneRandomizer
 				string[] lines = File.ReadAllLines(Path.Combine(USER_DATA, BLACKLIST_FILE));
 				//blackList = new int[lines.Length];
 				//Broken: no longer reading from file
-				Log("BlackListing stones from file");
+				Debug.Log("BlackListing stones from file");
 				for (int i = 0; i < lines.Length; i++)
 				{
 					foreach (StoneItem stone in stones)
@@ -150,13 +150,13 @@ namespace ShiftStoneRandomizer
 						{
 							//blackList[i] = System.Array.IndexOf(stones, stone);
 							stone.IsEnabled = false;
-							Log($"\t{stone.Name}");
+							Debug.Log($"\t{stone.Name}");
 						}
 					}
 				}
 			}
 			else
-				Log("No blacklist file found");
+				Debug.Log("No blacklist file found");
 		}
 
 		
@@ -212,12 +212,12 @@ namespace ShiftStoneRandomizer
 			}
 
 			string blackListOut = "";
-			Log("Blacklisted stones: ");
+			Debug.Log("Blacklisted stones: ");
 			foreach (StoneItem stone in stones)
 			{
 				if (!stone.IsEnabled)
 				{
-					Log($"\t{stone.Name}");
+					Debug.Log($"\t{stone.Name}");
 					blackListOut += stone.Name + "\n";
 				}
 			}
@@ -233,7 +233,7 @@ namespace ShiftStoneRandomizer
 				EnabledHand = (RandomedHand)(-1);
 			}
 			RandomedHand hand = (RandomedHand)EnabledHand;
-			Log($"Hand lock set to: {hand}");
+			Debug.Log($"Hand lock set to: {hand}");
 
 			switch (hand)
 			{
@@ -309,26 +309,26 @@ namespace ShiftStoneRandomizer
 		private void RandomizeStones(int[] Equipped)
 		{
 			List<StoneItem> randomStones = new List<StoneItem>();
-			Log("Stone check:", true);
+			Debug.Log("Stone check:", true);
 			for (int i = 0; i < stones.Length; i++)
 			{
 				StoneItem stone = stones[i];
-				Log($"\t{stone.Name} - Enabled: {stone.IsEnabled}", true);
+				Debug.Log($"\t{stone.Name} - Enabled: {stone.IsEnabled}", true);
 				if (stone.IsEnabled && System.Array.IndexOf(Equipped, i) == -1)
 				{
-					Log("\t Added", true);
+					Debug.Log("\t Added", true);
 					randomStones.Add(stone);
 				}
 				else
 				{
-					Log("\t Not added", true);
+					Debug.Log("\t Not added", true);
 				}
 			}
 
 
 			if (randomStones.Count <= 2 && EnabledHand == RandomedHand.Both)
 			{
-				Log("Not enough stones to disallow repeats", true);
+				Debug.Log("Not enough stones to disallow repeats", true);
 				// If there are less than 4 stones available, add the equipped stones to the list
 				foreach (int stoneIndex in Equipped)
 				{
@@ -341,7 +341,7 @@ namespace ShiftStoneRandomizer
 			randomStones = randomStones.OrderBy(x => random.Next()).ToList();
 			if (randomStones.Count < 2)
 			{
-				Log("Not enough stones to randomize, using equipped stones instead.");
+				Debug.Log("Not enough stones to randomize, using equipped stones instead.");
 				return;
 			}
 
@@ -371,7 +371,7 @@ namespace ShiftStoneRandomizer
 		/// <param name="rightStone"></param>
 		private void EquipStones(StoneItem leftStone, StoneItem rightStone)
 		{
-			Log("Equipping stones: " + (leftStone != null ? leftStone.Name : "Null") + " | " + (rightStone != null ? rightStone.Name : "Null"), true);
+			Debug.Log("Equipping stones: " + (leftStone != null ? leftStone.Name : "Null") + " | " + (rightStone != null ? rightStone.Name : "Null"), true);
 
 			if (rightStone != null) //Makes sure you don't equip a stone on the left hand if it's already equipped in the right hand
 				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(1, true, true);
@@ -455,7 +455,7 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
-		private void Log(string message, bool debugOnly = false)
+/*		private void Log(string message, bool debugOnly = false)
 		{
 			if (!debugOnly)
 			{
@@ -466,7 +466,7 @@ namespace ShiftStoneRandomizer
 				LoggerInstance.Msg(message);
 
 
-		}
+		}*/
 
 	
 	}

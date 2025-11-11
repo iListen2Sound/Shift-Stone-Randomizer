@@ -80,8 +80,8 @@ namespace ShiftStoneRandomizer
 			ShiftStonePrefs result;
 			if(!System.Enum.TryParse<ShiftStonePrefs>(Name, out result))
 			{
-				Log("Error: Failed to parse stone item enum");
-				return null;
+				Debug.Log("Error: Failed to parse stone item enum");
+				return ShiftStonePrefs.Invalid;
 			}
 
 			return result;
@@ -102,5 +102,7 @@ namespace ShiftStoneRandomizer
 		{
 			ShiftStone = null;
 		}
+
+		
 	}
 }

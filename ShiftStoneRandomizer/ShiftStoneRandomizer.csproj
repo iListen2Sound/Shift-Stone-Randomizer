@@ -692,6 +692,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Debug.cs" />
     <Compile Include="enums.cs" />
     <Compile Include="Preferences.cs" />
     <Compile Include="StoneItem.cs" />

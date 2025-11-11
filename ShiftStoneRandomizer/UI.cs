@@ -31,7 +31,7 @@ using Type = Il2CppSystem.Type;
 namespace ShiftStoneRandomizer
 {
 
-	public partial class Class1 : MelonMod
+	public partial class ShiftStoneRandomizer : MelonMod
 	{
 		#region UI
 

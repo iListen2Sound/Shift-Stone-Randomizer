@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace ShiftStoneRandomizer
 {
@@ -15,6 +11,7 @@ namespace ShiftStoneRandomizer
 
 	public enum ShiftStonePrefs
 	{
+		Invalid = -3,
 		Random = -2,
 		Empty = -1,
 		Adamant = 0,

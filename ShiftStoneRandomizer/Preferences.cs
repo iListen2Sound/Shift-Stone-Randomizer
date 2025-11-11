@@ -8,7 +8,7 @@ using Type = Il2CppSystem.Type;
 namespace ShiftStoneRandomizer
 {
 
-	public partial class Class1 : MelonMod
+	public partial class ShiftStoneRandomizer : MelonMod
 	{
 		private const string USER_DATA = "UserData/ShiftStoneRandomizer/";
 		private const string CONFIG_FILE = "config.cfg";
@@ -50,7 +50,7 @@ namespace ShiftStoneRandomizer
 		{
 			if (!Directory.Exists(USER_DATA))
 			{
-				Log("Userdata folder not found. Creating...");
+				Debug.Log("Userdata folder not found. Creating...");
 				Directory.CreateDirectory(USER_DATA);
 			}
 
@@ -99,12 +99,12 @@ namespace ShiftStoneRandomizer
 
 			if(!System.Enum.TryParse<AutomationPrefs>(PrefAutomation.Value, out AutomationMode)) 
 			{
-				Log($"Failed to parse automation mode preference: {PrefAutomation.Value}");
+				Debug.Log($"Failed to parse automation mode preference: {PrefAutomation.Value}");
 				AutomationMode = AutomationPrefs.Random;
 			}
 			if(!System.Enum.TryParse<RandomedHand>(PrefEnabledHand.Value, out EnabledHand)) 
 			{
-				Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
+				Debug.Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
 				EnabledHand = RandomedHand.Both;
 			}
 		}
@@ -130,7 +130,7 @@ namespace ShiftStoneRandomizer
 
 			if (!System.Enum.TryParse<RandomedHand>(PrefEnabledHand.Value, out EnabledHand)) ;
 			{
-				Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
+				Debug.Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
 			}
 		}
 
@@ -157,11 +157,11 @@ namespace ShiftStoneRandomizer
 
 			if(!System.Enum.TryParse<ShiftStonePrefs>(PrefLobLeft.Value, out left))
 			{
-				Log("Failed to parse Left hand loadout from config file");
+				Debug.Log("Failed to parse Left hand loadout from config file");
 			}
 			if(!System.Enum.TryParse<ShiftStonePrefs>(PrefLobRight.Value, out right))
 			{
-				Log("Failed to parse Right hand loadout from config file");
+				Debug.Log("Failed to parse Right hand loadout from config file");
 			}
 			EquipStones(left, right);
 		}
