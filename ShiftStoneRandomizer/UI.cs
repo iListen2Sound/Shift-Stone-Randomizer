@@ -47,6 +47,14 @@ namespace ShiftStoneRandomizer
 					}
 				}*/
 
+		private GameObject scrollButtonSource;
+		private void GrabSourceObjects()
+		{
+			scrollButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
+			scrollButtonSource.SetActive(false);
+			GameObject.DontDestroyOnLoad(scrollButtonSource);
+		}
+
 		private void CreateButtonsForAll()
 		{
 			var swappers = GameObject.FindObjectsOfType<GameObject>().Where(go => go.name == "ShiftstoneQuickswapper").ToArray();
@@ -54,7 +62,7 @@ namespace ShiftStoneRandomizer
 			{
 				//Dont add more then 1 button
 				if (swapper.transform.GetChild(0).GetChildCount() < 4)
-					CreateQSSRandomButton(swapper);
+					CreateQuickSwapButtons(swapper);
 
 			}
 		}
@@ -131,10 +139,6 @@ namespace ShiftStoneRandomizer
 			leftHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
 			leftHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
 
-
-
-
-
 			rightHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
 			rightHand.transform.localPosition = new Vector3(-0.14f, 0.01f, -0.07f);
 			rightHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
@@ -192,7 +196,7 @@ namespace ShiftStoneRandomizer
 
 		}
 
-		private void CreateQSSRandomButton(GameObject swapper)
+		private void CreateQuickSwapButtons(GameObject swapper)
 		{
 			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
 
@@ -234,6 +238,18 @@ namespace ShiftStoneRandomizer
 			ClearStones.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
 				EquipStones(new StoneItem(), new StoneItem());
+			});
+
+			GameObject loadout1 = GameObject.Instantiate(scrollButtonSource);
+			loadout1.transform.SetParent(swapper.transform.GetChild(0));
+			loadout1.transform.localPosition = new Vector3(0.0f, 0.4f, 0f);
+			loadout1.SetActive(true);
+			loadout1.transform.GetChild(0).GetComponent<InteractionButton>().isToggleButton = false;
+			loadout1.transform.GetChild(0).GetComponent<InteractionButton>().enabled = true;
+			loadout1.transform.GetChild(0).GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			
+			{
+				ReadPrefs();
 			});
 
 
