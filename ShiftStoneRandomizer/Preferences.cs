@@ -166,6 +166,50 @@ namespace ShiftStoneRandomizer
 			EquipStones(left, right);
 		}
 
+		private void ToggleStones(int[] equipped RandomedHand hand = RandomedHand.Both)
+		{
+			StoneItem left; 
+			StoneItem right;
+			stoneItem single; 
+			if (Equipped[0] == -1)
+				left = new StoneItem();
+			else
+				left = stones[Equipped[0]];
+
+			if (Equipped[1] == -1)
+				right = new StoneItem();
+			else
+				right = stones[Equipped[1]];
+
+			if(hand = RandomedHand.Both)
+			{
+				if(left.IsEnabled || right.IsEnabled)
+				{
+					left.IsEnabled = false;
+					right.IsEnabled = false;
+					EquipStones(new StoneItem(), new StoneItem());
+				}else
+				{
+					left.IsEnabled = true;
+					right.IsEnabled = true;
+				}
+			}
+			else if(hand = RandomedHand.Left)
+			{
+				single = left;
+			}
+			else if(hand = RandomedHand.Right)
+			{
+				single = right;
+			}
+
+			single.IsEnabled = !Single.IsEnabled;
+
+			UpdatePrefsFromState();
+			CatEnabledStones.SaveToFile();
+
+		}
+
 		private void SaveLoadOut(int[] Equipped)
 		{
 			StoneItem left;

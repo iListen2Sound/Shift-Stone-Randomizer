@@ -399,6 +399,22 @@ namespace ShiftStoneRandomizer
 			ActivateEffect(leftStone != null, rightStone != null);
 		}
 
+		private void EquipStones(ShiftStonePrefs single, RandomedHand hand)
+		{
+			if(hand = RandomedHand.Left)
+			{
+				EquipStones(single, ShiftStonePrefs.Stay);
+			} 
+			else if (hand = RandomedHand.Right)
+			{
+				EquipStones(ShiftStonePrefs.Stay, single);
+			}
+			else
+			{
+				Log("EquipStones: Single Equip method given invalid hand either neither or both");
+			}
+		}
+
 		private void EquipStones(ShiftStonePrefs left, ShiftStonePrefs right)
 		{
 			StoneItem leftStone = null;
@@ -412,6 +428,10 @@ namespace ShiftStoneRandomizer
 			{
 				leftStone = PickRandomStoneExcept(rightStone);
 			}
+			else if (left == ShiftStonePrefs.Stay)
+			{
+				leftStone = null;
+			}
 			else
 			{
 				leftStone = stones[(int)left];
@@ -424,6 +444,10 @@ namespace ShiftStoneRandomizer
 			else if (right == ShiftStonePrefs.Random)
 			{
 				rightStone = PickRandomStoneExcept(leftStone);
+			}
+			else if (right == ShiftStonePrefs.Stay)
+			{
+				rightStone = null;
 			}
 			else
 			{

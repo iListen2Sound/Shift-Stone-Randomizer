@@ -63,7 +63,9 @@ namespace ShiftStoneRandomizer
 				_isEnabled = value;
 
 				//MelonLogger.Msg($"{Name} Icon: {_icon.active}");
-
+				if(ShiftStone is null)
+					return;
+				
 				if (value)
 					_blacklistCount++;
 
@@ -101,6 +103,7 @@ namespace ShiftStoneRandomizer
 		public StoneItem()
 		{
 			ShiftStone = null;
+			_isEnabled = false;
 		}
 
 		
