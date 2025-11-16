@@ -40,9 +40,9 @@ namespace ShiftStoneRandomizer
 		private System.Random random = new System.Random();
 		//private ShiftStone[] shiftStones;
 		private StoneItem[] stones;
-		private StoneItem[] defaultStones = new StoneItem[] {
-			new StoneItem(), // Empty slot
-			new StoneItem(), // Empty slot
+		private ShiftStonePrefs[] defaultStones = new ShiftStonePrefs[] {
+			ShiftStonePrefs.Random,
+			ShiftStonePrefs.Random,
 		};
 		//private int[] blackList = new int[0];
 		private bool debugMode = false;
@@ -55,7 +55,7 @@ namespace ShiftStoneRandomizer
 		private GameObject rightHand;
 
 
-		private RandomedHand EnabledHand;
+		private Hands EnabledHand;
 
 		private GameObject dropSign;
 
@@ -68,6 +68,8 @@ namespace ShiftStoneRandomizer
 			//CreateCosmetics();
 			Calls.onMapInitialized += SceneReady;
 			Calls.onMatchEnded += CreateButtonsForAll;//CreateButtonsForAll;
+			InitPreferences();
+			
 
 		}
 		public void logOnMatchEnded()
@@ -102,7 +104,8 @@ namespace ShiftStoneRandomizer
 				firstLoad = false;
 			}
 			CreateButtonsForAll();
-			LoadBlackListFile();
+			ApplyPrefsToState();
+			//LoadBlackListFile();
 
 
 		}
@@ -230,20 +233,20 @@ namespace ShiftStoneRandomizer
 			EnabledHand++;
 			if ((int)EnabledHand > 1)
 			{
-				EnabledHand = (RandomedHand)(-1);
+				EnabledHand = (Hands)(-1);
 			}
-			RandomedHand hand = (RandomedHand)EnabledHand;
+			Hands hand = (Hands)EnabledHand;
 			Debug.Log($"Hand lock set to: {hand}");
 
 			switch (hand)
 			{
-				case RandomedHand.Both:
+				case Hands.Both:
 					ActivateEffect(true, true);
 					break;
-				case RandomedHand.Left:
+				case Hands.Left:
 					ActivateEffect(true, false);
 					break;
-				case RandomedHand.Right:
+				case Hands.Right:
 					ActivateEffect(false, true);
 					break;
 			}
@@ -256,20 +259,20 @@ namespace ShiftStoneRandomizer
 
 		private void ShowRandomedHand()
 		{
-			RandomedHand hand = EnabledHand;
+			Hands hand = EnabledHand;
 			Color disabled = new Color(1f, 1f, 0f, 0.5f);
 			Color enabled = new Color(1f, 1f, 1f, 1f);
 			switch (hand)
 			{
-				case RandomedHand.Both:
+				case Hands.Both:
 					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
 					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
 					break;
-				case RandomedHand.Left:
+				case Hands.Left:
 					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
 					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
 					break;
-				case RandomedHand.Right:
+				case Hands.Right:
 					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
 					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
 					break;
@@ -326,7 +329,7 @@ namespace ShiftStoneRandomizer
 			}
 
 
-			if (randomStones.Count <= 2 && EnabledHand == RandomedHand.Both)
+			if (randomStones.Count <= 2 && EnabledHand == Hands.Both)
 			{
 				Debug.Log("Not enough stones to disallow repeats", true);
 				// If there are less than 4 stones available, add the equipped stones to the list
@@ -347,13 +350,13 @@ namespace ShiftStoneRandomizer
 
 			switch (EnabledHand)
 			{
-				case RandomedHand.Both:
+				case Hands.Both:
 					EquipStones(randomStones[0], randomStones[1]);
 					break;
-				case RandomedHand.Right:
+				case Hands.Right:
 					EquipStones(null, randomStones[0]);
 					break;
-				case RandomedHand.Left:
+				case Hands.Left:
 					EquipStones(randomStones[0], null);
 					break;
 			}
@@ -399,19 +402,19 @@ namespace ShiftStoneRandomizer
 			ActivateEffect(leftStone != null, rightStone != null);
 		}
 
-		private void EquipStones(ShiftStonePrefs single, RandomedHand hand)
+		private void EquipStones(ShiftStonePrefs single, Hands hand)
 		{
-			if(hand = RandomedHand.Left)
+			if(hand == Hands.Left)
 			{
 				EquipStones(single, ShiftStonePrefs.Stay);
 			} 
-			else if (hand = RandomedHand.Right)
+			else if (hand == Hands.Right)
 			{
 				EquipStones(ShiftStonePrefs.Stay, single);
 			}
 			else
 			{
-				Log("EquipStones: Single Equip method given invalid hand either neither or both");
+				Debug.Log("EquipStones: Single Equip method given invalid hand either neither or both");
 			}
 		}
 

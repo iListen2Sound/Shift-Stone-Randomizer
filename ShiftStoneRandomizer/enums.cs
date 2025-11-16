@@ -2,7 +2,7 @@
 
 namespace ShiftStoneRandomizer
 {
-	public enum RandomedHand
+	public enum Hands
 	{
 		Both = -1,
 		Left = 0,
@@ -10,7 +10,8 @@ namespace ShiftStoneRandomizer
 	}
 
 	public enum ShiftStonePrefs
-	{
+	{	
+		Invalid = -4,
 		Stay = -3,
 		Random = -2,
 		Empty = -1,

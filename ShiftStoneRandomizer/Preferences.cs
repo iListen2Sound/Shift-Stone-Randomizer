@@ -97,16 +97,7 @@ namespace ShiftStoneRandomizer
 			CatMap0.LoadFromFile();
 			CatMap1.LoadFromFile();
 
-			if(!System.Enum.TryParse<AutomationPrefs>(PrefAutomation.Value, out AutomationMode)) 
-			{
-				Debug.Log($"Failed to parse automation mode preference: {PrefAutomation.Value}");
-				AutomationMode = AutomationPrefs.Random;
-			}
-			if(!System.Enum.TryParse<RandomedHand>(PrefEnabledHand.Value, out EnabledHand)) 
-			{
-				Debug.Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
-				EnabledHand = RandomedHand.Both;
-			}
+			
 		}
 
 		private void SavePrefs()
@@ -128,9 +119,19 @@ namespace ShiftStoneRandomizer
 			stones[6].IsEnabled = PrefVigor.Value;
 			stones[7].IsEnabled = PrefVolitile.Value;
 
-			if (!System.Enum.TryParse<RandomedHand>(PrefEnabledHand.Value, out EnabledHand)) ;
+			if (!System.Enum.TryParse<Hands>(PrefEnabledHand.Value, out EnabledHand)) ;
 			{
 				Debug.Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
+			}
+			if (!System.Enum.TryParse<AutomationPrefs>(PrefAutomation.Value, out AutomationMode))
+			{
+				Debug.Log($"Failed to parse automation mode preference: {PrefAutomation.Value}");
+				AutomationMode = AutomationPrefs.Random;
+			}
+			if (!System.Enum.TryParse<Hands>(PrefEnabledHand.Value, out EnabledHand))
+			{
+				Debug.Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
+				EnabledHand = Hands.Both;
 			}
 		}
 
@@ -166,44 +167,55 @@ namespace ShiftStoneRandomizer
 			EquipStones(left, right);
 		}
 
-		private void ToggleStones(int[] equipped RandomedHand hand = RandomedHand.Both)
+		private void ToggleStones(int[] equipped, Hands hand = Hands.Both)
 		{
 			StoneItem left; 
 			StoneItem right;
-			stoneItem single; 
-			if (Equipped[0] == -1)
+			StoneItem single; 
+
+			if (equipped[0] == -1)
 				left = new StoneItem();
 			else
-				left = stones[Equipped[0]];
+				left = stones[equipped[0]];
 
-			if (Equipped[1] == -1)
+			if (equipped[1] == -1)
 				right = new StoneItem();
 			else
-				right = stones[Equipped[1]];
+				right = stones[equipped[1]];
 
-			if(hand = RandomedHand.Both)
+			if (hand == Hands.Both)
 			{
-				if(left.IsEnabled || right.IsEnabled)
+				if (left.IsEnabled || right.IsEnabled)
 				{
 					left.IsEnabled = false;
 					right.IsEnabled = false;
 					EquipStones(new StoneItem(), new StoneItem());
-				}else
+				} else
 				{
 					left.IsEnabled = true;
 					right.IsEnabled = true;
 				}
 			}
-			else if(hand = RandomedHand.Left)
-			{
-				single = left;
-			}
-			else if(hand = RandomedHand.Right)
-			{
-				single = right;
-			}
 
-			single.IsEnabled = !Single.IsEnabled;
+			else
+			{
+				if (hand == Hands.Left)
+				{
+					single = left;
+				}
+				else if (hand == Hands.Right)
+				{
+					single = right;
+				}
+				else return;
+
+				single.IsEnabled = !single.IsEnabled;
+
+				if(single.IsEnabled)
+					EquipStones(single.GetEnum(), hand);
+				else
+					EquipStones(ShiftStonePrefs.Empty, hand);
+			}
 
 			UpdatePrefsFromState();
 			CatEnabledStones.SaveToFile();

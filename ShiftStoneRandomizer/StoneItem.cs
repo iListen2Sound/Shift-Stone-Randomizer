@@ -77,7 +77,7 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
-		private ShiftStonePrefs GetEnum()
+		public ShiftStonePrefs GetEnum()
 		{
 			ShiftStonePrefs result;
 			if(!System.Enum.TryParse<ShiftStonePrefs>(Name, out result))
