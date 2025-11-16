@@ -166,10 +166,11 @@ namespace ShiftStoneRandomizer
 			EquipStones(left, right);
 		}
 
-		private void ToggleStones(int[] equipped)
+		private void ToggleStones(int[] equipped RandomedHand hand = RandomedHand.Both)
 		{
 			StoneItem left; 
 			StoneItem right;
+			stoneItem single; 
 			if (Equipped[0] == -1)
 				left = new StoneItem();
 			else
@@ -180,16 +181,29 @@ namespace ShiftStoneRandomizer
 			else
 				right = stones[Equipped[1]];
 
-			if(left.IsEnabled || right.IsEnabled)
+			if(hand = RandomedHand.Both)
 			{
-				left.IsEnabled = false;
-				right.IsEnabled = false;
-				EquipStones(new StoneItem(), new StoneItem());
-			}else
-			{
-				left.IsEnabled = true;
-				right.IsEnabled = true;
+				if(left.IsEnabled || right.IsEnabled)
+				{
+					left.IsEnabled = false;
+					right.IsEnabled = false;
+					EquipStones(new StoneItem(), new StoneItem());
+				}else
+				{
+					left.IsEnabled = true;
+					right.IsEnabled = true;
+				}
 			}
+			else if(hand = RandomedHand.Left)
+			{
+				single = left;
+			}
+			else if(hand = RandomedHand.Right)
+			{
+				single = right;
+			}
+
+			single.IsEnabled = !Single.IsEnabled;
 
 			UpdatePrefsFromState();
 			CatEnabledStones.SaveToFile();
