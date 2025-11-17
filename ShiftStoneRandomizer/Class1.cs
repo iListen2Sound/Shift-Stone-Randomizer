@@ -105,7 +105,6 @@ namespace ShiftStoneRandomizer
 			}
 			CreateButtonsForAll();
 			ApplyPrefsToState();
-			//LoadBlackListFile();
 
 
 		}
@@ -121,46 +120,6 @@ namespace ShiftStoneRandomizer
 			CurrentScene = sceneName;
 		}
 
-		private void LoadBlackListFile()
-		{
-
-			if (!Directory.Exists(USER_DATA))
-				Directory.CreateDirectory(USER_DATA);
-
-			if (File.Exists(Path.Combine(USER_DATA, DEBUG_FILE)))
-			{
-				debugMode = true;
-				Debug.Log("Debug mode enabled");
-			}
-			else
-			{
-				debugMode = false;
-				Debug.Log("Debug mode disabled");
-			}
-
-
-			if (File.Exists(Path.Combine(USER_DATA, BLACKLIST_FILE)))
-			{
-				string[] lines = File.ReadAllLines(Path.Combine(USER_DATA, BLACKLIST_FILE));
-				//blackList = new int[lines.Length];
-				//Broken: no longer reading from file
-				Debug.Log("BlackListing stones from file");
-				for (int i = 0; i < lines.Length; i++)
-				{
-					foreach (StoneItem stone in stones)
-					{
-						if (stone.Name == lines[i])
-						{
-							//blackList[i] = System.Array.IndexOf(stones, stone);
-							stone.IsEnabled = false;
-							Debug.Log($"\t{stone.Name}");
-						}
-					}
-				}
-			}
-			else
-				Debug.Log("No blacklist file found");
-		}
 
 		
 		/// <summary>

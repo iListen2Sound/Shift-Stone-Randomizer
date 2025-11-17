@@ -10,16 +10,23 @@ namespace ShiftStoneRandomizer
 	public static class Debug
 	{
 		public static bool debugMode = true;
-		public static void Log(string message, bool debugOnly = false)
+		public static void Log(string message, bool debugOnly = false, int logLevel = 0)
 		{
-			if (!debugOnly)
-			{
-				Melon<ShiftStoneRandomizer>.Logger.Msg(message);
+			if(debugOnly && !debugMode)
 				return;
-			}
-			if (debugMode)
-				Melon<ShiftStoneRandomizer>.Logger.Msg(message);
 
+			switch (logLevel)
+			{
+				case 1:
+					Melon<ShiftStoneRandomizer>.Logger.Warning("Warn: " + message);
+					break;
+				case 2:
+					Melon<ShiftStoneRandomizer>.Logger.Error("Error: " + message);
+					break;
+				default:
+					Melon<ShiftStoneRandomizer>.Logger.Msg(message);
+					break;
+			}
 
 		}
 	}

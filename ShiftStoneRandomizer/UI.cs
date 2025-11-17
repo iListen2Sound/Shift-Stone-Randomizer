@@ -275,56 +275,6 @@ namespace ShiftStoneRandomizer
 
 
 		#region Easter Egg
-		private void CreateCosmetics()
-		{
-			glasses = this.LoadAssetBundle("Shift_Stone_Randomizer.assets.glasses", "Glasses");
-			UnityEngine.Object.DontDestroyOnLoad(glasses);
-			glasses.SetActive(false);
-		}
-		private void AddCosmetics()
-		{
-			bool isme = Calls.Players.GetLocalPlayer().Data.GeneralData.PlayFabMasterId == "91D650B737D47020";
-			var players = Calls.Players.GetAllPlayers();
-			foreach (var player in players)
-			{
-				if (player.Data.GeneralData.PlayFabMasterId == "91D650B737D47020")
-				{
-					GameObject myglasses = UnityEngine.Object.Instantiate<GameObject>(glasses);
-					myglasses.transform.parent = player.Controller.gameObject.transform.FindChild("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Neck/Bone_Head");
-					myglasses.transform.localPosition = new Vector3(0.0035f, 0.0431f, 0.0846f);
-					myglasses.transform.localRotation = Quaternion.Euler(5.2364f, 0f, 0f);
-					myglasses.transform.localScale = new Vector3(1.1576f, 1.1958f, 1.3094f);
-					myglasses.SetActive(!isme);
-				}
-			}
-			if (isme)
-			{
-				GameObject ppc = GameObject.Find("Preview Player Controller");
-				GameObject myglasses = UnityEngine.Object.Instantiate<GameObject>(glasses);
-				myglasses.transform.parent = ppc.transform.FindChild("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Neck/Bone_Head");
-				myglasses.transform.localPosition = new Vector3(0.0035f, 0.0431f, 0.0846f);
-				myglasses.transform.localRotation = Quaternion.Euler(5.2364f, 0f, 0f);
-				myglasses.transform.localScale = new Vector3(1.1576f, 1.1958f, 1.3094f);
-				myglasses.SetActive(true);
-			}
-		}
-		private GameObject LoadAssetBundle(string bundleName, string objectName)
-		{
-			using Stream stream = ((MelonBase)this).MelonAssembly.Assembly.GetManifestResourceStream(bundleName);
-			byte[] array = new byte[stream.Length];
-			stream.Read(array, 0, array.Length);
-
-			// Manually create Il2CppStructArray<byte> from byte[]
-			Il2CppStructArray<byte> il2CppArray = new Il2CppStructArray<byte>(array.Length);
-			for (int i = 0; i < array.Length; i++)
-			{
-				il2CppArray[i] = array[i];
-			}
-
-			Il2CppAssetBundle val = Il2CppAssetBundleManager.LoadFromMemory(il2CppArray);
-			return UnityEngine.Object.Instantiate<GameObject>(val.LoadAsset<GameObject>(objectName));
-		}
-
 		#endregion
 	}
 }
