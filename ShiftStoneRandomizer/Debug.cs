@@ -12,7 +12,8 @@ namespace ShiftStoneRandomizer
 		public static bool debugMode = true;
 		public static void Log(string message, bool debugOnly = false, int logLevel = 0)
 		{
-			if(debugOnly && !debugMode)
+			
+			if (debugOnly && !debugMode)
 				return;
 
 			switch (logLevel)

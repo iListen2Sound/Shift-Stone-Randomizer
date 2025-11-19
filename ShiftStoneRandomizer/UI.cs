@@ -47,12 +47,52 @@ namespace ShiftStoneRandomizer
 					}
 				}*/
 
-		private GameObject scrollButtonSource;
-		private void GrabSourceObjects()
+		private GameObject LoadOutCluster;
+		private void CreateLoadOutSource()
 		{
-			scrollButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
+			GameObject scrollButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
+			scrollButtonSource.transform.GetChild(0).GetComponent<InteractionButton>().enabled = true;
+			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
+			scrollButtonSource.transform.localPosition = Vector3.zero;
 			scrollButtonSource.SetActive(false);
-			GameObject.DontDestroyOnLoad(scrollButtonSource);
+
+
+
+			LoadOutCluster = new GameObject("LoadOutCluster");
+			/*
+			###########
+			# H0 # H1 #
+			###########
+			# C0 # C1 #
+			###########
+			 */
+
+			Dictionary<string, Vector3> ButtonName_Locations = new Dictionary<string, Vector3>
+			{
+				{"host0", new Vector3(-0.04f, 0.04f, 0.07f)  },
+				{"host1", new Vector3(0.04f, 0.04f, 0.07f)  },
+				{"client0", new Vector3(-0.04f, -0.04f, 0.07f) },
+				{"client1", new Vector3(0.04f, -0.04f, 0.07f) },
+			}; 
+
+
+			foreach(KeyValuePair<string, Vector3> name_locations in ButtonName_Locations)
+			{
+				GameObject presetButton = GameObject.Instantiate(scrollButtonSource);
+				presetButton.name = name_locations.Key;
+				presetButton.transform.localPosition = name_locations.Value;
+				presetButton.SetActive(true);
+				presetButton.transform.SetParent(LoadOutCluster.transform, false);
+				
+
+			}
+			LoadOutCluster.SetActive(false);
+			GameObject.DontDestroyOnLoad(LoadOutCluster);
+				
+			
+			
+
+			
 		}
 
 		private void CreateButtonsForAll()
@@ -240,7 +280,22 @@ namespace ShiftStoneRandomizer
 				EquipStones(new StoneItem(), new StoneItem());
 			});
 
-			GameObject loadout1 = GameObject.Instantiate(scrollButtonSource);
+			GameObject derivedLoadOutCluster = GameObject.Instantiate(LoadOutCluster);
+			derivedLoadOutCluster.transform.SetParent(swapper.transform, false);
+			derivedLoadOutCluster.transform.localPosition = new Vector3(0.0f, 0.4f, 0f);
+			derivedLoadOutCluster.transform.localRotation = Quaternion.Euler(0, 180, 0);
+			derivedLoadOutCluster.SetActive(true);
+
+			for (int i = 0; i < derivedLoadOutCluster.transform.childCount; i++)
+			{
+				GameObject btnloadout = derivedLoadOutCluster.transform.GetChild(i).GetChild(0).gameObject;
+				btnloadout.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+				{
+					Debug.Log(btnloadout.transform.parent.gameObject.name, true);
+				});
+			}
+
+			/*GameObject loadout1 = GameObject.Instantiate(scrollButtonSource);
 			loadout1.transform.SetParent(swapper.transform.GetChild(0));
 			loadout1.transform.localPosition = new Vector3(0.0f, 0.4f, 0f);
 			loadout1.SetActive(true);
@@ -250,7 +305,7 @@ namespace ShiftStoneRandomizer
 			
 			{
 				ReadPrefs();
-			});
+			});*/
 
 
 		}
