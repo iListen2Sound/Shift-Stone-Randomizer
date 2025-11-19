@@ -14,34 +14,34 @@ namespace ShiftStoneRandomizer
 		private const string CONFIG_FILE = "config.cfg";
 
 		private MelonPreferences_Category CatSettings;
-		private MelonPreferences_Entry<string> PrefEnabledHand;
-		private MelonPreferences_Entry<string> PrefAutomation;
+		public MelonPreferences_Entry<string> PrefEnabledHand;
+		public MelonPreferences_Entry<string> PrefAutomation;
 
 		private MelonPreferences_Category CatEnabledStones;
-		private MelonPreferences_Entry<bool> PrefAdamant;
-		private MelonPreferences_Entry<bool> PrefCharge;
-		private MelonPreferences_Entry<bool> PrefFlow;
-		private MelonPreferences_Entry<bool> PrefGuard;
-		private MelonPreferences_Entry<bool> PrefStubborn;
-		private MelonPreferences_Entry<bool> PrefSurge;
-		private MelonPreferences_Entry<bool> PrefVigor;
-		private MelonPreferences_Entry<bool> PrefVolitile;
+		public MelonPreferences_Entry<bool> PrefAdamant;
+		public MelonPreferences_Entry<bool> PrefCharge;
+		public MelonPreferences_Entry<bool> PrefFlow;
+		public MelonPreferences_Entry<bool> PrefGuard;
+		public MelonPreferences_Entry<bool> PrefStubborn;
+		public MelonPreferences_Entry<bool> PrefSurge;
+		public MelonPreferences_Entry<bool> PrefVigor;
+		public MelonPreferences_Entry<bool> PrefVolitile;
 
 		private MelonPreferences_Category CatMap0;
-		private MelonPreferences_Entry<string> PrefMap0HostLeft;
-		private MelonPreferences_Entry<string> PrefMap0HostRight;
-		private MelonPreferences_Entry<string> PrefMap0ClientLeft;
-		private MelonPreferences_Entry<string> PrefMap0ClientRight;
+		public MelonPreferences_Entry<string> PrefMap0HostLeft { get; private set; }
+		public MelonPreferences_Entry<string> PrefMap0HostRight { get; private set; }
+		public MelonPreferences_Entry<string> PrefMap0ClientLeft { get; private set; }
+		public MelonPreferences_Entry<string> PrefMap0ClientRight { get; private set; }
 
 		private MelonPreferences_Category CatMap1;
-		private MelonPreferences_Entry<string> PrefMap1HostLeft;
-		private MelonPreferences_Entry<string> PrefMap1HostRight;
-		private MelonPreferences_Entry<string> PrefMap1ClientLeft;
-		private MelonPreferences_Entry<string> PrefMap1ClientRight;
+		public MelonPreferences_Entry<string> PrefMap1HostLeft { get; private set; }
+		public MelonPreferences_Entry<string> PrefMap1HostRight { get; private set; }
+		public MelonPreferences_Entry<string> PrefMap1ClientLeft { get; private set; }
+		public MelonPreferences_Entry<string> PrefMap1ClientRight { get; private set; }
 
 		private MelonPreferences_Category CatLoadOutButton;
-		private MelonPreferences_Entry<string> PrefLobLeft;
-		private MelonPreferences_Entry<string> PrefLobRight;
+		public MelonPreferences_Entry<string> PrefLobLeft;
+		public MelonPreferences_Entry<string> PrefLobRight;
 
 		AutomationPrefs AutomationMode;
 

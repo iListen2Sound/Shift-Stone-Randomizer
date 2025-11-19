@@ -5,28 +5,34 @@ using Il2CppInterop.Runtime.Runtime.VersionSpecific.Class;
 using Il2CppPhoton.Realtime;
 using Il2CppRootMotion;
 using Il2CppRUMBLE.CharacterCreation.Interactable;
-using Il2CppRUMBLE.Combat.ShiftStones;
-using Il2CppRUMBLE.Interactions.InteractionBase;
+
 using Il2CppRUMBLE.Managers;
 using Il2CppRUMBLE.Players.Subsystems;
 using Il2CppSystem;
 using Il2CppSystem.Data;
-using Il2CppTMPro;
-using MelonLoader;
+
 using MelonLoader.TinyJSON;
 using MelonLoader.Utils;
-using RumbleModdingAPI;
+
 using System.Collections;
-using System.Collections.Generic;
+
 using System.IO;
-using System.Linq;
+
 using UnityEditor;
-using UnityEngine;
-using UnityEngine.InputSystem.Utilities;
+
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Action = System.Action;
 using Type = Il2CppSystem.Type;
+using Il2CppTMPro;
+using MelonLoader;
+using Il2CppRUMBLE.Combat.ShiftStones;
+using Il2CppRUMBLE.Interactions.InteractionBase;
+using UnityEngine;
+using UnityEngine.InputSystem.Utilities;
+using RumbleModdingAPI;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ShiftStoneRandomizer
 {
@@ -50,11 +56,8 @@ namespace ShiftStoneRandomizer
 		private GameObject LoadOutCluster;
 		private void CreateLoadOutSource()
 		{
-			GameObject scrollButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
-			scrollButtonSource.transform.GetChild(0).GetComponent<InteractionButton>().enabled = true;
-			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
-			scrollButtonSource.transform.localPosition = Vector3.zero;
-			scrollButtonSource.SetActive(false);
+			//LoadoutInteractor.ButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
+			
 
 
 
@@ -78,13 +81,26 @@ namespace ShiftStoneRandomizer
 
 			foreach(KeyValuePair<string, Vector3> name_locations in ButtonName_Locations)
 			{
-				GameObject presetButton = GameObject.Instantiate(scrollButtonSource);
+				GameObject presetButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
 				presetButton.name = name_locations.Key;
 				presetButton.transform.localPosition = name_locations.Value;
 				presetButton.SetActive(true);
 				presetButton.transform.SetParent(LoadOutCluster.transform, false);
-				
 
+
+
+				GameObject LeftST = GameObject.Instantiate(stones[2].ShiftStone.gameObject);
+				LeftST.transform.localPosition = new Vector3(0.08f, 0.07f, 0.01f);
+				LeftST.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+				LeftST.transform.SetParent(presetButton.transform, false);
+				LeftST.SetActive(true);
+
+
+				GameObject RightST = GameObject.Instantiate(stones[1].ShiftStone.gameObject);
+				RightST.transform.localPosition = new Vector3(0.08f, 0.07f, -0.01f);
+				RightST.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+				RightST.transform.SetParent(presetButton.transform, false);
+				RightST.SetActive(true);
 			}
 			LoadOutCluster.SetActive(false);
 			GameObject.DontDestroyOnLoad(LoadOutCluster);

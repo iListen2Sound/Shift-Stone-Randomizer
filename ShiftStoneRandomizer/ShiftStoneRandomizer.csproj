@@ -694,6 +694,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="enums.cs" />
+    <Compile Include="LoadoutInteractor.cs" />
     <Compile Include="Preferences.cs" />
     <Compile Include="StoneItem.cs" />
     <Compile Include="UI.cs" />
