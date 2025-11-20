@@ -33,7 +33,10 @@ namespace ShiftStoneRandomizer
 
 	public partial class ShiftStoneRandomizer : MelonMod
 	{
+		
 		//private const string USER_DATA = "Userdata/ShiftStoneRandomizer/";
+
+
 		private const string BLACKLIST_FILE = "blacklist.txt";
 		private const string LOADOUT_FILE = "loadout.txt";
 		private const string DEBUG_FILE = ".debug";

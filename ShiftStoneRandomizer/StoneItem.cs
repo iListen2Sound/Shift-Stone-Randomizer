@@ -43,7 +43,7 @@ namespace ShiftStoneRandomizer
 		{
 			get { return _blacklistCount; }
 		}
-		public ShiftStone ShiftStone { get; set; }
+		public ShiftStone ShiftStone { get; private set; }
 		/// <summary>
 		/// Returns "None" if the stone is null.
 		/// </summary>
