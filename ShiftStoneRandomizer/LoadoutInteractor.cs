@@ -29,7 +29,7 @@ namespace ShiftStoneRandomizer
 		}
 
 
-
+#region static
 		public enum Quadrant { TopLeft, TopRight, BottomLeft, BottomRight };
 
 		public static GameObject ButtonSource;
@@ -46,12 +46,22 @@ namespace ShiftStoneRandomizer
 			GameObject.DontDestroyOnLoad(ButtonSource);
 
 			ClusterSource = new GameObject("Loadout Cluster");
-
+			GameObject.DontDestroyOnLoad(ClusterSource);
 
 		}
+#endregion
 
 
-		public GameObject Cluster { get; set; } = new GameObject("LoadoutCluster");
+		public GameObject Cluster { get; set; } = 
+		
+		public Slot Map0Host {get; set;}
+		public Slot Map1Host {get; set;}
+		public Slot Map0Client {get; set; }
+		public Slot Map1Client {get; set; }
+
+		public readonly List<Slot> SlotList = new List<Slot>() { Map0Host, Map1Host, Map0Client, Map1Client };
+
+		
 
 
 
