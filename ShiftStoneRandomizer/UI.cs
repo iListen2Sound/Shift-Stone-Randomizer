@@ -56,23 +56,6 @@ namespace ShiftStoneRandomizer
 		private GameObject LoadOutCluster;
 		private void CreateLoadOutSource()
 		{
-			GameObject scrollButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
-			scrollButtonSource.transform.GetChild(0).GetComponent<InteractionButton>().enabled = true;
-			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
-			scrollButtonSource.transform.localPosition = Vector3.zero;
-			scrollButtonSource.SetActive(false);
-			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
-			scrollButtonSource.transform.localPosition = Vector3.zero;
-			scrollButtonSource.SetActive(false);
-			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
-			scrollButtonSource.transform.localPosition = Vector3.zero;
-			scrollButtonSource.SetActive(false);
-			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
-			scrollButtonSource.transform.localPosition = Vector3.zero;
-			scrollButtonSource.SetActive(false);
-			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
-			scrollButtonSource.transform.localPosition = Vector3.zero;
-			scrollButtonSource.SetActive(false);
 
 
 
