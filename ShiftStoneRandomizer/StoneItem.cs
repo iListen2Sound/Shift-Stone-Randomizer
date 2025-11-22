@@ -38,6 +38,36 @@ namespace ShiftStoneRandomizer
 	/// globally through <see cref="BlackListCount"/>.</remarks>
 	public class StoneItem
 	{
+
+		public readonly static StoneItem[] AllStones = new StoneItem[] {
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
+			};
+
+		public static StoneItem GetStoneItem(ShiftStonePrefs stoneEnum)
+		{
+			if ((int)stoneEnum >= 0 || (int)stoneEnum <= 7)
+			{
+				return AllStones[(int)stoneEnum];
+			}
+			else if (stoneEnum == ShiftStonePrefs.Empty)
+			{
+				return new StoneItem();
+			}
+			else
+			{
+
+				return null;
+			}
+		}
+
+
 		private static int _blacklistCount = 0;
 		public static int BlackListCount
 		{

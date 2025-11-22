@@ -56,23 +56,6 @@ namespace ShiftStoneRandomizer
 		private GameObject LoadOutCluster;
 		private void CreateLoadOutSource()
 		{
-			GameObject scrollButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
-			scrollButtonSource.transform.GetChild(0).GetComponent<InteractionButton>().enabled = true;
-			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
-			scrollButtonSource.transform.localPosition = Vector3.zero;
-			scrollButtonSource.SetActive(false);
-			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
-			scrollButtonSource.transform.localPosition = Vector3.zero;
-			scrollButtonSource.SetActive(false);
-			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
-			scrollButtonSource.transform.localPosition = Vector3.zero;
-			scrollButtonSource.SetActive(false);
-			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
-			scrollButtonSource.transform.localPosition = Vector3.zero;
-			scrollButtonSource.SetActive(false);
-			scrollButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
-			scrollButtonSource.transform.localPosition = Vector3.zero;
-			scrollButtonSource.SetActive(false);
 
 
 
@@ -104,14 +87,14 @@ namespace ShiftStoneRandomizer
 
 
 
-				GameObject LeftST = GameObject.Instantiate(stones[2].ShiftStone.gameObject);
+				GameObject LeftST = GameObject.Instantiate(StoneItem.AllStones[2].ShiftStone.gameObject);
 				LeftST.transform.localPosition = new Vector3(0.08f, 0.07f, 0.01f);
 				LeftST.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 				LeftST.transform.SetParent(presetButton.transform, false);
 				LeftST.SetActive(true);
 
 
-				GameObject RightST = GameObject.Instantiate(stones[1].ShiftStone.gameObject);
+				GameObject RightST = GameObject.Instantiate(StoneItem.AllStones[1].ShiftStone.gameObject);
 				RightST.transform.localPosition = new Vector3(0.08f, 0.07f, -0.01f);
 				RightST.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 				RightST.transform.SetParent(presetButton.transform, false);
