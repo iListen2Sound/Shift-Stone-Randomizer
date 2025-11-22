@@ -7,16 +7,23 @@ using UnityEngine.InputSystem.Utilities;
 using RumbleModdingAPI;
 using System.Collections.Generic;
 using System.Linq;
-using RumbleModdingAPI;
 
 namespace ShiftStoneRandomizer
 {
 	internal class LoadoutInteractor
 	{
+		//TODO: Create logic for all loadout interactors in the world to display the same shiftstones
 		public class Slot
 		{
 
-			public GameObject Button { get; set; }
+			public GameObject Button { get; private set; }
+			public GameObject ActualButton 
+			{
+				get 
+				{
+					return Button.transform.GetChild(0).gameObject;
+				}
+			}
 
 			private GameObject _leftStoneSlot = new GameObject();
 			public GameObject LeftStoneSlot { get { return _leftStoneSlot; } }
@@ -67,6 +74,8 @@ namespace ShiftStoneRandomizer
 					}
 				}
 			}
+
+
 			public MelonPreferences_Entry<string> RightHandPref { get; set; }
 
 			private Quadrants _quadrant;
@@ -89,12 +98,70 @@ namespace ShiftStoneRandomizer
 				_rightStoneSlot.transform.localPosition = new Vector3(0.05f, 0.07f, -0.01f);
 				_rightStoneSlot.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 				_rightStoneSlot.transform.SetParent(Button.transform, false);
+
+				//TODO: Define save vs load event handlers
+				if(isSaveButton)
+				{
+					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
+					{
+						SaveSelectedToLoadout();
+					});
+				}
+				else
+				{
+					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
+					{
+						//TODO: Implement load logic
+					});
+				}
 			}
 
-			public void DisplayShiftStones(ShiftStonePrefs left, ShiftStonePrefs right)
+			private void SaveSelectedToLoadout()
 			{
-				LeftStoneItem = StoneItem.GetStoneItem(left);
-				RightStoneItem = StoneItem.GetStoneItem(right);
+				int[] stonesInHand = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				
+				foreach (int i in stonesInHand)
+				{
+					//Make sure to make an event handler for selecting a shiftstone from the shiftstone case that sets the selection to the selected stone
+					if(LoadoutInteractor.Selection[i] >= ShiftStonePrefs.Empty)
+					{
+						LoadoutInteractor.Selection[i] = (ShiftStonePrefs) i;
+						
+					}
+				}
+
+				DisplayShiftStones(LoadoutInteractor.Selection[0], LoadoutInteractor.Selection[1]);
+				LeftHandPref.Value = LoadoutInteractor.Selection[0].ToString();
+				RightHandPref.Value = LoadoutInteractor.Selection[1].ToString();
+				ShiftStoneRandomizer.Instance.SavePrefs();
+			}
+
+
+			private void DisplayShiftStones(ShiftStonePrefs left, ShiftStonePrefs right)
+			{
+				Infanticide(LeftStoneSlot);
+				Infanticide(RightStoneSlot);
+
+				GameObject leftItem = StoneItem.GetDisplayObject(left);
+				if(left == ShiftStonePrefs.Charge)
+				{
+					leftItem.transform.localRotation = Quaternion.Euler(0f, 0f, 270f);
+				}
+				GameObject RightItem = StoneItem.GetDisplayObject(right);
+				if(right == ShiftStonePrefs.Charge)
+				{
+					RightItem.transform.localRotation = Quaternion.Euler(0f, 0f, 270f);
+				}
+
+
+			}
+			
+			private void Infanticide(GameObject parent)
+			{
+				for(int i = 0; i < parent.transform.childCount; i++)
+				{
+					UnityEngine.Object.Destroy(parent.transform.GetChild(i).gameObject);
+				}
 			}
 
 
@@ -102,6 +169,11 @@ namespace ShiftStoneRandomizer
 
 
 		#region static Members
+		public static List<ShiftStonePrefs> Selection = new List<ShiftStonePrefs> {
+			ShiftStonePrefs.Stay,
+			ShiftStonePrefs.Stay,
+		};
+
 		public enum Quadrants { TopLeft, TopRight, BottomLeft, BottomRight };
 
 		public static GameObject ButtonSource;
@@ -133,6 +205,8 @@ namespace ShiftStoneRandomizer
 		
 #endregion
 
+#region Instance Members
+
 		private Slot _map0Host;
 		public Slot Map0Host { get { return _map0Host; } }
 
@@ -145,13 +219,35 @@ namespace ShiftStoneRandomizer
 		private Slot _map1Client;
 		public Slot Map1Client { get { return _map1Client; } }
 
+		public static List<MelonPreferences_Entry<string>> PrefList = new List<MelonPreferences_Entry<string>>()
+		{
+			ShiftStoneRandomizer.Instance.PrefMap0HostLeft,
+			ShiftStoneRandomizer.Instance.PrefMap0HostRight,
+			ShiftStoneRandomizer.Instance.PrefMap1HostLeft,
+			ShiftStoneRandomizer.Instance.PrefMap1HostRight,
+			ShiftStoneRandomizer.Instance.PrefMap0ClientLeft,
+			ShiftStoneRandomizer.Instance.PrefMap0ClientRight,
+			ShiftStoneRandomizer.Instance.PrefMap1ClientLeft,
+			ShiftStoneRandomizer.Instance.PrefMap1ClientRight,
+		};
+
 		public readonly List<Slot> SlotList;
 
 		public LoadoutInteractor(bool isForSaving)
 		{
 			SlotList = new List<Slot>() { Map0Host, Map1Host, Map0Client, Map1Client };
+			for(int i = 0; i < 4; i++)
+			{
+				SlotList[i] = new Slot(Sections[i], PrefList[i * 2], PrefList[(i * 2) + 1], true);
+				GameObject Cluster = GameObject.Instantiate(ClusterSource);
+				
+			}
+			
+			
 		}
+
+		
 	}
 
-	
+	#endregion
 }
