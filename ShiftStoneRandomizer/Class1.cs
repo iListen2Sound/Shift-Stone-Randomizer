@@ -42,13 +42,12 @@ namespace ShiftStoneRandomizer
 		private const string DEBUG_FILE = ".debug";
 		private System.Random random = new System.Random();
 		//private ShiftStone[] shiftStones;
-		private StoneItem[] stones;
+		//private StoneItem[] stones;
 		private ShiftStonePrefs[] defaultStones = new ShiftStonePrefs[] {
 			ShiftStonePrefs.Random,
 			ShiftStonePrefs.Random,
 		};
 		//private int[] blackList = new int[0];
-		private bool debugMode = false;
 		private bool firstLoad = true;
 		private string CurrentScene;
 		//private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
@@ -100,9 +99,9 @@ namespace ShiftStoneRandomizer
 
 
 				GameObject Cabinet = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.GetGameObject();
-				for (int i = 0; i < stones.Length; i++)
+				for (int i = 0; i < StoneItem.AllStones.Length; i++)
 				{
-					stones[i].Icon = CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject);
+					StoneItem.AllStones[i].Icon = CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject);
 				}
 				
 				ShowRandomedHand();
@@ -135,7 +134,7 @@ namespace ShiftStoneRandomizer
 		/// </remarks>
 		private void InitializeShiftStones()
 		{
-			stones = new StoneItem[]
+			/*stones = new StoneItem[]
 			{
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
@@ -146,7 +145,7 @@ namespace ShiftStoneRandomizer
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
 			};
-
+*/
 		}
 
 
@@ -160,10 +159,10 @@ namespace ShiftStoneRandomizer
 			bool hasEnabledEquipedStones = false;
 			foreach (int i in Hand)
 			{
-				if (i > -1 && stones[i].IsEnabled)
+				if (i > -1 && StoneItem.AllStones[i].IsEnabled)
 				{
 					hasEnabledEquipedStones = true;
-					stones[i].IsEnabled = false;
+					StoneItem.AllStones[i].IsEnabled = false;
 				}
 			}
 
@@ -174,13 +173,13 @@ namespace ShiftStoneRandomizer
 				foreach (int i in Hand)
 				{
 					if (i > -1)
-						stones[i].IsEnabled = true;
+						StoneItem.AllStones[i].IsEnabled = true;
 				}
 			}
 
 			string blackListOut = "";
 			Debug.Log("Blacklisted stones: ");
-			foreach (StoneItem stone in stones)
+			foreach (StoneItem stone in StoneItem.AllStones)
 			{
 				if (!stone.IsEnabled)
 				{
@@ -277,9 +276,9 @@ namespace ShiftStoneRandomizer
 		{
 			List<StoneItem> randomStones = new List<StoneItem>();
 			Debug.Log("Stone check:", true);
-			for (int i = 0; i < stones.Length; i++)
+			for (int i = 0; i < StoneItem.AllStones.Length; i++)
 			{
-				StoneItem stone = stones[i];
+				StoneItem stone = StoneItem.AllStones[i];
 				Debug.Log($"\t{stone.Name} - Enabled: {stone.IsEnabled}", true);
 				if (stone.IsEnabled && System.Array.IndexOf(Equipped, i) == -1)
 				{
@@ -300,7 +299,7 @@ namespace ShiftStoneRandomizer
 				foreach (int stoneIndex in Equipped)
 				{
 					if (stoneIndex > -1)
-						randomStones.Add(stones[stoneIndex]);
+						randomStones.Add(StoneItem.AllStones[stoneIndex]);
 				}
 			}
 
@@ -401,7 +400,7 @@ namespace ShiftStoneRandomizer
 			}
 			else
 			{
-				leftStone = stones[(int)left];
+				leftStone = StoneItem.AllStones[(int)left];
 			}
 
 			if (right == ShiftStonePrefs.Empty)
@@ -418,7 +417,7 @@ namespace ShiftStoneRandomizer
 			}
 			else
 			{
-				rightStone = stones[(int)right];
+				rightStone = StoneItem.AllStones[(int)right];
 			}
 
 			EquipStones(leftStone, rightStone);
@@ -430,7 +429,7 @@ namespace ShiftStoneRandomizer
 		{
 			//TODO: Create select random enabled stone function
 			StoneItem selectedStone = null;
-			List<StoneItem> possibleStones = stones.Where(s => s.IsEnabled = true).ToList();
+			List<StoneItem> possibleStones = StoneItem.AllStones.Where(s => s.IsEnabled = true).ToList();
 			if (possibleStones.Count() >= 2)
 			{
 				do

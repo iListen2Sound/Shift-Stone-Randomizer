@@ -110,14 +110,14 @@ namespace ShiftStoneRandomizer
 
 		private void ApplyPrefsToState()
 		{
-			stones[0].IsEnabled = PrefAdamant.Value;
-			stones[1].IsEnabled = PrefCharge.Value;
-			stones[2].IsEnabled = PrefFlow.Value;
-			stones[3].IsEnabled = PrefGuard.Value;
-			stones[4].IsEnabled = PrefStubborn.Value;
-			stones[5].IsEnabled = PrefSurge.Value;
-			stones[6].IsEnabled = PrefVigor.Value;
-			stones[7].IsEnabled = PrefVolitile.Value;
+			StoneItem.AllStones[0].IsEnabled = PrefAdamant.Value;
+			StoneItem.AllStones[1].IsEnabled = PrefCharge.Value;
+			StoneItem.AllStones[2].IsEnabled = PrefFlow.Value;
+			StoneItem.AllStones[3].IsEnabled = PrefGuard.Value;
+			StoneItem.AllStones[4].IsEnabled = PrefStubborn.Value;
+			StoneItem.AllStones[5].IsEnabled = PrefSurge.Value;
+			StoneItem.AllStones[6].IsEnabled = PrefVigor.Value;
+			StoneItem.AllStones[7].IsEnabled = PrefVolitile.Value;
 
 			if (!System.Enum.TryParse<Hands>(PrefEnabledHand.Value, out EnabledHand)) ;
 			{
@@ -137,14 +137,14 @@ namespace ShiftStoneRandomizer
 
 		private void UpdatePrefsFromState()
 		{
-			PrefAdamant.Value = stones[0].IsEnabled;
-			PrefCharge.Value = stones[1].IsEnabled;
-			PrefFlow.Value = stones[2].IsEnabled;
-			PrefGuard.Value = stones[3].IsEnabled;
-			PrefStubborn.Value = stones[4].IsEnabled;
-			PrefSurge.Value = stones[5].IsEnabled;
-			PrefVigor.Value = stones[6].IsEnabled;
-			PrefVolitile.Value = stones[7].IsEnabled;
+			PrefAdamant.Value = StoneItem.AllStones[0].IsEnabled;
+			PrefCharge.Value = StoneItem.AllStones[1].IsEnabled;
+			PrefFlow.Value = StoneItem.AllStones[2].IsEnabled;
+			PrefGuard.Value = StoneItem.AllStones[3].IsEnabled;
+			PrefStubborn.Value = StoneItem.AllStones[4].IsEnabled;
+			PrefSurge.Value = StoneItem.AllStones[5].IsEnabled;
+			PrefVigor.Value = StoneItem.AllStones[6].IsEnabled;
+			PrefVolitile.Value = StoneItem.AllStones[7].IsEnabled;
 
 			PrefEnabledHand.Value = EnabledHand.ToString();
 
@@ -176,12 +176,12 @@ namespace ShiftStoneRandomizer
 			if (equipped[0] == -1)
 				left = new StoneItem();
 			else
-				left = stones[equipped[0]];
+				left = StoneItem.AllStones[equipped[0]];
 
 			if (equipped[1] == -1)
 				right = new StoneItem();
 			else
-				right = stones[equipped[1]];
+				right = StoneItem.AllStones[equipped[1]];
 
 			if (hand == Hands.Both)
 			{
@@ -229,12 +229,12 @@ namespace ShiftStoneRandomizer
 			if (Equipped[0] == -1)
 				left = new StoneItem();
 			else
-				left = stones[Equipped[0]];
+				left = StoneItem.AllStones[Equipped[0]];
 
 			if (Equipped[1] == -1)
 				right = new StoneItem();
 			else
-				right = stones[Equipped[1]];
+				right = StoneItem.AllStones[Equipped[1]];
 
 
 			PrefLobLeft.Value = left.Name;

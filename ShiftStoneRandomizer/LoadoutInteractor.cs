@@ -7,7 +7,6 @@ using UnityEngine.InputSystem.Utilities;
 using RumbleModdingAPI;
 using System.Collections.Generic;
 using System.Linq;
-using RumbleModdingAPI;
 
 namespace ShiftStoneRandomizer
 {
@@ -94,8 +93,8 @@ namespace ShiftStoneRandomizer
 
 			public void DisplayShiftStones(ShiftStonePrefs left, ShiftStonePrefs right)
 			{
-				LeftStoneItem = AllStones.GetStoneItem(left);
-				RightStoneItem = AllStones.GetStoneItem(right);
+				LeftStoneItem = StoneItem.GetStoneItem(left);
+				RightStoneItem = StoneItem.GetStoneItem(right);
 			}
 
 
@@ -154,34 +153,5 @@ namespace ShiftStoneRandomizer
 		}
 	}
 
-	public static class AllStones
-	{
-		public static StoneItem[] StoneHandles = new StoneItem[] {
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
-			};
-
-		public static StoneItem GetStoneItem(ShiftStonePrefs stoneEnum)
-		{
-			if ((int)stoneEnum >= 0 || (int)stoneEnum <= 7)
-			{
-				return StoneHandles[(int)stoneEnum];
-			}
-			else if (stoneEnum == ShiftStonePrefs.Empty)
-			{
-				return new StoneItem();
-			}
-			else
-			{
-
-				return null;
-			}
-		}
-	}
+	
 }
