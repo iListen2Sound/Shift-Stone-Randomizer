@@ -144,12 +144,29 @@ namespace ShiftStoneRandomizer
 		private Slot _map1Client;
 		public Slot Map1Client { get { return _map1Client; } }
 
+		public static List<MelonPreferences_Entry<string>> PrefList = new List<MelonPreferences_Entry<string>>()
+		{
+			ShiftStoneRandomizer.Instance.PrefMap0HostLeft,
+			ShiftStoneRandomizer.Instance.PrefMap0HostRight,
+			ShiftStoneRandomizer.Instance.PrefMap1HostLeft,
+			ShiftStoneRandomizer.Instance.PrefMap1HostRight,
+			ShiftStoneRandomizer.Instance.PrefMap0ClientLeft,
+			ShiftStoneRandomizer.Instance.PrefMap0ClientRight,
+			ShiftStoneRandomizer.Instance.PrefMap1ClientLeft,
+			ShiftStoneRandomizer.Instance.PrefMap1ClientRight,
+		};
+
 		public readonly List<Slot> SlotList;
 
 		public LoadoutInteractor(bool isForSaving)
 		{
 			SlotList = new List<Slot>() { Map0Host, Map1Host, Map0Client, Map1Client };
+			
+			
+			
 		}
+
+		
 	}
 
 	

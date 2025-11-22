@@ -82,7 +82,7 @@ namespace ShiftStoneRandomizer
 		}
 		private void SceneReady()
 		{
-			InitializeShiftStones();
+			//InitializeShiftStones();
 			if (CurrentScene == "Gym")
 			{
 
@@ -125,28 +125,6 @@ namespace ShiftStoneRandomizer
 		}
 
 
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <remarks>
-		/// Blacklist icons are added at sceneready and only in the gym
-		/// </remarks>
-		private void InitializeShiftStones()
-		{
-			/*stones = new StoneItem[]
-			{
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
-			};
-*/
-		}
 
 
 
@@ -444,20 +422,6 @@ namespace ShiftStoneRandomizer
 				return null;
 			}
 		}
-
-/*		private void Log(string message, bool debugOnly = false)
-		{
-			if (!debugOnly)
-			{
-				LoggerInstance.Msg(message);
-				return;
-			}
-			if (debugMode)
-				LoggerInstance.Msg(message);
-
-
-		}*/
-
 	
 	}
 }
