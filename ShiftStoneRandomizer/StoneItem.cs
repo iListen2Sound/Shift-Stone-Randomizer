@@ -36,14 +36,14 @@ namespace ShiftStoneRandomizer
 	/// <remarks>A <see cref="StoneItem"/> can either represent a valid shift stone or an empty slot.  It provides
 	/// properties to manage the stone's state, such as enabling or disabling it,  and tracks the number of disabled stones
 	/// globally through <see cref="BlackListCount"/>.</remarks>
-	class StoneItem
+	public class StoneItem
 	{
 		private static int _blacklistCount = 0;
 		public static int BlackListCount
 		{
 			get { return _blacklistCount; }
 		}
-		public ShiftStone ShiftStone { get; set; }
+		public ShiftStone ShiftStone { get; private set; }
 		/// <summary>
 		/// Returns "None" if the stone is null.
 		/// </summary>

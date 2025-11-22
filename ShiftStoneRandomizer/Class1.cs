@@ -33,7 +33,10 @@ namespace ShiftStoneRandomizer
 
 	public partial class ShiftStoneRandomizer : MelonMod
 	{
+		public static ShiftStoneRandomizer Instance { get; private set; }
 		//private const string USER_DATA = "Userdata/ShiftStoneRandomizer/";
+
+
 		private const string BLACKLIST_FILE = "blacklist.txt";
 		private const string LOADOUT_FILE = "loadout.txt";
 		private const string DEBUG_FILE = ".debug";
@@ -65,9 +68,11 @@ namespace ShiftStoneRandomizer
 
 		public override void OnLateInitializeMelon()
 		{
+			Instance = this;
 			//CreateCosmetics();
 			Calls.onMapInitialized += SceneReady;
 			Calls.onMatchEnded += CreateButtonsForAll;//CreateButtonsForAll;
+			
 			InitPreferences();
 			
 
