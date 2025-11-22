@@ -7,7 +7,6 @@ using UnityEngine.InputSystem.Utilities;
 using RumbleModdingAPI;
 using System.Collections.Generic;
 using System.Linq;
-using RumbleModdingAPI;
 
 namespace ShiftStoneRandomizer
 {

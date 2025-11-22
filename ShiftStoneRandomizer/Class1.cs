@@ -40,7 +40,7 @@ namespace ShiftStoneRandomizer
 		private const string BLACKLIST_FILE = "blacklist.txt";
 		private const string LOADOUT_FILE = "loadout.txt";
 		private const string DEBUG_FILE = ".debug";
-		private System.Random random = new System.Random();
+		private static System.Random random = new System.Random();
 		//private ShiftStone[] shiftStones;
 		//private StoneItem[] stones;
 		private ShiftStonePrefs[] defaultStones = new ShiftStonePrefs[] {
@@ -57,7 +57,7 @@ namespace ShiftStoneRandomizer
 		private GameObject rightHand;
 
 
-		private Hands EnabledHand;
+		private static Hands EnabledHand;
 
 		private GameObject dropSign;
 
@@ -259,7 +259,7 @@ namespace ShiftStoneRandomizer
 		}
 		
 
-		private void ActivateEffect(bool left, bool right)
+		private static void ActivateEffect(bool left, bool right)
 		{
 			if (left)
 				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Left);
@@ -272,7 +272,7 @@ namespace ShiftStoneRandomizer
 		/// Avoids currently equipped stones
 		/// Should enable equipping currently equipped stones if available stones are less than 4
 		/// </summary>
-		private void RandomizeStones(int[] Equipped)
+		private static void RandomizeStones(int[] Equipped)
 		{
 			List<StoneItem> randomStones = new List<StoneItem>();
 			Debug.Log("Stone check:", true);
@@ -325,7 +325,7 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
-		private void EquipStones(StoneItem[] StonesToEquip)
+		private static void EquipStones(StoneItem[] StonesToEquip)
 		{
 			EquipStones(StonesToEquip[0], StonesToEquip[1]);
 		}
@@ -335,7 +335,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="leftStone"></param>
 		/// <param name="rightStone"></param>
-		private void EquipStones(StoneItem leftStone, StoneItem rightStone)
+		private static void EquipStones(StoneItem leftStone, StoneItem rightStone)
 		{
 			Debug.Log("Equipping stones: " + (leftStone != null ? leftStone.Name : "Null") + " | " + (rightStone != null ? rightStone.Name : "Null"), true);
 
@@ -365,7 +365,7 @@ namespace ShiftStoneRandomizer
 			ActivateEffect(leftStone != null, rightStone != null);
 		}
 
-		private void EquipStones(ShiftStonePrefs single, Hands hand)
+		private static void EquipStones(ShiftStonePrefs single, Hands hand)
 		{
 			if(hand == Hands.Left)
 			{
@@ -381,7 +381,7 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
-		private void EquipStones(ShiftStonePrefs left, ShiftStonePrefs right)
+		private static void EquipStones(ShiftStonePrefs left, ShiftStonePrefs right)
 		{
 			StoneItem leftStone = null;
 			StoneItem rightStone = null;
@@ -425,7 +425,7 @@ namespace ShiftStoneRandomizer
 
 		}
 
-		private StoneItem PickRandomStoneExcept(StoneItem excludeStone = null)
+		private static StoneItem PickRandomStoneExcept(StoneItem excludeStone = null)
 		{
 			//TODO: Create select random enabled stone function
 			StoneItem selectedStone = null;
