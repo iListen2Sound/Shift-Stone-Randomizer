@@ -7,6 +7,7 @@ using UnityEngine.InputSystem.Utilities;
 using RumbleModdingAPI;
 using System.Collections.Generic;
 using System.Linq;
+using RumbleModdingAPI;
 
 namespace ShiftStoneRandomizer
 {
@@ -16,7 +17,6 @@ namespace ShiftStoneRandomizer
 		{
 
 			public GameObject Button { get; set; }
-
 
 			private GameObject _leftStoneSlot = new GameObject();
 			public GameObject LeftStoneSlot { get { return _leftStoneSlot; } }
@@ -100,7 +100,6 @@ namespace ShiftStoneRandomizer
 
 		}
 
-		public enum Quadrant { TopLeft, TopRight, BottomLeft, BottomRight };
 
 		#region static Members
 		public enum Quadrants { TopLeft, TopRight, BottomLeft, BottomRight };
@@ -122,7 +121,6 @@ namespace ShiftStoneRandomizer
 			GameObject.DontDestroyOnLoad(ClusterSource);
 
 		}
-		#endregion
 
 		public static Vector3[] Sections = new Vector3[]
 		{
@@ -132,6 +130,8 @@ namespace ShiftStoneRandomizer
 			new Vector3(0.04f, -0.06f, 0.07f),
 		};
 
+		
+#endregion
 
 		private Slot _map0Host;
 		public Slot Map0Host { get { return _map0Host; } }
