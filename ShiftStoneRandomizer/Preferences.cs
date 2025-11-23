@@ -100,7 +100,7 @@ namespace ShiftStoneRandomizer
 			
 		}
 
-		private void SavePrefs()
+		public void SavePrefs()
 		{
 			CatSettings.SaveToFile();
 			CatEnabledStones.SaveToFile();

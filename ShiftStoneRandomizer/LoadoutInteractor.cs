@@ -15,7 +15,14 @@ namespace ShiftStoneRandomizer
 		public class Slot
 		{
 
-			public GameObject Button { get; set; }
+			public GameObject Button { get; private set; }
+			public GameObject ActualButton 
+			{
+				get 
+				{
+					return Button.transform.GetChild(0).gameObject;
+				}
+			}
 
 			private GameObject _leftStoneSlot = new GameObject();
 			public GameObject LeftStoneSlot { get { return _leftStoneSlot; } }
@@ -88,6 +95,12 @@ namespace ShiftStoneRandomizer
 				_rightStoneSlot.transform.localPosition = new Vector3(0.05f, 0.07f, -0.01f);
 				_rightStoneSlot.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 				_rightStoneSlot.transform.SetParent(Button.transform, false);
+
+				//TODO: Define save vs load event handlers
+				if(isSaveButton)
+				{
+					
+				}
 			}
 
 			public void DisplayShiftStones(ShiftStonePrefs left, ShiftStonePrefs right)
@@ -161,7 +174,12 @@ namespace ShiftStoneRandomizer
 		public LoadoutInteractor(bool isForSaving)
 		{
 			SlotList = new List<Slot>() { Map0Host, Map1Host, Map0Client, Map1Client };
-			
+			for(int i = 0; i < 4; i++)
+			{
+				SlotList[i] = new Slot(Sections[i], PrefList[i * 2], PrefList[(i * 2) + 1], true);
+				GameObject Cluster = GameObject.Instantiate(ClusterSource);
+				
+			}
 			
 			
 		}
