@@ -12,6 +12,7 @@ namespace ShiftStoneRandomizer
 {
 	internal class LoadoutInteractor
 	{
+		//TODO: Create logic for all loadout interactors in the world to display the same shiftstones
 		public class Slot
 		{
 
@@ -73,6 +74,8 @@ namespace ShiftStoneRandomizer
 					}
 				}
 			}
+
+
 			public MelonPreferences_Entry<string> RightHandPref { get; set; }
 
 			private Quadrants _quadrant;
@@ -99,21 +102,78 @@ namespace ShiftStoneRandomizer
 				//TODO: Define save vs load event handlers
 				if(isSaveButton)
 				{
-					
+					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
+					{
+						SaveSelectedToLoadout();
+					});
+				}
+				else
+				{
+					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
+					{
+						//TODO: Implement load logic
+					});
 				}
 			}
 
-			public void DisplayShiftStones(ShiftStonePrefs left, ShiftStonePrefs right)
+			private void SaveSelectedToLoadout()
 			{
-				LeftStoneItem = StoneItem.GetStoneItem(left);
-				RightStoneItem = StoneItem.GetStoneItem(right);
+				int[] stonesInHand = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				
+				foreach (int i in stonesInHand)
+				{
+					//Make sure to make an event handler for selecting a shiftstone from the shiftstone case that sets the selection to the selected stone
+					if(LoadoutInteractor.Selection[i] >= ShiftStonePrefs.Empty)
+					{
+						LoadoutInteractor.Selection[i] = (ShiftStonePrefs) i;
+						
+					}
+				}
+
+				DisplayShiftStones(LoadoutInteractor.Selection[0], LoadoutInteractor.Selection[1]);
+				LeftHandPref.Value = (string) nameof(LoadoutInteractor.Selection[i]);
+				RightHandPref.Value = (string) nameof(LoadoutInteractor.Selection[1]);
+				ShiftStoneRandomizer.Instance.SavePrefs();
+			}
+
+
+			private void DisplayShiftStones(ShiftStonePrefs left, ShiftStonePrefs right)
+			{
+				Infanticide(LeftStoneSlot);
+				Infanticide(RightStoneSlot);
+
+				GameObject leftItem = StoneItem.GetDisplayObject(left);
+				if(left == ShiftStonePrefs.Charge)
+				{
+					leftItem.transform.localRotation = Quaternion.Euler(0f, 0f, 270f);
+				}
+				GameObject RightItem = StoneItem.GetDisplayObject(right);
+				if(right == ShiftStonePrefs.Charge)
+				{
+					RightItem.transform.localRotation = Quaternion.Euler(0f, 0f, 270f);
+				}
+
+
+			}
+			
+			private void Infanticide(GameObject parent)
+			{
+				for(int i = 0; i = parent.transform.childcount; i++)
+				{
+					Object.destroy(parent.transform.GetChild(i).gameObject);
+				}
 			}
 
 
 		}
 
 
-		#region static Members
+#region static Members
+		public static List<ShiftStonePrefs> Selection = new List<ShiftStonePrefs> {
+			ShiftStonePrefs.Stay,
+			ShiftStonePrefs.Stay,
+		}
+
 		public enum Quadrants { TopLeft, TopRight, BottomLeft, BottomRight };
 
 		public static GameObject ButtonSource;
@@ -144,6 +204,8 @@ namespace ShiftStoneRandomizer
 
 		
 #endregion
+
+#region Instance Members
 
 		private Slot _map0Host;
 		public Slot Map0Host { get { return _map0Host; } }
@@ -187,5 +249,5 @@ namespace ShiftStoneRandomizer
 		
 	}
 
-	
+	#endregion
 }

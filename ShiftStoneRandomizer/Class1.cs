@@ -47,6 +47,8 @@ namespace ShiftStoneRandomizer
 			ShiftStonePrefs.Random,
 			ShiftStonePrefs.Random,
 		};
+
+		
 		//private int[] blackList = new int[0];
 		private bool firstLoad = true;
 		private string CurrentScene;

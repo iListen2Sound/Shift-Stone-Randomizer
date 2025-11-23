@@ -11,6 +11,7 @@ namespace ShiftStoneRandomizer
 
 	public enum ShiftStonePrefs
 	{	
+		Special = -6,
 		Invalid = -5,
 		Mirror = -4
 		Stay = -3,

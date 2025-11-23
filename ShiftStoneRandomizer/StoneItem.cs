@@ -49,22 +49,25 @@ namespace ShiftStoneRandomizer
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
 			};
+		
+		public readonly static GameObject[] Specials = new GameObject[]	{
+			//TODO: Create source templates and prefabs
+			GameObject.Instantiate(ObjMirror),
+			GameObject.Instantiate(ObjStay),
+			GameObject.Instantiate(Random),
+			GameObject.Instantiate(Empty),
+		};
 
-		public static StoneItem GetStoneItem(ShiftStonePrefs stoneEnum)
+		public static GameObject GetDisplayObject (ShiftStonePrefs stoneEnum)
 		{
 			if ((int)stoneEnum >= 0 || (int)stoneEnum <= 7)
 			{
-				return AllStones[(int)stoneEnum];
+				return GameObject.Instantiate(AllStones[(int)stoneEnum].ShiftStone.gameObject);
 			}
-			else if (stoneEnum == ShiftStonePrefs.Empty)
+			else 
 			{
-				return new StoneItem();
-			}
-			else
-			{
-
-				return null;
-			}
+				return GameObject.Instantiate(Specials[((int) stoneEnum) + 4]);
+			}	
 		}
 
 
