@@ -38,10 +38,39 @@ namespace ShiftStoneRandomizer
 	/// globally through <see cref="BlackListCount"/>.</remarks>
 	public class StoneItem
 	{
-		private static GameObject ObjMirror = new GameObject("PlaceHolder");
-		private static GameObject ObjStay = new GameObject("PlaceHolder");
-		private static GameObject ObjRandom = new GameObject("PlaceHolder");
-		private static GameObject ObjEmpty = new GameObject("PlaceHolder");
+		private static GameObject ObjMirror = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
+		private static GameObject ObjStay = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
+		private static GameObject ObjRandom = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
+		private static GameObject ObjEmpty = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
+
+		public readonly static GameObject[] Specials = new GameObject[] {
+			//TODO: Create source templates and prefabs
+			ObjMirror,
+			ObjStay,
+			ObjRandom,
+			ObjEmpty
+		};
+
+		static StoneItem()
+		{
+			ObjMirror.name = "Indicator_Mirror";
+			ObjMirror.transform.GetChild(0).GetComponent<RawImage>().color = Color.blue;
+			ObjStay.name = "Indicator_Stay";
+			ObjStay.transform.GetChild(0).GetComponent<RawImage>().color = Color.red;
+			ObjRandom.name = "Indicator_Random";
+			ObjRandom.transform.GetChild(0).GetComponent<RawImage>().color = Color.green;
+			ObjEmpty.name = "Indicator_Empty";
+			ObjEmpty.transform.GetChild(0).GetComponent<RawImage>().color = Color.black;
+
+			foreach (GameObject obj in Specials)
+			{
+				obj.transform.localScale = Vector3.one * 0.00015f;
+				GameObject.DontDestroyOnLoad(obj);
+				obj.SetActive(false);
+
+			}
+		}
+
 		public readonly static StoneItem[] AllStones = new StoneItem[] {
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
@@ -53,13 +82,7 @@ namespace ShiftStoneRandomizer
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
 			};
 		
-		public readonly static GameObject[] Specials = new GameObject[]	{
-			//TODO: Create source templates and prefabs
-			GameObject.Instantiate(ObjMirror),
-			GameObject.Instantiate(ObjStay),
-			GameObject.Instantiate(ObjRandom),
-			GameObject.Instantiate(ObjEmpty),
-		};
+		
 
 		public static GameObject GetDisplayObject (ShiftStonePrefs stoneEnum)
 		{

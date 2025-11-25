@@ -139,6 +139,7 @@ namespace ShiftStoneRandomizer
 
 			private void DisplayShiftStones(ShiftStonePrefs left, ShiftStonePrefs right)
 			{
+				//clear existing children to replace with new ones
 				Infanticide(LeftStoneSlot);
 				Infanticide(RightStoneSlot);
 
@@ -160,7 +161,7 @@ namespace ShiftStoneRandomizer
 			{
 				for(int i = 0; i < parent.transform.childCount; i++)
 				{
-					UnityEngine.Object.Destroy(parent.transform.GetChild(i).gameObject);
+					Object.Destroy(parent.transform.GetChild(i).gameObject);
 				}
 			}
 
