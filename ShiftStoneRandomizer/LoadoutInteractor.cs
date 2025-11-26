@@ -13,8 +13,16 @@ namespace ShiftStoneRandomizer
 	internal class LoadoutInteractor
 	{
 		//TODO: Create logic for all loadout interactors in the world to display the same shiftstones
+#region Slot
 		public class Slot
 		{
+			public static Vector3[] Sections = new Vector3[]
+			{
+				new Vector3(-0.04f, 0.06f, 0.07f),
+				new Vector3(0.04f, 0.06f, 0.07f),
+				new Vector3(-0.04f, -0.06f, 0.07f),
+				new Vector3(0.04f, -0.06f, 0.07f),
+			};
 
 			public GameObject Button { get; private set; }
 			public GameObject ActualButton 
@@ -81,15 +89,16 @@ namespace ShiftStoneRandomizer
 			private Quadrants _quadrant;
 			public Quadrants Quadrant;
 
-			public Slot(Vector3 position, MelonPreferences_Entry<string> leftPref, MelonPreferences_Entry<string> rightPref, bool isSaveButton)
+			public Slot(Quadrant quadrant, MelonPreferences_Entry<string> leftPref, MelonPreferences_Entry<string> rightPref, bool isSaveButton)
 			{
 				//Quadrant = quad;
 				LeftHandPref = leftPref;
 				RightHandPref = rightPref;
+				Quadrant = quadrant;
 
 				Button = GameObject.Instantiate(ButtonSource);
 				Button.name = "Loadout Button";
-				Button.transform.localPosition = position;
+				Button.transform.localPosition = Sections[(int) Quadrant];
 
 				_leftStoneSlot.transform.localPosition = new Vector3(0.05f, 0.07f, 0.01f);
 				_leftStoneSlot.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
@@ -171,9 +180,10 @@ namespace ShiftStoneRandomizer
 
 
 		}
+#endregion
 
 
-		#region static Members
+#region static Members
 		public static List<ShiftStonePrefs> Selection = new List<ShiftStonePrefs> {
 			ShiftStonePrefs.Stay,
 			ShiftStonePrefs.Stay,
@@ -204,13 +214,7 @@ namespace ShiftStoneRandomizer
 
 		}
 
-		public static Vector3[] Sections = new Vector3[]
-		{
-			new Vector3(-0.04f, 0.06f, 0.07f),
-			new Vector3(0.04f, 0.06f, 0.07f),
-			new Vector3(-0.04f, -0.06f, 0.07f),
-			new Vector3(0.04f, -0.06f, 0.07f),
-		};
+		
 
 		//public static List<GameObject> AllDisplaySlots = new List<GameObject>();
 
@@ -231,6 +235,8 @@ namespace ShiftStoneRandomizer
 		private Slot _map1Client;
 		public Slot Map1Client { get { return _map1Client; } }
 
+		public GameObject Cluster {get; private set;}
+
 		public static List<MelonPreferences_Entry<string>> PrefList = new List<MelonPreferences_Entry<string>>()
 		{
 			ShiftStoneRandomizer.Instance.PrefMap0HostLeft,
@@ -248,13 +254,13 @@ namespace ShiftStoneRandomizer
 		public LoadoutInteractor(bool isForSaving)
 		{
 			SlotList = new List<Slot>() { Map0Host, Map1Host, Map0Client, Map1Client };
+			Cluster = GameObject.Instantiate(ClusterSource);
 			for(int i = 0; i < 4; i++)
 			{
-				SlotList[i] = new Slot(Sections[i], PrefList[i * 2], PrefList[(i * 2) + 1], isForSaving);
-				GameObject Cluster = GameObject.Instantiate(ClusterSource);
+				SlotList[i] = new Slot((Quadrant) i, PrefList[i * 2], PrefList[(i * 2) + 1], isForSaving);
+				SlotList[i].Button.transform.SetParent(Cluster, false);
 			}
-			
-			
+			Cluster.SetActive(false);
 		}
 
 		
