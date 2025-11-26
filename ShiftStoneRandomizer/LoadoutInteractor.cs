@@ -99,6 +99,7 @@ namespace ShiftStoneRandomizer
 				_rightStoneSlot.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 				_rightStoneSlot.transform.SetParent(Button.transform, false);
 
+				LoadoutInteractor.UpdateAllDisplays += DisplayShiftStones();
 				//TODO: Define save vs load event handlers
 				if(isSaveButton)
 				{
@@ -130,15 +131,18 @@ namespace ShiftStoneRandomizer
 					}
 				}
 
-				DisplayShiftStones(LoadoutInteractor.Selection[0], LoadoutInteractor.Selection[1]);
+				//DisplayShiftStones(LoadoutInteractor.Selection[0], LoadoutInteractor.Selection[1]);
 				LeftHandPref.Value = LoadoutInteractor.Selection[0].ToString();
 				RightHandPref.Value = LoadoutInteractor.Selection[1].ToString();
 				ShiftStoneRandomizer.Instance.SavePrefs();
+				LoadoutInteractor.UpdateAllDisplays(Quadrant, LoadoutInteractor.Selection[0], LoadOutInteractor.Selection[1]);
 			}
 
 
-			private void DisplayShiftStones(ShiftStonePrefs left, ShiftStonePrefs right)
+			internal void DisplayShiftStones(LoadoutInteractor.Quadrants quadrant, ShiftStonePrefs left, ShiftStonePrefs right)
 			{
+				if(quadrant != this.Quadrant)
+					return;
 				//clear existing children to replace with new ones
 				Infanticide(LeftStoneSlot);
 				Infanticide(RightStoneSlot);
@@ -179,6 +183,11 @@ namespace ShiftStoneRandomizer
 
 		public static GameObject ButtonSource;
 
+		public static event Action<Quadrant, ShiftStonePrefs, ShiftStonePrefs> Display;
+		public static void UpdateAllDisplays(Quadrants quadrant, ShiftStonePrefs left, ShiftStonePrefs right)
+		{
+			Display?.Invoke(quadrant, left, right);
+		}
 
 		public static GameObject ClusterSource;
 		static LoadoutInteractor()
@@ -202,6 +211,8 @@ namespace ShiftStoneRandomizer
 			new Vector3(-0.04f, -0.06f, 0.07f),
 			new Vector3(0.04f, -0.06f, 0.07f),
 		};
+
+		//public static List<GameObject> AllDisplaySlots = new List<GameObject>();
 
 		
 #endregion
@@ -239,9 +250,8 @@ namespace ShiftStoneRandomizer
 			SlotList = new List<Slot>() { Map0Host, Map1Host, Map0Client, Map1Client };
 			for(int i = 0; i < 4; i++)
 			{
-				SlotList[i] = new Slot(Sections[i], PrefList[i * 2], PrefList[(i * 2) + 1], true);
+				SlotList[i] = new Slot(Sections[i], PrefList[i * 2], PrefList[(i * 2) + 1], isForSaving);
 				GameObject Cluster = GameObject.Instantiate(ClusterSource);
-				
 			}
 			
 			
