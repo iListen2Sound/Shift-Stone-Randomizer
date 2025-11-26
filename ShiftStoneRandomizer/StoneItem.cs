@@ -157,9 +157,9 @@ namespace ShiftStoneRandomizer
 			_isEnabled = true;
 		}
 		
-		public StoneItem(ShiftStonePrefs enum)
+		public StoneItem(ShiftStonePrefs ssp)
 		{
-			shiftStone = AllStones[(int) enum].ShiftStone;
+			ShiftStone stone = AllStones[(int) ssp].ShiftStone;
 			_isEnabled = true;
 		}
 		/// <summary>

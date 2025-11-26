@@ -247,20 +247,19 @@ namespace ShiftStoneRandomizer
 				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Right);
 		}
 
-		private static void GetRandomStones(Hand hand = Hand.Both, bool includeDisabled = false )
+		private static List<StoneItem> GetRandomStones(Hands hand = Hands.Both, bool includeDisabled = false )
 		{
 
-			
-			ShiftStonePrefs[] equipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration()
+			List<ShiftStonePrefs> equipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration()
 				.Select(i => (ShiftStonePrefs)i)
-				.ToArray();
+				.ToList();
 
 			List<StoneItem> options = StoneItem.AllStones.Where(s => s.IsEnabled || includeDisabled).ToList();
 
 			
-			int stonesNeeded = (hand == Hand.Both) ? 2 : 1;
+			int stonesNeeded = (hand == Hands.Both) ? 2 : 1;
 
-			var filteredOptions = options.Where(x => !equipped.Contains(x.GetEnum)).ToList(); 
+			var filteredOptions = options.Where(x => !equipped.Contains(x.GetEnum())).ToList(); 
 
 			
 			if (filteredOptions.Count >= stonesNeeded)
@@ -268,8 +267,8 @@ namespace ShiftStoneRandomizer
 				options = filteredOptions; // Safe to remove equipped stones
 			}
 			
-			Random rng = new Random();
-			return options.OrderBy(x => rng.Next()).Take(stonesNeeded).ToList();
+			
+			return options.OrderBy(x => random.Next()).Take(stonesNeeded).ToList();
 
 
 		}
