@@ -247,6 +247,16 @@ namespace ShiftStoneRandomizer
 				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Right);
 		}
 
+		private static void GetRandomStones(ShiftStonePrefs[] equipped, Hand hand = Hand.Both, bool includeDisabled = false )
+		{
+			List<StoneItem> options = StoneItem.AllStones.Where(s => s.IsEnabled || includeDisabled).ToList();
+
+			
+			options.RemoveAll(x => equipped.Contains(x.GetEnum));
+
+
+		}
+
 		/// <summary>
 		/// Randomizes shift stones
 		/// Avoids currently equipped stones
@@ -409,7 +419,7 @@ namespace ShiftStoneRandomizer
 		{
 			//TODO: Create select random enabled stone function
 			StoneItem selectedStone = null;
-			List<StoneItem> possibleStones = StoneItem.AllStones.Where(s => s.IsEnabled = true).ToList();
+			List<StoneItem> possibleStones = StoneItem.AllStones.Where(s => s.IsEnabled == true).ToList();
 			if (possibleStones.Count() >= 2)
 			{
 				do

@@ -147,6 +147,11 @@ namespace ShiftStoneRandomizer
 				LoadoutInteractor.UpdateAllDisplays(Quadrant, LoadoutInteractor.Selection[0], LoadOutInteractor.Selection[1]);
 			}
 
+			private void ApplyLoadOut()
+			{
+				
+			}
+
 
 			internal void DisplayShiftStones(LoadoutInteractor.Quadrants quadrant, ShiftStonePrefs left, ShiftStonePrefs right)
 			{

@@ -156,6 +156,12 @@ namespace ShiftStoneRandomizer
 			ShiftStone = shiftStone;
 			_isEnabled = true;
 		}
+		
+		public StoneItem(ShiftStonePrefs enum)
+		{
+			shiftStone = AllStones[(int) enum].ShiftStone;
+			_isEnabled = true;
+		}
 		/// <summary>
 		/// No arguments to indicate empty stone slot
 		/// </summary>
