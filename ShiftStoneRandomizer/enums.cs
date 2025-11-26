@@ -24,7 +24,7 @@ namespace ShiftStoneRandomizer
 		Stubborn,
 		Surge,
 		Vigor,
-		Volitile
+		Volatile
 	}
 
 	public enum AutomationPrefs

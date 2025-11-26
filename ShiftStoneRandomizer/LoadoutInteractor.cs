@@ -34,7 +34,7 @@ namespace ShiftStoneRandomizer
 				}
 			}
 
-			private GameObject _leftStoneSlot = new GameObject();
+			private GameObject _leftStoneSlot = new GameObject("LeftSlot");
 			public GameObject LeftStoneSlot { get { return _leftStoneSlot; } }
 
 			private StoneItem _leftStoneItem;
@@ -60,7 +60,7 @@ namespace ShiftStoneRandomizer
 			public MelonPreferences_Entry<string> LeftHandPref { get; set; }
 
 
-			private GameObject _rightStoneSlot = new GameObject();
+			private GameObject _rightStoneSlot = new GameObject("Right Slot");
 			public GameObject RightStoneSlot { get { return _rightStoneSlot; } }
 
 			private StoneItem _rightStoneItem;
@@ -90,6 +90,13 @@ namespace ShiftStoneRandomizer
 			private Quadrants _quadrant;
 			public Quadrants Quadrant;
 
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="quadrant"></param>
+			/// <param name="leftPref"></param>
+			/// <param name="rightPref"></param>
+			/// <param name="isSaveButton"></param>
 			public Slot(LoadoutInteractor.Quadrants quadrant, MelonPreferences_Entry<string> leftPref, MelonPreferences_Entry<string> rightPref, bool isSaveButton)
 			{
 				//Quadrant = quad;
@@ -100,18 +107,23 @@ namespace ShiftStoneRandomizer
 				Button = GameObject.Instantiate(ButtonSource);
 				Button.name = "Loadout Button";
 				Button.transform.localPosition = Sections[(int) Quadrant];
+				Button.SetActive(true);
 
 				_leftStoneSlot.transform.localPosition = new Vector3(0.05f, 0.07f, 0.01f);
 				_leftStoneSlot.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 				_leftStoneSlot.transform.SetParent(Button.transform, false);
+				_leftStoneSlot.SetActive(true);
 
 				_rightStoneSlot.transform.localPosition = new Vector3(0.05f, 0.07f, -0.01f);
 				_rightStoneSlot.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 				_rightStoneSlot.transform.SetParent(Button.transform, false);
+				_rightStoneSlot.SetActive(true);
 
 				LoadoutInteractor.Display += DisplayShiftStones;
+				//UpdateAllDisplays(Quadrant, Selection[0], Selection[1]);
+				DisplayShiftStones(Quadrant, Selection[0], Selection[1]);
 				//TODO: Define save vs load event handlers
-				if(isSaveButton)
+				if (isSaveButton)
 				{
 					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
 					{
@@ -153,7 +165,12 @@ namespace ShiftStoneRandomizer
 				
 			}
 
-
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="quadrant"></param>
+			/// <param name="left"></param>
+			/// <param name="right"></param>
 			internal void DisplayShiftStones(Quadrants quadrant, ShiftStonePrefs left, ShiftStonePrefs right)
 			{
 				if(quadrant != this.Quadrant)
@@ -162,17 +179,33 @@ namespace ShiftStoneRandomizer
 				Infanticide(LeftStoneSlot);
 				Infanticide(RightStoneSlot);
 
+				if(!Enum.TryParse<ShiftStonePrefs>(LeftHandPref.Value, out left))
+				{
+					Debug.Log($"Failed to parse left: {LeftHandPref.Value}, defaulting to Empty");
+				}
+
+				if(!Enum.TryParse<ShiftStonePrefs>(RightHandPref.Value, out right))
+				{
+					Debug.Log($"Failed to parse right: {RightHandPref.Value}, defaulting to Empty");
+				}
+
 				GameObject leftItem = StoneItem.GetDisplayObject(left);
 				if(left == ShiftStonePrefs.Charge)
 				{
 					leftItem.transform.localRotation = Quaternion.Euler(0f, 0f, 270f);
+					
 				}
-				GameObject RightItem = StoneItem.GetDisplayObject(right);
+				leftItem.transform.SetParent(LeftStoneSlot.transform, false);
+				leftItem.SetActive(true);
+
+				GameObject rightItem = StoneItem.GetDisplayObject(right);
 				if(right == ShiftStonePrefs.Charge)
 				{
-					RightItem.transform.localRotation = Quaternion.Euler(0f, 0f, 270f);
+					rightItem.transform.localRotation = Quaternion.Euler(0f, 0f, 270f);
+					
 				}
-
+				rightItem.transform.SetParent(RightStoneSlot.transform, false);
+				rightItem.SetActive(true);
 
 			}
 			
@@ -256,7 +289,10 @@ namespace ShiftStoneRandomizer
 		};
 
 		public readonly List<Slot> SlotList;
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="isForSaving"></param>
 		public LoadoutInteractor(bool isForSaving)
 		{
 			SlotList = new List<Slot>() { Map0Host, Map1Host, Map0Client, Map1Client };

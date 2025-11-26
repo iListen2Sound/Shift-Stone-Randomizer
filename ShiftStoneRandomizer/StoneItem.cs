@@ -65,6 +65,7 @@ namespace ShiftStoneRandomizer
 			foreach (GameObject obj in Specials)
 			{
 				obj.transform.localScale = Vector3.one * 0.00015f;
+				obj.transform.localRotation = Quaternion.Euler(90f, 90f, 0);
 				GameObject.DontDestroyOnLoad(obj);
 				obj.SetActive(false);
 
@@ -83,16 +84,21 @@ namespace ShiftStoneRandomizer
 			};
 		
 		
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="stoneEnum"></param>
+		/// <returns></returns>
 		public static GameObject GetDisplayObject (ShiftStonePrefs stoneEnum)
 		{
-			if ((int)stoneEnum >= 0 || (int)stoneEnum <= 7)
+			Debug.Log($"GetDisplayObject called for {stoneEnum} Index: {(int) stoneEnum}", true);
+			if ((int)stoneEnum >= 0 && (int)stoneEnum <= 7)
 			{
 				return GameObject.Instantiate(AllStones[(int)stoneEnum].ShiftStone.gameObject);
 			}
 			else 
 			{
-				return GameObject.Instantiate(Specials[((int) stoneEnum) + 4]);
+				return GameObject.Instantiate(Specials[( (int) stoneEnum + 4)]);
 			}	
 		}
 
@@ -124,7 +130,7 @@ namespace ShiftStoneRandomizer
 				//MelonLogger.Msg($"{Name} Icon: {_icon.active}");
 				if(ShiftStone is null)
 					return;
-				
+
 				if (value)
 					_blacklistCount++;
 
@@ -157,9 +163,9 @@ namespace ShiftStoneRandomizer
 			_isEnabled = true;
 		}
 		
-		public StoneItem(ShiftStonePrefs ssp)
+		public StoneItem(ShiftStonePrefs stoneSelection)
 		{
-			ShiftStone stone = AllStones[(int) ssp].ShiftStone;
+			ShiftStone stone = AllStones[(int) stoneSelection].ShiftStone;
 			_isEnabled = true;
 		}
 		/// <summary>

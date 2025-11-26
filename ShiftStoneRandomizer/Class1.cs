@@ -93,7 +93,7 @@ namespace ShiftStoneRandomizer
 					IndicatorsBase = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
 					GameObject.DontDestroyOnLoad(IndicatorsBase);
 					IndicatorsBase.SetActive(false);
-					CreateLoadOutSource();
+				
 				}
 				CreatePhysicalGUI();
 
@@ -246,7 +246,12 @@ namespace ShiftStoneRandomizer
 			if (right)
 				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Right);
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="hand"></param>
+		/// <param name="includeDisabled"></param>
+		/// <returns></returns>
 		private static List<StoneItem> GetRandomStones(Hands hand = Hands.Both, bool includeDisabled = false )
 		{
 
