@@ -162,6 +162,39 @@ namespace ShiftStoneRandomizer
 
 			private void ApplyLoadOut()
 			{
+				ShiftStonePrefs left;
+				if(!Enum.TryParse<ShiftStonePrefs>(LeftHandPref.Value, out left))
+					Degug.Log($"AppyloLoadout Failed to parse: {LeftHandPref.Value}");
+				ShiftStonePrefs right;
+				if(!Enum.TryParse<ShiftStonePrefs>(RightHandPref.Value, out right))
+					Degug.Log($"AppyloLoadout Failed to parse: {RightHandPref.Value}");
+				
+				ShiftStonePrefs[] both = {left, right};
+
+				int[] currentEquipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				//If both are random, use standard randomization method
+				if(left == ShiftStonePrefs.Random && right == ShiftStonePrefs.Random)
+				{
+					RandomizeShiftStone(currentEquipped);
+					
+				}
+				else
+				{
+					
+					for(int i = 0; i < 2; i++)
+					{
+						switch (both[i])
+						{
+							
+						}
+						if(both[i] == ShiftStonePrefs.Random)
+						{
+							RandomizeStones(currentEquipped, (Hands) i);
+						}
+					}
+				}
+				
+
 				
 			}
 

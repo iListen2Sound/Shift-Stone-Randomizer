@@ -45,10 +45,10 @@ namespace ShiftStoneRandomizer
 
 		public readonly static GameObject[] Specials = new GameObject[] {
 			//TODO: Create source templates and prefabs
-			ObjMirror,
-			ObjStay,
+			ObjMirror, //Possible icon: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpFLoTk1WnuNjDSu5WeOFhxRwb50LfWqaBHA&s
+			ObjStay, //Cube
 			ObjRandom,
-			ObjEmpty
+			ObjEmpty //Either actually empty or disc
 		};
 
 		static StoneItem()

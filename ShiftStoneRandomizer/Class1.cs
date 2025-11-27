@@ -290,7 +290,7 @@ namespace ShiftStoneRandomizer
 		/// Avoids currently equipped stones
 		/// Should enable equipping currently equipped stones if available stones are less than 4
 		/// </summary>
-		private static void RandomizeStones(int[] Equipped)
+		private static void RandomizeStones(int[] Equipped Hands hand = EnabledHand)
 		{
 			List<StoneItem> randomStones = new List<StoneItem>();
 			Debug.Log("Stone check:", true);
@@ -329,7 +329,7 @@ namespace ShiftStoneRandomizer
 				return;
 			}
 
-			switch (EnabledHand)
+			switch (hand)
 			{
 				case Hands.Both:
 					EquipStones(randomStones[0], randomStones[1]);
