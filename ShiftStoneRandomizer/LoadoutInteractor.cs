@@ -8,6 +8,7 @@ using RumbleModdingAPI;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Il2CppRUMBLE.Managers;
 
 namespace ShiftStoneRandomizer
 {
@@ -164,10 +165,10 @@ namespace ShiftStoneRandomizer
 			{
 				ShiftStonePrefs left;
 				if(!Enum.TryParse<ShiftStonePrefs>(LeftHandPref.Value, out left))
-					Degug.Log($"AppyloLoadout Failed to parse: {LeftHandPref.Value}");
+					Debug.Log($"AppyloLoadout Failed to parse: {LeftHandPref.Value}");
 				ShiftStonePrefs right;
 				if(!Enum.TryParse<ShiftStonePrefs>(RightHandPref.Value, out right))
-					Degug.Log($"AppyloLoadout Failed to parse: {RightHandPref.Value}");
+					Debug.Log($"AppyloLoadout Failed to parse: {RightHandPref.Value}");
 				
 				ShiftStonePrefs[] both = {left, right};
 
@@ -175,7 +176,7 @@ namespace ShiftStoneRandomizer
 				//If both are random, use standard randomization method
 				if(left == ShiftStonePrefs.Random && right == ShiftStonePrefs.Random)
 				{
-					RandomizeShiftStone(currentEquipped);
+					ShiftStoneRandomizer.RandomizeStones(currentEquipped);
 					
 				}
 				else
@@ -186,7 +187,7 @@ namespace ShiftStoneRandomizer
 						switch (both[i])
 						{
 							case ShiftStonePrefs.Random:
-								RandomizeStones(currentEquipped, (Hands) i);
+								ShiftStoneRandomizer.RandomizeStones(currentEquipped, (Hands) i);
 								break;
 							
 							case ShiftStonePrefs.Mirror:

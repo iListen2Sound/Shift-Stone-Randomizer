@@ -51,8 +51,8 @@ namespace ShiftStoneRandomizer
 		
 		//private int[] blackList = new int[0];
 		private bool firstLoad = true;
-		private string CurrentScene;
-		public string CurrentLoadedScene {get { return CurrentScene.ToLower().Trim();} }
+		private static string CurrentScene;
+		public static string CurrentLoadedScene {get { return CurrentScene.ToLower().Trim();} }
 		//private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
 		public static GameObject RandomizerAssets { get; private set; }
 		public static GameObject IndicatorsBase { get; private set; }
@@ -271,14 +271,15 @@ namespace ShiftStoneRandomizer
 			
 			options.OrderBy(x => random.Next()).Take(stonesNeeded).ToList();
 
-			List<ShiftStonePrefs> result = new List<ShiftStonePrefs();
-
+			List<ShiftStonePrefs> result = new List<ShiftStonePrefs>();
+/*
 			switch (hand)
 			{
 				case Hands.Both
-					result = options.Select(s => s.GetEnum)
+					result = options.Select(s => s.GetEnum).ToList();
+					break;
 			}
-
+*/
 
 			
 			return result;
@@ -291,7 +292,7 @@ namespace ShiftStoneRandomizer
 		/// Avoids currently equipped stones
 		/// Should enable equipping currently equipped stones if available stones are less than 4
 		/// </summary>
-		private static void RandomizeStones(int[] Equipped Hands hand = EnabledHand)
+		public static void RandomizeStones(int[] Equipped, Hands hand = Hands.Both)
 		{
 			List<StoneItem> randomStones = new List<StoneItem>();
 			Debug.Log("Stone check:", true);
