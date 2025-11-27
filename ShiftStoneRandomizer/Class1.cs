@@ -252,12 +252,8 @@ namespace ShiftStoneRandomizer
 		/// <param name="hand"></param>
 		/// <param name="includeDisabled"></param>
 		/// <returns></returns>
-		private static List<StoneItem> GetRandomStones(Hands hand = Hands.Both, bool includeDisabled = false )
+		private static List<ShiftStonePrefs> GetRandomStones(ShiftStonePrefs[] equipped, Hands hand = Hands.Both, bool includeDisabled = false )
 		{
-
-			List<ShiftStonePrefs> equipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration()
-				.Select(i => (ShiftStonePrefs)i)
-				.ToList();
 
 			List<StoneItem> options = StoneItem.AllStones.Where(s => s.IsEnabled || includeDisabled).ToList();
 
@@ -272,8 +268,19 @@ namespace ShiftStoneRandomizer
 				options = filteredOptions; // Safe to remove equipped stones
 			}
 			
+			options.OrderBy(x => random.Next()).Take(stonesNeeded).ToList();
+
+			List<ShiftStonePrefs> result = new List<ShiftStonePrefs();
+
+			switch (hand)
+			{
+				case Hands.Both
+					result = options.Select(s => s.GetEnum)
+			}
+
+
 			
-			return options.OrderBy(x => random.Next()).Take(stonesNeeded).ToList();
+			return result;
 
 
 		}

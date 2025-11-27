@@ -95,14 +95,20 @@ namespace ShiftStoneRandomizer
 
 		private void CreatePhysicalGUI()
 		{
-			LoadoutInteractor loadInteractor = new LoadoutInteractor(false);
-			LoadCluster = loadInteractor.Cluster;
-
+			
 
 
 			var Button = GameObject.Find("ShiftstoneQuickswapper").transform.GetChild(0).GetChild(2).gameObject;
 			GameObject titleBar = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.MatchConsole.MatchmakingSettings.TitleBar.GetGameObject());
 			GameObject titleText = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.MatchConsole.MatchmakingSettings.TitleText.GetGameObject());
+
+			LoadoutInteractor loadInteractor = new LoadoutInteractor(false);
+			SaveCluster = loadInteractor.Cluster;
+			SaveCluster.transform.SetParent(GameObject.Find("ShiftstoneCabinet").transform, false);
+			SaveCluster.transform.localPosition = new Vector3(0.0f, 0.4f, 0f);
+			SaveCluster.transform.localRotation = Quaternion.Euler(0, 180, 0);
+			SaveCluster.SetActive(true);
+
 
 			titleText.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
 			titleText.transform.localPosition = new Vector3(-0.09f, 0.736f, 0.0002f);
@@ -153,7 +159,7 @@ namespace ShiftStoneRandomizer
 			//Rotation 90 90 0
 			//0.0003 0.0003 0.0003
 
-
+			
 
 			GameObject saveLoadOutButton = GameObject.Instantiate(Button);
 			saveLoadOutButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
@@ -246,10 +252,7 @@ namespace ShiftStoneRandomizer
 				EquipStones(new StoneItem(), new StoneItem());
 			});
 
-			LoadCluster.transform.SetParent(swapper.transform, false);
-			LoadCluster.transform.localPosition = new Vector3(0.0f, 0.4f, 0f);
-			LoadCluster.transform.localRotation = Quaternion.Euler(0, 180, 0);
-			LoadCluster.SetActive(true);
+			
 
 			/*GameObject derivedLoadOutCluster = GameObject.Instantiate(LoadOutCluster);
 			derivedLoadOutCluster.transform.SetParent(swapper.transform, false);
