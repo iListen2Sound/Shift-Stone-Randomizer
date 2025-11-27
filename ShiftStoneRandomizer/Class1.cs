@@ -52,6 +52,7 @@ namespace ShiftStoneRandomizer
 		//private int[] blackList = new int[0];
 		private bool firstLoad = true;
 		private string CurrentScene;
+		public string CurrentLoadedScene {get { return CurrentScene.ToLower().Trim();} }
 		//private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
 		public static GameObject RandomizerAssets { get; private set; }
 		public static GameObject IndicatorsBase { get; private set; }
@@ -353,7 +354,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="leftStone"></param>
 		/// <param name="rightStone"></param>
-		private static void EquipStones(StoneItem leftStone, StoneItem rightStone)
+		public static void EquipStones(StoneItem leftStone, StoneItem rightStone)
 		{
 			Debug.Log("Equipping stones: " + (leftStone != null ? leftStone.Name : "Null") + " | " + (rightStone != null ? rightStone.Name : "Null"), true);
 

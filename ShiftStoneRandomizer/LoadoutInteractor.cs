@@ -134,7 +134,7 @@ namespace ShiftStoneRandomizer
 				{
 					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
 					{
-						//TODO: Implement load logic
+						ApplyLoadOut();
 					});
 				}
 			}
@@ -185,12 +185,29 @@ namespace ShiftStoneRandomizer
 					{
 						switch (both[i])
 						{
+							case ShiftStonePrefs.Random:
+								RandomizeStones(currentEquipped, (Hands) i);
+								break;
 							
+							case ShiftStonePrefs.Mirror:
+								if(ShiftStoneRandomizer.CurrentLoadedScene.Contains("map") && PlayerManager.instance.AllPlayers.Count >= 2)
+								{
+									//Copy other player's shift stone
+								}
+								else 
+								{
+									//ignore
+								}
+								break;
+							
+							case ShiftStonePrefs.Stay: 
+								//Don't do anything really
+								break;
+							case ShiftStonePrefs.Empty: 
+								ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
+								break;
 						}
-						if(both[i] == ShiftStonePrefs.Random)
-						{
-							RandomizeStones(currentEquipped, (Hands) i);
-						}
+						
 					}
 				}
 				
