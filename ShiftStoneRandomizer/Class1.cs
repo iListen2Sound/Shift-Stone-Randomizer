@@ -51,7 +51,8 @@ namespace ShiftStoneRandomizer
 		
 		//private int[] blackList = new int[0];
 		private bool firstLoad = true;
-		private string CurrentScene;
+		private static string CurrentScene;
+		public static string CurrentLoadedScene {get { return CurrentScene.ToLower().Trim();} }
 		//private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
 		public static GameObject RandomizerAssets { get; private set; }
 		public static GameObject IndicatorsBase { get; private set; }
@@ -252,12 +253,8 @@ namespace ShiftStoneRandomizer
 		/// <param name="hand"></param>
 		/// <param name="includeDisabled"></param>
 		/// <returns></returns>
-		private static List<StoneItem> GetRandomStones(Hands hand = Hands.Both, bool includeDisabled = false )
+		private static List<ShiftStonePrefs> GetRandomStones(ShiftStonePrefs[] equipped, Hands hand = Hands.Both, bool includeDisabled = false )
 		{
-
-			List<ShiftStonePrefs> equipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration()
-				.Select(i => (ShiftStonePrefs)i)
-				.ToList();
 
 			List<StoneItem> options = StoneItem.AllStones.Where(s => s.IsEnabled || includeDisabled).ToList();
 
@@ -272,8 +269,20 @@ namespace ShiftStoneRandomizer
 				options = filteredOptions; // Safe to remove equipped stones
 			}
 			
+			options.OrderBy(x => random.Next()).Take(stonesNeeded).ToList();
+
+			List<ShiftStonePrefs> result = new List<ShiftStonePrefs>();
+/*
+			switch (hand)
+			{
+				case Hands.Both
+					result = options.Select(s => s.GetEnum).ToList();
+					break;
+			}
+*/
+
 			
-			return options.OrderBy(x => random.Next()).Take(stonesNeeded).ToList();
+			return result;
 
 
 		}
@@ -283,7 +292,7 @@ namespace ShiftStoneRandomizer
 		/// Avoids currently equipped stones
 		/// Should enable equipping currently equipped stones if available stones are less than 4
 		/// </summary>
-		private static void RandomizeStones(int[] Equipped)
+		public static void RandomizeStones(int[] Equipped, Hands hand = Hands.Both)
 		{
 			List<StoneItem> randomStones = new List<StoneItem>();
 			Debug.Log("Stone check:", true);
@@ -322,7 +331,7 @@ namespace ShiftStoneRandomizer
 				return;
 			}
 
-			switch (EnabledHand)
+			switch (hand)
 			{
 				case Hands.Both:
 					EquipStones(randomStones[0], randomStones[1]);
@@ -346,7 +355,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="leftStone"></param>
 		/// <param name="rightStone"></param>
-		private static void EquipStones(StoneItem leftStone, StoneItem rightStone)
+		public static void EquipStones(StoneItem leftStone, StoneItem rightStone)
 		{
 			Debug.Log("Equipping stones: " + (leftStone != null ? leftStone.Name : "Null") + " | " + (rightStone != null ? rightStone.Name : "Null"), true);
 
