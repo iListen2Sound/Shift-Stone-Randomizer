@@ -8,6 +8,7 @@ using RumbleModdingAPI;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Il2CppRUMBLE.Managers;
 
 namespace ShiftStoneRandomizer
 {
@@ -134,7 +135,7 @@ namespace ShiftStoneRandomizer
 				{
 					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
 					{
-						//TODO: Implement load logic
+						ApplyLoadOut();
 					});
 				}
 			}
@@ -162,7 +163,54 @@ namespace ShiftStoneRandomizer
 
 			private void ApplyLoadOut()
 			{
+				ShiftStonePrefs left;
+				if(!Enum.TryParse<ShiftStonePrefs>(LeftHandPref.Value, out left))
+					Debug.Log($"AppyloLoadout Failed to parse: {LeftHandPref.Value}");
+				ShiftStonePrefs right;
+				if(!Enum.TryParse<ShiftStonePrefs>(RightHandPref.Value, out right))
+					Debug.Log($"AppyloLoadout Failed to parse: {RightHandPref.Value}");
 				
+				ShiftStonePrefs[] both = {left, right};
+
+				int[] currentEquipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				//If both are random, use standard randomization method
+				if(left == ShiftStonePrefs.Random && right == ShiftStonePrefs.Random)
+				{
+					ShiftStoneRandomizer.RandomizeStones(currentEquipped);
+					
+				}
+				else
+				{
+					
+					for(int i = 0; i < 2; i++)
+					{
+						switch (both[i])
+						{
+							case ShiftStonePrefs.Random:
+								ShiftStoneRandomizer.RandomizeStones(currentEquipped, (Hands) i);
+								break;
+							
+							case ShiftStonePrefs.Mirror:
+								if(ShiftStoneRandomizer.CurrentLoadedScene.Contains("map") && PlayerManager.instance.AllPlayers.Count >= 2)
+								{
+									//Copy other player's shift stone
+								}
+								else 
+								{
+									//ignore
+								}
+								break;
+							
+							case ShiftStonePrefs.Stay: 
+								//Don't do anything really
+								break;
+							case ShiftStonePrefs.Empty: 
+								ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
+								break;
+						}
+						
+					}
+				}
 			}
 
 			/// <summary>
@@ -243,6 +291,7 @@ namespace ShiftStoneRandomizer
 		{
 			ButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
 			ButtonSource.transform.GetChild(0).GetComponent<InteractionButton>().enabled = true;
+			
 			ButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
 			ButtonSource.transform.localPosition = Vector3.zero;
 			ButtonSource.SetActive(false);
