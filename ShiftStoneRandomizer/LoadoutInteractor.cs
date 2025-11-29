@@ -129,6 +129,7 @@ namespace ShiftStoneRandomizer
 					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
 					{
 						SaveSelectedToLoadout();
+						Debug.Log("Slot: Event handler assigned for save");
 					});
 				}
 				else
@@ -142,17 +143,19 @@ namespace ShiftStoneRandomizer
 
 			private void SaveSelectedToLoadout()
 			{
+				Debug.Log("Saving Loadout...");
 				int[] stonesInHand = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 				
-				foreach (int i in stonesInHand)
+
+				for(int i = 0; i < 2; i++)
 				{
-					//Make sure to make an event handler for selecting a shiftstone from the shiftstone case that sets the selection to the selected stone
-					if(Selection[i] >= ShiftStonePrefs.Empty)
+					if (Selection[i] >= ShiftStonePrefs.Empty || true)
 					{
-						Selection[i] = (ShiftStonePrefs) i;
-						
+						Selection[i] = (ShiftStonePrefs)stonesInHand[i];
+
 					}
 				}
+
 
 				//DisplayShiftStones(LoadoutInteractor.Selection[0], LoadoutInteractor.Selection[1]);
 				LeftHandPref.Value = Selection[0].ToString();
@@ -161,8 +164,10 @@ namespace ShiftStoneRandomizer
 				UpdateAllDisplays(Quadrant, Selection[0], Selection[1]);
 			}
 
+
 			private void ApplyLoadOut()
 			{
+				Debug.Log("Applying Loadout...");
 				ShiftStonePrefs left;
 				if(!Enum.TryParse<ShiftStonePrefs>(LeftHandPref.Value, out left))
 					Debug.Log($"AppyloLoadout Failed to parse: {LeftHandPref.Value}");
@@ -170,7 +175,7 @@ namespace ShiftStoneRandomizer
 				if(!Enum.TryParse<ShiftStonePrefs>(RightHandPref.Value, out right))
 					Debug.Log($"AppyloLoadout Failed to parse: {RightHandPref.Value}");
 				
-				ShiftStonePrefs[] both = {left, right};
+				ShiftStonePrefs[] eachHand = {left, right};
 
 				int[] currentEquipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 				//If both are random, use standard randomization method
@@ -181,10 +186,10 @@ namespace ShiftStoneRandomizer
 				}
 				else
 				{
-					
+					ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
 					for(int i = 0; i < 2; i++)
 					{
-						switch (both[i])
+						switch (eachHand[i])
 						{
 							case ShiftStonePrefs.Random:
 								ShiftStoneRandomizer.RandomizeStones(currentEquipped, (Hands) i);
@@ -207,10 +212,18 @@ namespace ShiftStoneRandomizer
 							case ShiftStonePrefs.Empty: 
 								ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
 								break;
+							default:
+								if(i == 0)
+									ShiftStoneRandomizer.EquipStones(StoneItem.AllStones[(int) eachHand[i]], null);
+								else if(i == 1)
+									ShiftStoneRandomizer.EquipStones(null, StoneItem.AllStones[(int) eachHand[i]]);
+								break;
+								
 						}
-						
 					}
 				}
+
+				UpdateAllDisplays(Quadrant, left, right);
 			}
 
 			/// <summary>
