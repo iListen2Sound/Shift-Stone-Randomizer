@@ -72,7 +72,7 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
-		public readonly static StoneItem[] AllStones = new StoneItem[] {
+		public static StoneItem[] AllStones = new StoneItem[] {
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
@@ -94,12 +94,38 @@ namespace ShiftStoneRandomizer
 			Debug.Log($"GetDisplayObject called for {stoneEnum} Index: {(int) stoneEnum}", true);
 			if ((int)stoneEnum >= 0 && (int)stoneEnum <= 7)
 			{
-				return GameObject.Instantiate(AllStones[(int)stoneEnum].ShiftStone.gameObject);
+				//null ref
+				try
+				{
+					return GameObject.Instantiate(AllStones[(int)stoneEnum].ShiftStone.gameObject);
+				}
+				catch (System.Exception ex)
+				{
+					Debug.Log($"Error instantiating stone object for {stoneEnum}: {ex.Message}", false);
+					return GameObject.Instantiate(RecreateStoneItems()[(int)stoneEnum].ShiftStone.gameObject);
+					
+				}
 			}
-			else 
+			else
 			{
-				return GameObject.Instantiate(Specials[( (int) stoneEnum + 4)]);
+				return GameObject.Instantiate(Specials[((int)stoneEnum + 4)]);
 			}	
+		}
+
+		public static StoneItem[] RecreateStoneItems()
+		{
+			StoneItem[] NewStones = new StoneItem[] {
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
+				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
+			};
+			AllStones = NewStones;
+			return NewStones;
 		}
 
 

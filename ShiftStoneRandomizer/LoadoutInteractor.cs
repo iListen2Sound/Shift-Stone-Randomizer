@@ -149,6 +149,8 @@ namespace ShiftStoneRandomizer
 
 				for(int i = 0; i < 2; i++)
 				{
+					//Selecting a command stone will have the shift stone socket empty
+					//If a command isn't selected, then assign the equivalent enum to the shift stone or lack of it to selected
 					if (Selection[i] >= ShiftStonePrefs.Empty || true)
 					{
 						Selection[i] = (ShiftStonePrefs)stonesInHand[i];
@@ -289,6 +291,8 @@ namespace ShiftStoneRandomizer
 			ShiftStonePrefs.Stay,
 		};
 
+
+
 		public enum Quadrants { TopLeft, TopRight, BottomLeft, BottomRight };
 
 		public static GameObject ButtonSource;
@@ -315,7 +319,37 @@ namespace ShiftStoneRandomizer
 
 		}
 
-		
+		//Add this as a listener to the shift stone interaction for the existing base stones
+		public static void SelectBaseStone()
+		{
+			int[] stonesInHand = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+			for(int i = 0; i < 2; i++)
+			{
+				Selection[i] = (ShiftStonePrefs) stonesInHand[i];
+			}
+		}
+
+		public static void SelectCommandStone(ShiftStonePrefs commandStone)
+		{
+			Hands handTrigger = Hands.Left; /*= determine which hand pressed the button*/
+
+			//Toggle between commandStone and empty when selecting a command stone.
+			if(Selection[(int) handTrigger] == commandStone)
+			{
+				Selection[(int) handTrigger] = ShiftStonePrefs.Empty;
+			}
+			else 
+			{
+				Selection[(int) handTrigger] = commandStone;
+			}
+			 
+			
+		}
+
+		public static void DisplayCommandOnHand(ShiftStonePrefs command, Hands hand)
+		{
+			
+		}
 
 		//public static List<GameObject> AllDisplaySlots = new List<GameObject>();
 

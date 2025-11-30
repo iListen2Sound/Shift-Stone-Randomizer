@@ -86,6 +86,7 @@ namespace ShiftStoneRandomizer
 			PrefMap1ClientRight = CatMap1.CreateEntry("Pit Right Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Empty");
 
 			CatLoadOutButton = MelonPreferences.CreateCategory("Load Out Button Selection");
+			CatLoadOutButton.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
 			PrefLobLeft = CatLoadOutButton.CreateEntry("Left Hand: ", "Empty", null, "[Preferred Stone] | Empty");
 			PrefLobRight = CatLoadOutButton.CreateEntry("Right Hand: ", "Empty", null, "[Preferred Stone] | Empty");
 		}

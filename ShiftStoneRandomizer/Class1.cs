@@ -86,6 +86,10 @@ namespace ShiftStoneRandomizer
 		private void SceneReady()
 		{
 			//InitializeShiftStones();
+			if(CurrentScene.ToLower().Trim() != "loader")
+			{
+				Debug.CreateDebugUi(PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(6).GetChild(0).gameObject);
+			}
 			if (CurrentScene == "Gym")
 			{
 
@@ -240,7 +244,7 @@ namespace ShiftStoneRandomizer
 		}
 		
 
-		private static void ActivateEffect(bool left, bool right)
+		public static void ActivateEffect(bool left, bool right)
 		{
 			if (left)
 				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Left);
