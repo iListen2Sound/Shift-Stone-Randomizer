@@ -61,10 +61,22 @@ namespace ShiftStoneRandomizer
 			var swappers = GameObject.FindObjectsOfType<GameObject>().Where(go => go.name == "ShiftstoneQuickswapper").ToArray();
 			foreach (var swapper in swappers)
 			{
-				//Dont add more then 1 button
-				if (swapper.transform.GetChild(0).GetChildCount() < 4)
-					CreateQuickSwapButtons(swapper);
 
+				try
+				{
+					CreateQuickSwapButtons(swapper);
+				}
+				catch (System.Exception e)
+				{
+					Debug.Log($"Error creating quickswap buttons: {e}", true, 2);
+				}
+				/*//Dont add more then 1 button
+				if (swapper.transform.GetChild(0).GetChildCount() < 4)
+				{
+					
+					
+
+				}*/
 			}
 		}
 		/// <summary>
