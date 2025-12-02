@@ -86,6 +86,10 @@ namespace ShiftStoneRandomizer
 		private void SceneReady()
 		{
 			//InitializeShiftStones();
+			if(CurrentScene.ToLower().Trim() != "loader")
+			{
+				Debug.CreateDebugUi(PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(6).GetChild(0).gameObject);
+			}
 			if (CurrentScene == "Gym")
 			{
 
