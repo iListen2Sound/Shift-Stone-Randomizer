@@ -240,7 +240,7 @@ namespace ShiftStoneRandomizer
 		}
 		
 
-		private static void ActivateEffect(bool left, bool right)
+		public static void ActivateEffect(bool left, bool right)
 		{
 			if (left)
 				Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Left);
