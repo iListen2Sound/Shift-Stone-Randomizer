@@ -17,7 +17,7 @@ namespace ShiftStoneRandomizer
 		public MelonPreferences_Entry<bool> CatDebugMode;
 		public MelonPreferences_Entry<string> PrefEnabledHand;
 		public MelonPreferences_Entry<string> PrefAutomation;
-		
+
 
 		private MelonPreferences_Category CatEnabledStones;
 		public MelonPreferences_Entry<bool> PrefAdamant;
@@ -58,7 +58,7 @@ namespace ShiftStoneRandomizer
 
 			CatSettings = MelonPreferences.CreateCategory("Preferences");
 			CatSettings.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-			CatDebugMode = CatSettings.CreateEntry("Enable Debug Mode", false, "Enable for more verbose logging");
+			CatDebugMode = CatSettings.CreateEntry("Enable Debug Mode", false, null, "Enable for more verbose logging");
 			PrefEnabledHand = CatSettings.CreateEntry("Randomized Hand", "Both", null, "Hand where randomization is Enabled");
 			PrefAutomation = CatSettings.CreateEntry("Auto-Equip Mode", "Random", null, "Random: Randomize every match | Auto: Based on Map automation config | None: No action");
 
@@ -103,7 +103,7 @@ namespace ShiftStoneRandomizer
 			CatMap0.LoadFromFile();
 			CatMap1.LoadFromFile();
 
-			
+
 		}
 
 		public void SavePrefs()
@@ -162,11 +162,11 @@ namespace ShiftStoneRandomizer
 			ShiftStonePrefs left;
 			ShiftStonePrefs right;
 
-			if(!System.Enum.TryParse<ShiftStonePrefs>(PrefLobLeft.Value, out left))
+			if (!System.Enum.TryParse<ShiftStonePrefs>(PrefLobLeft.Value, out left))
 			{
 				Debug.Log("Failed to parse Left hand loadout from config file");
 			}
-			if(!System.Enum.TryParse<ShiftStonePrefs>(PrefLobRight.Value, out right))
+			if (!System.Enum.TryParse<ShiftStonePrefs>(PrefLobRight.Value, out right))
 			{
 				Debug.Log("Failed to parse Right hand loadout from config file");
 			}
@@ -175,9 +175,9 @@ namespace ShiftStoneRandomizer
 
 		private void ToggleStones(int[] equipped, Hands hand = Hands.Both)
 		{
-			StoneItem left; 
+			StoneItem left;
 			StoneItem right;
-			StoneItem single; 
+			StoneItem single;
 
 			if (equipped[0] == -1)
 				left = new StoneItem();
@@ -196,7 +196,8 @@ namespace ShiftStoneRandomizer
 					left.IsEnabled = false;
 					right.IsEnabled = false;
 					EquipStones(new StoneItem(), new StoneItem());
-				} else
+				}
+				else
 				{
 					left.IsEnabled = true;
 					right.IsEnabled = true;
@@ -217,7 +218,7 @@ namespace ShiftStoneRandomizer
 
 				single.IsEnabled = !single.IsEnabled;
 
-				if(single.IsEnabled)
+				if (single.IsEnabled)
 					EquipStones(single.GetEnum(), hand);
 				else
 					EquipStones(ShiftStonePrefs.Empty, hand);
@@ -247,7 +248,7 @@ namespace ShiftStoneRandomizer
 			PrefLobRight.Value = right.Name;
 
 			CatLoadOutButton.SaveToFile();
-			
+
 			ActivateEffect(true, true);
 
 

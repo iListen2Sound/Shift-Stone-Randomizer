@@ -52,6 +52,7 @@ namespace ShiftStoneRandomizer
 		//private int[] blackList = new int[0];
 		private bool firstLoad = true;
 		private static string CurrentScene;
+		private static bool IsSceneLoaded = false;
 		public static string CurrentLoadedScene {get { return CurrentScene.ToLower().Trim();} }
 		//private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
 		public static GameObject RandomizerAssets { get; private set; }
@@ -79,22 +80,27 @@ namespace ShiftStoneRandomizer
 			
 
 		}
-
+        public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
+        {
+            IsSceneLoaded = false;
+		}
 		public override void OnUpdate()
 		{
-			Debug.PrintInGame($"{LoadoutInteractor.Selection[0].ToString()} \n{LoadoutInteractor.Selection[1].ToString()}");
+			if (IsSceneLoaded)
+			{
+				Debug.PrintInGame($"{LoadoutInteractor.Selection[0].ToString()} \n{LoadoutInteractor.Selection[1].ToString()}");
+			}
 		}
 		public void logOnMatchEnded()
 		{
 			Debug.Log("Match Ended", true);
 		}
+		
 		private void SceneReady()
 		{
+			
 			//InitializeShiftStones();
-			if(CurrentScene.ToLower().Trim() != "loader")
-			{
-				Debug.CreateDebugUi(PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(6).GetChild(0).gameObject);
-			}
+			
 			if (CurrentScene == "Gym")
 			{
 
@@ -121,7 +127,11 @@ namespace ShiftStoneRandomizer
 			}
 			CreateButtonsForAll();
 			ApplyPrefsToState();
-
+			if (CurrentScene.ToLower().Trim() != "loader")
+			{
+				Debug.CreateDebugUi(PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(6).GetChild(0).gameObject);
+				IsSceneLoaded = true;
+			}
 
 		}
 		/// <summary>
