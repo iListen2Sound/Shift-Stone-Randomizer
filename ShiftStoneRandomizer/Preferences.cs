@@ -14,8 +14,10 @@ namespace ShiftStoneRandomizer
 		private const string CONFIG_FILE = "config.cfg";
 
 		private MelonPreferences_Category CatSettings;
+		public MelonPreferences_Entry<bool> CatDebugMode;
 		public MelonPreferences_Entry<string> PrefEnabledHand;
 		public MelonPreferences_Entry<string> PrefAutomation;
+		
 
 		private MelonPreferences_Category CatEnabledStones;
 		public MelonPreferences_Entry<bool> PrefAdamant;
@@ -56,6 +58,7 @@ namespace ShiftStoneRandomizer
 
 			CatSettings = MelonPreferences.CreateCategory("Preferences");
 			CatSettings.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
+			CatDebugMode = CatSettings.CreateEntry("Enable Debug Mode", false, "Enable for more verbose logging");
 			PrefEnabledHand = CatSettings.CreateEntry("Enabled Hand", "Both", null, "Hand where randomization is Enabled");
 			PrefAutomation = CatSettings.CreateEntry("Auto-Equip Mode", "Random", null, "Random: Randomize every match | Auto: Based on Map automation config | None: No action");
 
@@ -89,6 +92,8 @@ namespace ShiftStoneRandomizer
 			CatLoadOutButton.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
 			PrefLobLeft = CatLoadOutButton.CreateEntry("Left Hand: ", "Empty", null, "[Preferred Stone] | Empty");
 			PrefLobRight = CatLoadOutButton.CreateEntry("Right Hand: ", "Empty", null, "[Preferred Stone] | Empty");
+
+			Debug.debugMode = CatDebugMode.Value;
 		}
 
 		private void ReadPrefs()

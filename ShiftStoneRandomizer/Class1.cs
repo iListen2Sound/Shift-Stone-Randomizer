@@ -79,6 +79,11 @@ namespace ShiftStoneRandomizer
 			
 
 		}
+
+		public override void OnUpdate()
+		{
+			Debug.PrintInGame($"{LoadoutInteractor.Selection[0].ToString()} \n{LoadoutInteractor.Selection[1].ToString()}");
+		}
 		public void logOnMatchEnded()
 		{
 			Debug.Log("Match Ended", true);

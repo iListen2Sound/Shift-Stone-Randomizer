@@ -12,7 +12,7 @@ namespace ShiftStoneRandomizer
 {
 	public static class Debug
 	{
-		public static bool debugMode = true;
+		public static bool debugMode {get; set;} = true;
 		public static void Log(string message, bool debugOnly = false, int logLevel = 0)
 		{
 			
@@ -56,7 +56,7 @@ namespace ShiftStoneRandomizer
 			}
 			else 
 			{
-				Log($"Can't print message: \"{message}\" to debug ui. Not created and assigned", false, 2);
+				Log($"Can't print message: \"{message}\" to debug ui. Not created and assigned", true, 2);
 			}
 		}
 	}
