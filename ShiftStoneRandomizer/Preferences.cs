@@ -59,7 +59,7 @@ namespace ShiftStoneRandomizer
 			CatSettings = MelonPreferences.CreateCategory("Preferences");
 			CatSettings.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
 			CatDebugMode = CatSettings.CreateEntry("Enable Debug Mode", false, "Enable for more verbose logging");
-			PrefEnabledHand = CatSettings.CreateEntry("Enabled Hand", "Both", null, "Hand where randomization is Enabled");
+			PrefEnabledHand = CatSettings.CreateEntry("Randomized Hand", "Both", null, "Hand where randomization is Enabled");
 			PrefAutomation = CatSettings.CreateEntry("Auto-Equip Mode", "Random", null, "Random: Randomize every match | Auto: Based on Map automation config | None: No action");
 
 			CatEnabledStones = MelonPreferences.CreateCategory("Enabled Stones", "Black List");
