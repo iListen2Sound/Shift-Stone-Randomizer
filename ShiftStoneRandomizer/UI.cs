@@ -59,6 +59,8 @@ namespace ShiftStoneRandomizer
 		LoadoutInteractor saveInteractor;
 		LoadoutInteractor loadInteractor;
 
+
+		GameObject ShiftStoneBoxSource;
 		private void CreateButtonsForAll()
 		{
 			var swappers = GameObject.FindObjectsOfType<GameObject>().Where(go => go.name == "ShiftstoneQuickswapper").ToArray();
@@ -305,19 +307,20 @@ namespace ShiftStoneRandomizer
 				ReadPrefs();
 			});*/
 
-
+			BuildPortableCase(swapper);
 		}
 
-		public GameObject LoadAsset()
+		private void GrabBoxSource()
 		{
-			using (System.IO.Stream bundleStream = MelonAssembly.Assembly.GetManifestResourceStream("ShiftStoneRandomizer.assets.randomizer"))
-			{
-				byte[] bundleBytes = new byte[bundleStream.Length];
-				bundleStream.Read(bundleBytes, 0, bundleBytes.Length);
-				Il2CppAssetBundle bundle = Il2CppAssetBundleManager.LoadFromMemory(bundleBytes);
-				var asset = GameObject.Instantiate(bundle.LoadAsset<GameObject>("ShiftstoneRandomizer"));
-				return asset;
-			}
+			ShiftStoneBoxSource = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject();
+			ShiftStoneBoxSource.SetActive(false);
+			ShiftStoneBoxSource.name = "ShiftStoneBoxSource";
+			GameObject.DontDestroyOnLoad(ShiftStoneBoxSource);
+
+		}
+		private void BuildPortableCase(GameObject swapper)
+		{
+
 		}
 
 		#endregion

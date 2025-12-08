@@ -111,7 +111,7 @@ namespace ShiftStoneRandomizer
 					IndicatorsBase = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
 					GameObject.DontDestroyOnLoad(IndicatorsBase);
 					IndicatorsBase.SetActive(false);
-
+					GrabBoxSource();
 				}
 				CreatePhysicalGUI();
 
