@@ -9,10 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using Il2CppRUMBLE.Managers;
+using UnityEngine.Bindings;
 
 namespace ShiftStoneRandomizer
 {
-	internal class LoadoutInteractor
+	public class LoadoutInteractor
 	{
 		//TODO: Create logic for all loadout interactors in the world to display the same shiftstones
 #region Slot
@@ -35,8 +36,8 @@ namespace ShiftStoneRandomizer
 				}
 			}
 
-			private GameObject _leftStoneSlot = new GameObject("LeftSlot");
-			public GameObject LeftStoneSlot { get { return _leftStoneSlot; } }
+			private GameObject _leftStoneSlot;// = new GameObject("LeftSlot");
+			public GameObject LeftStoneSlot { get { return _leftStoneSlot; } private set { _leftStoneSlot = value; } }
 
 			private StoneItem _leftStoneItem;
 			public StoneItem LeftStoneItem
@@ -61,8 +62,8 @@ namespace ShiftStoneRandomizer
 			public MelonPreferences_Entry<string> LeftHandPref { get; set; }
 
 
-			private GameObject _rightStoneSlot = new GameObject("Right Slot");
-			public GameObject RightStoneSlot { get { return _rightStoneSlot; } }
+			private GameObject _rightStoneSlot;// = new GameObject("Right Slot");
+			public GameObject RightStoneSlot { get { return _rightStoneSlot; } private set { _rightStoneSlot = value; } }
 
 			private StoneItem _rightStoneItem;
 			public StoneItem RightStoneItem
@@ -110,11 +111,13 @@ namespace ShiftStoneRandomizer
 				Button.transform.localPosition = Sections[(int) Quadrant];
 				Button.SetActive(true);
 
+				_leftStoneSlot = new GameObject("LeftSlot");
 				_leftStoneSlot.transform.localPosition = new Vector3(0.05f, 0.07f, 0.01f);
 				_leftStoneSlot.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 				_leftStoneSlot.transform.SetParent(Button.transform, false);
 				_leftStoneSlot.SetActive(true);
 
+				_rightStoneSlot = new GameObject("Right Slot");
 				_rightStoneSlot.transform.localPosition = new Vector3(0.05f, 0.07f, -0.01f);
 				_rightStoneSlot.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
 				_rightStoneSlot.transform.SetParent(Button.transform, false);
@@ -238,11 +241,17 @@ namespace ShiftStoneRandomizer
 			{
 				if(quadrant != this.Quadrant)
 					return;
+				if (LeftStoneSlot == null || RightStoneSlot == null)
+				{
+					Debug.Log("DisplayShiftStones: One or both stone slots are null!", true);
+					return;
+				}
 				//clear existing children to replace with new ones
 				Infanticide(LeftStoneSlot);
 				Infanticide(RightStoneSlot);
 
-				if(!Enum.TryParse<ShiftStonePrefs>(LeftHandPref.Value, out left))
+
+				if (!Enum.TryParse<ShiftStonePrefs>(LeftHandPref.Value, out left))
 				{
 					Debug.Log($"Failed to parse left: {LeftHandPref.Value}, defaulting to Empty");
 				}
@@ -274,9 +283,19 @@ namespace ShiftStoneRandomizer
 			
 			private void Infanticide(GameObject parent)
 			{
-				for(int i = 0; i < parent.transform.childCount; i++)
+				
+				Debug.Log($"Infanticide: parent is null? {parent == null}", true);
+				//if(parent == null)
+					//return;
+				for (int i = 0; i < parent.transform.childCount; i++)
 				{
-					UnityEngine.Object.Destroy(parent.transform.GetChild(i).gameObject);
+					try
+					{
+						UnityEngine.Object.Destroy(parent.transform.GetChild(i).gameObject);
+					}catch(Exception ex)
+					{
+						Debug.Log(ex.Message);
+					}
 				}
 			}
 
@@ -301,6 +320,14 @@ namespace ShiftStoneRandomizer
 		public static void UpdateAllDisplays(Quadrants quadrant, ShiftStonePrefs left, ShiftStonePrefs right)
 		{
 			Display?.Invoke(quadrant, left, right);
+		}
+
+		public static void UnsubAll()
+		{
+			lock (typeof(LoadoutInteractor))
+			{
+				LoadoutInteractor.Display = null;
+			}
 		}
 
 		public static GameObject ClusterSource;

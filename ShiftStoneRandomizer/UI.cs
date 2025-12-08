@@ -56,6 +56,9 @@ namespace ShiftStoneRandomizer
 		GameObject LoadCluster;
 		GameObject SaveCluster;
 
+		LoadoutInteractor saveInteractor;
+		LoadoutInteractor loadInteractor;
+
 		private void CreateButtonsForAll()
 		{
 			var swappers = GameObject.FindObjectsOfType<GameObject>().Where(go => go.name == "ShiftstoneQuickswapper").ToArray();
@@ -116,7 +119,8 @@ namespace ShiftStoneRandomizer
 
 			//-0.07 1.334 -1.016
 			//-0 90 0
-			SaveCluster = new LoadoutInteractor(true).Cluster;
+			saveInteractor = new LoadoutInteractor(true);
+			SaveCluster = saveInteractor.Cluster;
 			SaveCluster.transform.SetParent(GameObject.Find("ShiftstoneCabinet").transform, false);
 			SaveCluster.transform.localPosition = new Vector3(-0.07f, 1.334f, -1.016f);
 			SaveCluster.transform.localRotation = Quaternion.Euler(0, 90, 0);
@@ -225,8 +229,8 @@ namespace ShiftStoneRandomizer
 		{
 			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
 
-
-			LoadCluster = new LoadoutInteractor(false).Cluster;
+			loadInteractor = new LoadoutInteractor(false);
+			LoadCluster = loadInteractor.Cluster;
 			LoadCluster.transform.SetParent(swapper.transform, false);
 			LoadCluster.transform.localPosition = new Vector3(0.144f, 0.42f, 0f);
 			LoadCluster.transform.localRotation = Quaternion.Euler(0, 180, 0);

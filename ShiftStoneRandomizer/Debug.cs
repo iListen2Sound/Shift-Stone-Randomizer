@@ -44,7 +44,6 @@ namespace ShiftStoneRandomizer
 			DebugUi.transform.SetParent(PlayerUi.transform, false);
 			DebugUiText = DebugUi.GetComponent<TextMeshPro>();
 			DebugUi.SetActive(debugMode);
-			PrintInGame("");
 			return DebugUi;
 		}
 
@@ -52,6 +51,8 @@ namespace ShiftStoneRandomizer
 		{
 			if(!(DebugUi is null))
 			{
+				//DebugUi.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(1, 0.21);
+				DebugUiText.enableWordWrapping = false;
 				DebugUiText.text = message;
 			}
 			else 
