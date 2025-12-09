@@ -480,5 +480,10 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
+		void SelectStoneItem(ShiftStonePrefs item)
+		{
+			Debug.Log($"SelectStoneItem {item.ToString()}");
+			//TODO: Implement Selection properly
+		}
 	}
 }

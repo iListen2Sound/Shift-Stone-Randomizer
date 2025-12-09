@@ -321,6 +321,28 @@ namespace ShiftStoneRandomizer
 		private void BuildPortableCase(GameObject swapper)
 		{
 			
+			double mulRow = 0.4;
+			double mulCol = 0.6;
+			GameObject stoneCase = new GameObject("Portable Shift Stone Case");
+			for (int i = 0; i < 12; i++)
+			{	
+				ShiftStonePrefs currentStoneItem = i < 8 ? (ShiftStonePrefs) i : (ShiftStonePrefs) (i - 12);
+				GameObject box = GameObject.Instantiate(ShiftStoneBoxSource);
+				box.transform.SetParent(stoneCase.transform);
+				box.name = $"{currentStoneItem.ToString()}_Case";
+				box.transform.localPosition((float) (mulRow * i % 4), (float) (mulCol * (Math.Floor(i / 4))), 0.07f);
+				box.transform.SetParent(stoneCase);
+
+				GameObject boxDisplay = StoneItem.GetDisplayObject(currentStoneItem);
+				boxDisplay.SetParent(box);
+
+				box.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
+				{
+					SelectStoneItem(currentStoneItem);
+				});
+			}
+
+			stoneCase.SetParent(swapper);
 		}
 
 		#endregion
