@@ -320,7 +320,7 @@ namespace ShiftStoneRandomizer
 		}
 		private void BuildPortableCase(GameObject swapper)
 		{
-
+			
 		}
 
 		#endregion

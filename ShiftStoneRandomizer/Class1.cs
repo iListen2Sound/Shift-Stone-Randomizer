@@ -69,7 +69,8 @@ namespace ShiftStoneRandomizer
 
 		private GameObject glasses;
 
-		private Il2CppRUMBLE.Players.PlayerController playerController;
+		private Il2CppRUMBLE.Players.PlayerController Player0;
+		
 
 		public override void OnLateInitializeMelon()
 		{
@@ -115,9 +116,6 @@ namespace ShiftStoneRandomizer
 				}
 				CreatePhysicalGUI();
 
-
-
-
 				GameObject Cabinet = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.GetGameObject();
 				for (int i = 0; i < StoneItem.AllStones.Length; i++)
 				{
@@ -133,6 +131,7 @@ namespace ShiftStoneRandomizer
 			{
 				Debug.CreateDebugUi(PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(6).GetChild(0).gameObject);
 				IsSceneLoaded = true;
+				Player0 = Calls.Managers.GetPlayerManager().LocalPlayer.Controller;
 			}
 
 		}
@@ -258,11 +257,11 @@ namespace ShiftStoneRandomizer
 
 		public static void ActivateEffect(bool left, bool right)
 		{
-			Il2CppRUMBLE.Players.PlayerController player = Calls.Managers.GetPlayerManager().LocalPlayer.Controller;
+			
 			if (left)
-				player.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Left);
+				Player0.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Left);
 			if (right)
-				player.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Right);
+				Player0.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Right);
 		}
 		/// <summary>
 		/// 
@@ -375,27 +374,27 @@ namespace ShiftStoneRandomizer
 		public static void EquipStones(StoneItem leftStone, StoneItem rightStone)
 		{
 			Debug.Log("Equipping stones: " + (leftStone != null ? leftStone.Name : "Null") + " | " + (rightStone != null ? rightStone.Name : "Null"), true);
-			Il2CppRUMBLE.Players.PlayerController player = Calls.Managers.GetPlayerManager().LocalPlayer.Controller;
+			
 			if (rightStone != null) //Makes sure you don't equip a stone on the left hand if it's already equipped in the right hand
-				player.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(1, true, true);
+				Player0.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(1, true, true);
 			if (leftStone != null)
 			{
-				player.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(0, true, true);
+				Player0.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(0, true, true);
 				if (leftStone.ShiftStone != null)
 				{
-					player.GetComponent<PlayerShiftstoneSystem>().AttachShiftStone(leftStone.ShiftStone, 0, true, true);
+					Player0.GetComponent<PlayerShiftstoneSystem>().AttachShiftStone(leftStone.ShiftStone, 0, true, true);
 					// This ensures that the stones exist (According to Darkener. Don't know why this is -iListen2Sound)
-					player.GetComponent<PlayerShiftstoneSystem>().RemoveAndReattachShiftstones(true, true);
+					Player0.GetComponent<PlayerShiftstoneSystem>().RemoveAndReattachShiftstones(true, true);
 
 				}
 			}
 			if (rightStone != null)
 			{
-				player.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(1, true, true);
+				Player0.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(1, true, true);
 				if (rightStone.ShiftStone != null)
 				{
-					player.GetComponent<PlayerShiftstoneSystem>().AttachShiftStone(rightStone.ShiftStone, 1, true, true);
-					player.GetComponent<PlayerShiftstoneSystem>().RemoveAndReattachShiftstones(true, true);
+					Player0.GetComponent<PlayerShiftstoneSystem>().AttachShiftStone(rightStone.ShiftStone, 1, true, true);
+					Player0.GetComponent<PlayerShiftstoneSystem>().RemoveAndReattachShiftstones(true, true);
 				}
 			}
 			ActivateEffect(leftStone != null, rightStone != null);
