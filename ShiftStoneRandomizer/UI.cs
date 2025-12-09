@@ -342,7 +342,6 @@ namespace ShiftStoneRandomizer
 			ShiftStoneBoxSource.SetActive(false);
 			ShiftStoneBoxSource.name = "ShiftStoneBoxSource";
 			GameObject.DontDestroyOnLoad(ShiftStoneBoxSource);
-
 		}
 		private void BuildPortableCase(GameObject swapper)
 		{
