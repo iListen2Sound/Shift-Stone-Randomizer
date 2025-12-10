@@ -139,6 +139,10 @@ namespace ShiftStoneRandomizer
 				Debug.Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
 				EnabledHand = Hands.Both;
 			}
+			if(CurrentScene == "Gym")
+			{
+				ShowRandomedHand();
+			}
 		}
 
 		private void UpdatePrefsFromState()

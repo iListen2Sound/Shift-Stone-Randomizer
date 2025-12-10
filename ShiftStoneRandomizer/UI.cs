@@ -338,7 +338,8 @@ namespace ShiftStoneRandomizer
 
 		private void GrabBoxSource()
 		{
-			ShiftStoneBoxSource = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject();
+			
+			ShiftStoneBoxSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject());
 			ShiftStoneBoxSource.SetActive(false);
 			ShiftStoneBoxSource.name = "ShiftStoneBoxSource";
 			GameObject.DontDestroyOnLoad(ShiftStoneBoxSource);

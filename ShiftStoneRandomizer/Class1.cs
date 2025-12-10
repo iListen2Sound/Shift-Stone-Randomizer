@@ -71,6 +71,7 @@ namespace ShiftStoneRandomizer
 
 		private static Il2CppRUMBLE.Players.PlayerController Player0;
 		
+		
 
 		public override void OnLateInitializeMelon()
 		{
@@ -106,7 +107,7 @@ namespace ShiftStoneRandomizer
 
 			if (CurrentScene == "Gym")
 			{
-
+				
 				if (firstLoad)
 				{
 					IndicatorsBase = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
@@ -125,8 +126,8 @@ namespace ShiftStoneRandomizer
 				firstLoad = false;
 			}
 			CreateButtonsForAll();
+
 			ApplyPrefsToState();
-			ShowRandomedHand();
 			if (CurrentScene.ToLower().Trim() != "loader")
 			{
 				Debug.CreateDebugUi(PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(6).GetChild(0).gameObject);
@@ -288,14 +289,6 @@ namespace ShiftStoneRandomizer
 			options.OrderBy(x => random.Next()).Take(stonesNeeded).ToList();
 
 			List<ShiftStonePrefs> result = new List<ShiftStonePrefs>();
-			/*
-						switch (hand)
-						{
-							case Hands.Both
-								result = options.Select(s => s.GetEnum).ToList();
-								break;
-						}
-			*/
 
 
 			return result;
@@ -437,7 +430,6 @@ namespace ShiftStoneRandomizer
 			{
 				leftStone = StoneItem.AllStones[(int)left];
 			}
-
 			if (right == ShiftStonePrefs.Empty)
 			{
 				rightStone = new StoneItem();
@@ -456,10 +448,7 @@ namespace ShiftStoneRandomizer
 			}
 
 			EquipStones(leftStone, rightStone);
-
-
 		}
-
 		private static StoneItem PickRandomStoneExcept(StoneItem excludeStone = null)
 		{
 			//TODO: Create select random enabled stone function
@@ -479,7 +468,6 @@ namespace ShiftStoneRandomizer
 				return null;
 			}
 		}
-
 		void SelectStoneItem(ShiftStonePrefs item)
 		{
 			Debug.Log($"SelectStoneItem {item.ToString()}");
