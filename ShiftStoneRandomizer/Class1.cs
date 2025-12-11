@@ -67,9 +67,10 @@ namespace ShiftStoneRandomizer
 
 		private PlayerHaptics haptics;
 
-		private GameObject glasses;
 
 		private static Il2CppRUMBLE.Players.PlayerController Player0;
+		public static GameObject leftPoint;
+		public static GameObject rightPoint;
 		
 		
 
@@ -93,9 +94,17 @@ namespace ShiftStoneRandomizer
 		}
 		public override void OnUpdate()
 		{
+			Vector3 leftPointPos;
+			Vector3 rightPointPos;
+			string bothPos;
+
+			leftPointPos = leftPoint != null ? leftPoint.transform.position : new Vector3(0, 0, 0);
+			rightPointPos = rightPoint != null ? rightPoint.transform.position : new Vector3(0, 0, 0);
+			bothPos = $"Left Point: {leftPointPos.ToString()} \nRight Point: {rightPointPos.ToString()}";
 			if (IsSceneLoaded)
 			{
-				Debug.PrintInGame($"{LoadoutInteractor.Selection[0].ToString()} \n{LoadoutInteractor.Selection[1].ToString()}");
+				//Debug.PrintInGame($"{LoadoutInteractor.Selection[0].ToString()} \n{LoadoutInteractor.Selection[1].ToString()}");
+				Debug.PrintInGame(bothPos);
 			}
 		}
 		public void logOnMatchEnded()
@@ -136,6 +145,15 @@ namespace ShiftStoneRandomizer
 				Debug.CreateDebugUi(PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(6).GetChild(0).gameObject);
 				IsSceneLoaded = true;
 				Player0 = Calls.Managers.GetPlayerManager().LocalPlayer.Controller;
+
+				//Left Point: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/Bone_Pointer_A_L/Bone_Pointer_B_L/Bone_Pointer_C_L
+				//Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/ShifstoneSocket_L
+
+				//Right Point: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/Bone_Pointer_A_R/Bone_Pointer_B_R/Bone_Pointer_C_R
+				//Right Socket: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/ShiftstoneSocket_R
+
+				leftPoint = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/Bone_Pointer_A_L/Bone_Pointer_B_L/Bone_Pointer_C_L").gameObject;
+				rightPoint = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/Bone_Pointer_A_R/Bone_Pointer_B_R/Bone_Pointer_C_R").gameObject;
 			}
 
 		}
