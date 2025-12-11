@@ -87,6 +87,9 @@ namespace ShiftStoneRandomizer
 		public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
 		{
 			IsSceneLoaded = false;
+			Debug.Log("Unloaded " + sceneName);
+			if (sceneName == "Gym" || sceneName == "Park" || sceneName.Contains("Map"))
+				StoneItem.ResetAllIcons();
 		}
 		public override void OnUpdate()
 		{
@@ -120,7 +123,7 @@ namespace ShiftStoneRandomizer
 				GameObject Cabinet = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.GetGameObject();
 				for (int i = 0; i < StoneItem.AllStones.Length; i++)
 				{
-					StoneItem.AllStones[i].Icon = CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject);
+					StoneItem.AllStones[i].AddIcon(CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject));
 				}
 			
 				firstLoad = false;
@@ -141,7 +144,6 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="buildIndex"></param>
 		/// <param name="sceneName"></param>
-		/// TODO: Create default loadout system that loads only once.
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
@@ -220,7 +222,7 @@ namespace ShiftStoneRandomizer
 		private void ShowRandomedHand()
 		{
 			Hands hand = EnabledHand;
-			Color disabled = new Color(1f, 1f, 0f, 0.5f);
+			Color disabled = new Color(1f, 1f, 1f, 0.25f);
 			Color enabled = new Color(1f, 1f, 1f, 1f);
 			switch (hand)
 			{

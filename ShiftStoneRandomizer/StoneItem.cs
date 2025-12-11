@@ -101,7 +101,7 @@ namespace ShiftStoneRandomizer
 				}
 				catch (System.Exception ex)
 				{
-					Debug.Log($"Error instantiating stone object for {stoneEnum}: {ex.Message}", false);
+					Debug.Log($"Error instantiating stone object for {stoneEnum}: {ex.Message}", false, 2);
 					return GameObject.Instantiate(RecreateStoneItems()[(int)stoneEnum].ShiftStone.gameObject);
 					
 				}
@@ -110,6 +110,13 @@ namespace ShiftStoneRandomizer
 			{
 				return GameObject.Instantiate(Specials[((int)stoneEnum + 4)]);
 			}	
+		}
+		public static void ResetAllIcons()
+		{
+			foreach(StoneItem stone in AllStones)
+			{
+				stone.ResetIcons();
+			}
 		}
 
 		public static StoneItem[] RecreateStoneItems()
@@ -162,9 +169,23 @@ namespace ShiftStoneRandomizer
 
 				else
 					_blacklistCount--;
-				if (_icon == null)
+
+				if(_iconList == null)
 					return;
-				_icon.SetActive(!_isEnabled);
+				
+				foreach(GameObject icon in _iconList)
+				{
+					try
+					{
+						icon.SetActive(!_isEnabled);
+					}catch(System.Exception ex)
+					{
+						Debug.Log(ex.Message, false, 1);
+					}
+				}
+				/*if (_icon == null)
+					return;
+				_icon.SetActive(!_isEnabled);*/
 			}
 		}
 
@@ -179,9 +200,9 @@ namespace ShiftStoneRandomizer
 
 			return result;
 		}
+		private List<GameObject> _iconList = new List<GameObject>();
+		public List<GameObject> IconList {get {return _iconList;} set { _iconList = value; }}
 
-		private GameObject _icon;
-		public GameObject Icon { set { _icon = value; _icon.SetActive(false); } }
 		public StoneItem(ShiftStone shiftStone)
 		{
 			shiftStone.gameObject.SetActive(false);// Disable the stone so it doesn't show up in the game
@@ -201,6 +222,16 @@ namespace ShiftStoneRandomizer
 		{
 			ShiftStone = null;
 			_isEnabled = false;
+		}
+
+		public void AddIcon(GameObject icon)
+		{
+			_iconList.Add(icon);
+		}
+		public void ResetIcons()
+		{
+			_iconList.Clear();
+			_iconList = new List<GameObject>();
 		}
 
 		

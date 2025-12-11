@@ -109,6 +109,11 @@ namespace ShiftStoneRandomizer
 				Button = GameObject.Instantiate(ButtonSource);
 				Button.name = "Loadout Button";
 				Button.transform.localPosition = Sections[(int) Quadrant];
+				if(isSaveButton)
+				{
+					ActualButton.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+				}
+				
 				Button.SetActive(true);
 
 				_leftStoneSlot = new GameObject("LeftSlot");
@@ -132,7 +137,7 @@ namespace ShiftStoneRandomizer
 					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
 					{
 						SaveSelectedToLoadout();
-						Debug.Log("Slot: Event handler assigned for save");
+						Debug.Log("Slot: Event handler assigned for save", true);
 					});
 				}
 				else
@@ -243,7 +248,7 @@ namespace ShiftStoneRandomizer
 					return;
 				if (LeftStoneSlot == null || RightStoneSlot == null)
 				{
-					Debug.Log("DisplayShiftStones: One or both stone slots are null!", true);
+					Debug.Log("DisplayShiftStones: One or both stone slots are null!", true, 2);
 					return;
 				}
 				//clear existing children to replace with new ones
@@ -253,12 +258,12 @@ namespace ShiftStoneRandomizer
 
 				if (!Enum.TryParse<ShiftStonePrefs>(LeftHandPref.Value, out left))
 				{
-					Debug.Log($"Failed to parse left: {LeftHandPref.Value}, defaulting to Empty");
+					Debug.Log($"Failed to parse left: {LeftHandPref.Value}, defaulting to Empty", false, 1);
 				}
 
 				if(!Enum.TryParse<ShiftStonePrefs>(RightHandPref.Value, out right))
 				{
-					Debug.Log($"Failed to parse right: {RightHandPref.Value}, defaulting to Empty");
+					Debug.Log($"Failed to parse right: {RightHandPref.Value}, defaulting to Empty", false, 1);
 				}
 
 				GameObject leftItem = StoneItem.GetDisplayObject(left);
@@ -316,6 +321,8 @@ namespace ShiftStoneRandomizer
 
 		public static GameObject ButtonSource;
 
+		//Create an action slots could subscribe to. This lets slots from every interactor know that the display should be updated without having to keep a reference to them
+		//Currently, this means that slots are left till listening even after the scene unloads. They are now null safe but it is technically a memory leak
 		public static event Action<Quadrants, ShiftStonePrefs, ShiftStonePrefs> Display;
 		public static void UpdateAllDisplays(Quadrants quadrant, ShiftStonePrefs left, ShiftStonePrefs right)
 		{
@@ -331,6 +338,8 @@ namespace ShiftStoneRandomizer
 		}
 
 		public static GameObject ClusterSource;
+
+		//Static constructor. Make sure to make no reference to this class before first load
 		static LoadoutInteractor()
 		{
 			ButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
