@@ -41,17 +41,6 @@ namespace ShiftStoneRandomizer
 	{
 		#region UI
 
-		/*		private int i = 0;
-				private int a = 0;
-				public override void OnUpdate()
-				{ // i hate this so much
-					i++;
-					if (i > 50)
-					{
-						i = 0;
-						CreateButtonsForAll();
-					}
-				}*/
 
 		GameObject LoadCluster;
 		GameObject SaveCluster;
@@ -65,6 +54,9 @@ namespace ShiftStoneRandomizer
 
 		GameObject PortableStoneCase;
 		bool isQssReplacementPressed = false;
+
+
+		//Legacy code from Darkener. Need optimization. 
 		private void CreateButtonsForAll()
 		{
 			var swappers = GameObject.FindObjectsOfType<GameObject>().Where(go => go.name == "ShiftstoneQuickswapper").ToArray();
@@ -79,13 +71,6 @@ namespace ShiftStoneRandomizer
 				{
 					Debug.Log($"Error creating quickswap buttons: {e}", true, 2);
 				}
-				/*//Dont add more then 1 button
-				if (swapper.transform.GetChild(0).GetChildCount() < 4)
-				{
-					
-					
-
-				}*/
 			}
 		}
 		/// <summary>
@@ -95,13 +80,6 @@ namespace ShiftStoneRandomizer
 		/// <returns>Reference to the blacklist icon for the shiftstone</returns>
 		private GameObject CreateBlackListIcons(GameObject TargetParent)
 		{
-
-			//indicator.SetActive(false);
-
-			//nameBendingObject = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "NameBending.assets.namebending", "NameBending"));
-
-			//GameObject box = Cabinet.transform.GetChild(0).gameObject;
-
 			System.Random jitter = new System.Random(TargetParent.GetHashCode());
 
 			GameObject blackListIcon = GameObject.Instantiate(IndicatorsBase.transform.GetChild(0).gameObject);
@@ -178,9 +156,6 @@ namespace ShiftStoneRandomizer
 			rightHand.transform.localPosition = new Vector3(-0.14f, 0.01f, -0.07f);
 			rightHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
 			rightHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
-			//position -0.13 0.01 -0.06
-			//Rotation 90 90 0
-			//0.0003 0.0003 0.0003
 
 
 
@@ -206,11 +181,6 @@ namespace ShiftStoneRandomizer
 			saveLabel.transform.GetChild(0).gameObject.transform.localScale = new Vector3(9.7f, 4.9f, 1f);
 
 			dropSign = saveLabel;
-			//Local Position 0.208 -0.05 0.212
-			//Rotation 5.0254 82.3274 274.8562
-			//Scale 0.09 0.2 0.3
-
-			//Text Scale 9.7 4.9 1
 
 
 			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
@@ -252,9 +222,7 @@ namespace ShiftStoneRandomizer
 
 			GameObject RandomButton = GameObject.Instantiate(Button);
 			RandomButton.transform.parent = swapper.transform.GetChild(0);
-			//-0.096 0.064 - 0.025
 			RandomButton.transform.localPosition = new Vector3(-0.096f, 0.064f, -0.025f);
-			//298.0022 83.3369 359.8999
 			RandomButton.transform.localRotation = Quaternion.Euler(298.0022f, 83.3369f, 359.8999f);
 			RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
@@ -290,36 +258,11 @@ namespace ShiftStoneRandomizer
 				EquipStones(new StoneItem(), new StoneItem());
 			});
 
-
-
-			/*GameObject derivedLoadOutCluster = GameObject.Instantiate(LoadOutCluster);
-			derivedLoadOutCluster.transform.SetParent(swapper.transform, false);
-			derivedLoadOutCluster.transform.localPosition = new Vector3(0.0f, 0.4f, 0f);
-			derivedLoadOutCluster.transform.localRotation = Quaternion.Euler(0, 180, 0);
-			derivedLoadOutCluster.SetActive(true);
-
-			for (int i = 0; i < derivedLoadOutCluster.transform.childCount; i++)
-			{
-				GameObject btnloadout = derivedLoadOutCluster.transform.GetChild(i).GetChild(0).gameObject;
-				btnloadout.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
-				{
-					Debug.Log(btnloadout.transform.parent.gameObject.name, true);
-				});
-			}*/
-
-			/*GameObject loadout1 = GameObject.Instantiate(scrollButtonSource);
-			loadout1.transform.SetParent(swapper.transform.GetChild(0));
-			loadout1.transform.localPosition = new Vector3(0.0f, 0.4f, 0f);
-			loadout1.SetActive(true);
-			loadout1.transform.GetChild(0).GetComponent<InteractionButton>().isToggleButton = false;
-			loadout1.transform.GetChild(0).GetComponent<InteractionButton>().enabled = true;
-			loadout1.transform.GetChild(0).GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			
-			{
-				ReadPrefs();
-			});*/
-
 			BuildPortableCase(swapper);
+			
+			//Replace default qss button with custom button that pulls up the portable stone case instead of the qss tablets 
+			
 			Button.SetActive(false);
 			GameObject qssReplacement = GameObject.Instantiate(Button);
 			//0.0131 0.0179 0.0577
@@ -339,6 +282,7 @@ namespace ShiftStoneRandomizer
 			});
 		}
 
+		
 		private void GrabBoxSource()
 		{
 			
@@ -355,7 +299,10 @@ namespace ShiftStoneRandomizer
 			PortableStoneCase = new GameObject("PortableStoneCase");
 			for (int i = 0; i < 12; i++)
 			{
+				//Standard shift stones correspond to 0 to 7 but control stones correspond to -4 to -1
 				ShiftStonePrefs currentStoneItem = i < 8 ? (ShiftStonePrefs)i : (ShiftStonePrefs)(i - 12);
+
+				//Create shift stone box
 				GameObject box = GameObject.Instantiate(ShiftStoneBoxSource);
 				box.transform.SetParent(PortableStoneCase.transform, false);
 				box.name = $"{currentStoneItem.ToString()}_Case";
@@ -365,26 +312,31 @@ namespace ShiftStoneRandomizer
 				box.transform.SetParent(PortableStoneCase.transform);
 				box.SetActive(true);
 
+				//Create the blacklist icon for the standard shiftstones and bind them to their respective stoneitem by adding it to the stoneItem's icon list and parent it to box
 				if(i < 8)
 				{
 					StoneItem.AllStones[i].AddIcon(CreateBlackListIcons(box));
 				}
 
+
 				GameObject boxDisplay = StoneItem.GetDisplayObject(currentStoneItem);
-
-
+				//Standard shift stones should be rotated on their broad face to show off their outline. But charge's outline is clearer from the side				
 				if (currentStoneItem >= 0 && currentStoneItem != ShiftStonePrefs.Charge)
 				{
 					boxDisplay.transform.rotation = Quaternion.Euler(0, 0, 90);
 				}
+
+				//The current placeholder icons for control stones are best displayed rotated this way
 				else if (currentStoneItem < 0)
 				{
 					boxDisplay.transform.rotation = Quaternion.Euler(0, 90, 0);
 				}
 				boxDisplay.transform.SetParent(box.transform, false);
 
+
 				boxDisplay.SetActive(true);
 
+				
 				box.transform.GetChild(1).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 				{
 					SelectStoneItem(currentStoneItem);

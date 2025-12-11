@@ -243,7 +243,7 @@ namespace ShiftStoneRandomizer
 					return;
 				if (LeftStoneSlot == null || RightStoneSlot == null)
 				{
-					Debug.Log("DisplayShiftStones: One or both stone slots are null!", true);
+					Debug.Log("DisplayShiftStones: One or both stone slots are null!", true, 2);
 					return;
 				}
 				//clear existing children to replace with new ones
@@ -316,6 +316,8 @@ namespace ShiftStoneRandomizer
 
 		public static GameObject ButtonSource;
 
+		//Create an action slots could subscribe to. This lets slots from every interactor know that the display should be updated without having to keep a reference to them
+		//Currently, this means that slots are left till listening even after the scene unloads. They are now null safe but it is technically a memory leak
 		public static event Action<Quadrants, ShiftStonePrefs, ShiftStonePrefs> Display;
 		public static void UpdateAllDisplays(Quadrants quadrant, ShiftStonePrefs left, ShiftStonePrefs right)
 		{
