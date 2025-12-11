@@ -362,6 +362,11 @@ namespace ShiftStoneRandomizer
 				box.transform.SetParent(PortableStoneCase.transform);
 				box.SetActive(true);
 
+				if(i < 8)
+				{
+					StoneItem.AllStones[i].AddIcon(CreateBlackListIcons(box));
+				}
+
 				GameObject boxDisplay = StoneItem.GetDisplayObject(currentStoneItem);
 
 
@@ -387,6 +392,7 @@ namespace ShiftStoneRandomizer
 			PortableStoneCase.transform.SetParent(swapper.transform, false);
 			PortableStoneCase.SetActive(true);
 			PortableStoneCase.transform.localPosition = new Vector3(0.3f, 0.6f, 0.0f);
+			
 		}
 
 		#endregion

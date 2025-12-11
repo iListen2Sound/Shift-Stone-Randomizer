@@ -87,6 +87,7 @@ namespace ShiftStoneRandomizer
 		public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
 		{
 			IsSceneLoaded = false;
+			StoneItem.ResetAllIcons();
 		}
 		public override void OnUpdate()
 		{
@@ -120,7 +121,7 @@ namespace ShiftStoneRandomizer
 				GameObject Cabinet = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.GetGameObject();
 				for (int i = 0; i < StoneItem.AllStones.Length; i++)
 				{
-					StoneItem.AllStones[i].Icon = CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject);
+					StoneItem.AllStones[i].AddIcon(CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject));
 				}
 			
 				firstLoad = false;

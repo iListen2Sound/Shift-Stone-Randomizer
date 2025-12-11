@@ -132,7 +132,7 @@ namespace ShiftStoneRandomizer
 					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
 					{
 						SaveSelectedToLoadout();
-						Debug.Log("Slot: Event handler assigned for save");
+						Debug.Log("Slot: Event handler assigned for save", true);
 					});
 				}
 				else
@@ -253,12 +253,12 @@ namespace ShiftStoneRandomizer
 
 				if (!Enum.TryParse<ShiftStonePrefs>(LeftHandPref.Value, out left))
 				{
-					Debug.Log($"Failed to parse left: {LeftHandPref.Value}, defaulting to Empty");
+					Debug.Log($"Failed to parse left: {LeftHandPref.Value}, defaulting to Empty", false, 1);
 				}
 
 				if(!Enum.TryParse<ShiftStonePrefs>(RightHandPref.Value, out right))
 				{
-					Debug.Log($"Failed to parse right: {RightHandPref.Value}, defaulting to Empty");
+					Debug.Log($"Failed to parse right: {RightHandPref.Value}, defaulting to Empty", false, 1);
 				}
 
 				GameObject leftItem = StoneItem.GetDisplayObject(left);
