@@ -142,7 +142,6 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="buildIndex"></param>
 		/// <param name="sceneName"></param>
-		/// TODO: Create default loadout system that loads only once.
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
@@ -221,7 +220,7 @@ namespace ShiftStoneRandomizer
 		private void ShowRandomedHand()
 		{
 			Hands hand = EnabledHand;
-			Color disabled = new Color(1f, 1f, 0f, 0.5f);
+			Color disabled = new Color(1f, 1f, 1f, 0.25f);
 			Color enabled = new Color(1f, 1f, 1f, 1f);
 			switch (hand)
 			{

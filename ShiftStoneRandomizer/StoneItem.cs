@@ -202,8 +202,7 @@ namespace ShiftStoneRandomizer
 		}
 		private List<GameObject> _iconList = new List<GameObject>();
 		public List<GameObject> IconList {get {return _iconList;} set {_iconList = value}};
-		private GameObject _icon;
-		public GameObject Icon { set { _icon = value; _icon.SetActive(false); } }
+
 		public StoneItem(ShiftStone shiftStone)
 		{
 			shiftStone.gameObject.SetActive(false);// Disable the stone so it doesn't show up in the game

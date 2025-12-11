@@ -333,6 +333,8 @@ namespace ShiftStoneRandomizer
 		}
 
 		public static GameObject ClusterSource;
+
+		//Static constructor. Make sure to make no reference to this class before first load
 		static LoadoutInteractor()
 		{
 			ButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
