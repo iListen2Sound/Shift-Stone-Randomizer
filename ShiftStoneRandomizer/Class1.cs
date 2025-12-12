@@ -488,10 +488,15 @@ namespace ShiftStoneRandomizer
 				return null;
 			}
 		}
-		void SelectStoneItem(ShiftStonePrefs item)
+		Hands SelectStoneItem(ShiftStonePrefs item, Vector3 itemPos)
 		{
 			Debug.Log($"SelectStoneItem {item.ToString()}");
 			//TODO: Implement Selection properly
+			float leftDist = Vector3.Distance(leftPoint, itemPos);
+			float rightDist = Vector3.Distance(rightPoint, itemPos);
+
+			return leftDist > rightDist ? Hands.Left : Hands.Right;
+
 		}
 	}
 }

@@ -339,7 +339,7 @@ namespace ShiftStoneRandomizer
 				
 				box.transform.GetChild(1).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 				{
-					SelectStoneItem(currentStoneItem);
+					Hand usedHand = SelectStoneItem(currentStoneItem);
 				});
 				box.transform.GetChild(1).gameObject.GetComponent<InteractionButton>().enabled = true;
 			}
