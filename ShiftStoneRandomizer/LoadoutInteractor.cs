@@ -154,7 +154,7 @@ namespace ShiftStoneRandomizer
 				Debug.Log("Saving Loadout...");
 				int[] stonesInHand = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 				
-
+				//Templogic for not adding listeners to stone case yet
 				for(int i = 0; i < 2; i++)
 				{
 					//Selecting a command stone will have the shift stone socket empty
@@ -320,6 +320,36 @@ namespace ShiftStoneRandomizer
 		public enum Quadrants { TopLeft, TopRight, BottomLeft, BottomRight };
 
 		public static GameObject ButtonSource;
+
+		private GameObject[] Sockets = new GameObject[2];
+		public static GameObject LeftSocket {get {return Sockets[0];} set{Sockets[0] = value;}}
+		public static GameObject RightSocket {get {return Sockets[1];} set{Sockets[1] = value;}}
+		
+		public static void HighlightItem(ShiftStonePrefs item, Hands hand)
+		{
+			if(item < shiftStonePrefs.Empty)
+			{
+				Selection[(int) hand] == item ? ShiftStonePrefs.Empty : item;
+				GameObject displayItem = StoneItem.GetDisplayObject(item);
+				displayItem.SetParent(Sockets[(int) hand]);
+				//Unequip current shift stone from selected hand;
+				if(hand = Hands.Left)
+					ShiftStoneRandomizer.EquipStones(new StoneItem(), null);
+				else 
+					ShiftStoneRandomizer.EquipStones(null, new StoneItem());
+			}
+			else 
+			{
+				HighlightCurrentEquippedStones();
+			}
+		}
+
+		public static void HighlightCurrentEquippedStones()
+		{
+			int[] equipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+			Selection[0] = (ShiftStonePrefs) equipped[0];
+			Selection[1] = (ShiftStonePrefs) equipped[1];
+		}
 
 		//Create an action slots could subscribe to. This lets slots from every interactor know that the display should be updated without having to keep a reference to them
 		//Currently, this means that slots are left till listening even after the scene unloads. They are now null safe but it is technically a memory leak

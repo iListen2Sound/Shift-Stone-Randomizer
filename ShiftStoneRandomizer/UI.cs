@@ -339,7 +339,9 @@ namespace ShiftStoneRandomizer
 				
 				box.transform.GetChild(1).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 				{
-					Hand usedHand = SelectStoneItem(currentStoneItem);
+					Hands usedHand = FindCulprit(box);
+
+					LoadoutInteractor.HighlightItem(usedHand, currentStoneItem);
 				});
 				box.transform.GetChild(1).gameObject.GetComponent<InteractionButton>().enabled = true;
 			}
@@ -351,7 +353,17 @@ namespace ShiftStoneRandomizer
 		}
 
 		#endregion
+		#region UI Logic
+		Hands FindCulprit(GameObject selectedButton)
+		{
+			float leftDist = Vector3.Distance(leftPoint, selectedButton.transform.position);
+			float rightDist = Vector3.Distance(rightPoint, selectedButton.transform.position);
 
+			return leftDist > rightDist ? Hands.Left : Hands.Right;
+		}
+
+
+		#endregion
 
 
 

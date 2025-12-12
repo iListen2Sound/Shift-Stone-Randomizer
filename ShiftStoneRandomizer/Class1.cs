@@ -147,13 +147,16 @@ namespace ShiftStoneRandomizer
 				Player0 = Calls.Managers.GetPlayerManager().LocalPlayer.Controller;
 
 				//Left Point: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/Bone_Pointer_A_L/Bone_Pointer_B_L/Bone_Pointer_C_L
-				//Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/ShifstoneSocket_L
+				//Left Socket: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/ShifstoneSocket_L
 
 				//Right Point: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/Bone_Pointer_A_R/Bone_Pointer_B_R/Bone_Pointer_C_R
 				//Right Socket: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/ShiftstoneSocket_R
 
 				leftPoint = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/Bone_Pointer_A_L/Bone_Pointer_B_L/Bone_Pointer_C_L").gameObject;
 				rightPoint = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/Bone_Pointer_A_R/Bone_Pointer_B_R/Bone_Pointer_C_R").gameObject;
+				LoadoutInteractor.LeftSocket = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/ShifstoneSocket_L").gameObject;
+				LoadoutInteractor.RightSocket = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/ShiftstoneSocket_R").gameObject;
+				LoadoutInteractor.HighlightCurrentEquippedStones();
 			}
 
 		}
@@ -384,7 +387,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="leftStone"></param>
 		/// <param name="rightStone"></param>
-		public static void EquipStones(StoneItem leftStone, StoneItem rightStone)
+		public static void EquipStones(StoneItem leftStone, StoneItem rightStone, bool applyEffect = true)
 		{
 			Debug.Log("Equipping stones: " + (leftStone != null ? leftStone.Name : "Null") + " | " + (rightStone != null ? rightStone.Name : "Null"), true);
 			
@@ -410,7 +413,8 @@ namespace ShiftStoneRandomizer
 					Player0.GetComponent<PlayerShiftstoneSystem>().RemoveAndReattachShiftstones(true, true);
 				}
 			}
-			ActivateEffect(leftStone != null, rightStone != null);
+			if(applyEffect)
+				ActivateEffect(leftStone != null, rightStone != null);
 		}
 
 		private static void EquipStones(ShiftStonePrefs single, Hands hand)
@@ -498,5 +502,7 @@ namespace ShiftStoneRandomizer
 			return leftDist > rightDist ? Hands.Left : Hands.Right;
 
 		}
+		
+		
 	}
 }
