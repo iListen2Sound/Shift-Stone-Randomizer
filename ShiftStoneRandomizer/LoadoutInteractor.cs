@@ -286,7 +286,7 @@ namespace ShiftStoneRandomizer
 
 			}
 			
-			private void Infanticide(GameObject parent)
+			public static void Infanticide(GameObject parent)
 			{
 				
 				Debug.Log($"Infanticide: parent is null? {parent == null}", true);
@@ -321,25 +321,43 @@ namespace ShiftStoneRandomizer
 
 		public static GameObject ButtonSource;
 
-		private GameObject[] Sockets = new GameObject[2];
+		private static GameObject[] Sockets = new GameObject[2];
 		public static GameObject LeftSocket {get {return Sockets[0];} set{Sockets[0] = value;}}
 		public static GameObject RightSocket {get {return Sockets[1];} set{Sockets[1] = value;}}
 		
 		public static void HighlightItem(ShiftStonePrefs item, Hands hand)
 		{
-			if(item < shiftStonePrefs.Empty)
+			if(item < ShiftStonePrefs.Empty)
 			{
-				Selection[(int) hand] == item ? ShiftStonePrefs.Empty : item;
-				GameObject displayItem = StoneItem.GetDisplayObject(item);
-				displayItem.SetParent(Sockets[(int) hand]);
-				//Unequip current shift stone from selected hand;
-				if(hand = Hands.Left)
-					ShiftStoneRandomizer.EquipStones(new StoneItem(), null);
+				Slot.Infanticide(Sockets[(int) hand]);
+				Selection[(int) hand] = Selection[(int) hand] == item ? ShiftStonePrefs.Empty : item;
+
+				if (Selection[(int)hand] != ShiftStonePrefs.Empty)
+				{
+					GameObject displayItem = StoneItem.GetDisplayObject(Selection[(int)hand]);
+					displayItem.transform.SetParent(Sockets[(int)hand].transform, false);
+					displayItem.SetActive(true);
+
+				}//Unequip current shift stone from selected hand;
+
+				//Highlight should be on top of empty shift stone socket
+				if (hand == Hands.Left)
+					ShiftStoneRandomizer.EquipStones(new StoneItem(), null, false);
 				else 
-					ShiftStoneRandomizer.EquipStones(null, new StoneItem());
+					ShiftStoneRandomizer.EquipStones(null, new StoneItem(), false);
 			}
 			else 
 			{
+				int[] currentEquipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+
+				if (hand == Hands.Left)
+				{
+					ShiftStoneRandomizer.EquipStones(currentEquipped[0] == -1 ? StoneItem.AllStones[(int) item] : new StoneItem(), null, false);
+				}
+				else
+				{
+					ShiftStoneRandomizer.EquipStones(null, currentEquipped[1] == -1 ? StoneItem.AllStones[(int)item] : new StoneItem(), false);
+				}
 				HighlightCurrentEquippedStones();
 			}
 		}
