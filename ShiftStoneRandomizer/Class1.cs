@@ -104,7 +104,7 @@ namespace ShiftStoneRandomizer
 			if (IsSceneLoaded)
 			{
 				//Debug.PrintInGame($"{LoadoutInteractor.Selection[0].ToString()} \n{LoadoutInteractor.Selection[1].ToString()}");
-				Debug.PrintInGame(bothPos);
+				Debug.PrintInGame($"{LoadoutInteractor.Selection[0]} \n {LoadoutInteractor.Selection[1]}");
 			}
 		}
 		public void logOnMatchEnded()
@@ -154,8 +154,12 @@ namespace ShiftStoneRandomizer
 
 				leftPoint = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/Bone_Pointer_A_L/Bone_Pointer_B_L/Bone_Pointer_C_L").gameObject;
 				rightPoint = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/Bone_Pointer_A_R/Bone_Pointer_B_R/Bone_Pointer_C_R").gameObject;
-				LoadoutInteractor.LeftSocket = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/ShifstoneSocket_L").gameObject;
-				LoadoutInteractor.RightSocket = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/ShiftstoneSocket_R").gameObject;
+
+				GameObject leftArm = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L").gameObject;
+				GameObject rightArm = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R").gameObject;
+
+				LoadoutInteractor.LeftSocket = leftArm.transform.DeepFind("SnapTransform").gameObject;
+				LoadoutInteractor.RightSocket = rightArm.transform.DeepFind("SnapTransform").gameObject;
 				LoadoutInteractor.HighlightCurrentEquippedStones();
 			}
 
@@ -211,7 +215,7 @@ namespace ShiftStoneRandomizer
 			ActivateEffect(true, true);
 		}
 
-		private void CycleHandLock()
+		public void CycleHandLock()
 		{
 			EnabledHand++;
 			if ((int)EnabledHand > 1)
@@ -491,16 +495,6 @@ namespace ShiftStoneRandomizer
 			{
 				return null;
 			}
-		}
-		Hands SelectStoneItem(ShiftStonePrefs item, Vector3 itemPos)
-		{
-			Debug.Log($"SelectStoneItem {item.ToString()}");
-			//TODO: Implement Selection properly
-			float leftDist = Vector3.Distance(leftPoint, itemPos);
-			float rightDist = Vector3.Distance(rightPoint, itemPos);
-
-			return leftDist > rightDist ? Hands.Left : Hands.Right;
-
 		}
 		
 		
