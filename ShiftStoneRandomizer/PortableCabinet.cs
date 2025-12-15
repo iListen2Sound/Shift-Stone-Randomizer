@@ -30,11 +30,54 @@ namespace ShiftStoneRandomizer
         private GameObject Cubbies {get; private set;}
         public GameObject StoneCase {get; private set; }
         private GameObject NewQssButton {get; set; }
+
+        private LoadoutInteractor loadInteractor;
+        private GameObject LoadCluster;
+
+        private LoadoutInteractor qssSaveInteractor;
+        private GameObject QssSaveCluster;
+
+
         
         public PortableCabinet(GameObject swapper)
         {   
-            double mulCol = 0.1; double mulRow = 0.12;
+            GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
+            
+            //Randomizer Button
+            // GameObject RandomButton = GameObject.Instantiate(Button);
+			// RandomButton.transform.SetParent(swapper.transform.GetChild(0));
+			// RandomButton.transform.localPosition = new Vector3(-0.096f, 0.064f, -0.025f);
+			// RandomButton.transform.localRotation = Quaternion.Euler(298.0022f, 83.3369f, 359.8999f);
+			// RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
+			// RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			// {
+			// 	ShiftStoneRandomizer.RandomizeStones(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+			// });
+
+            
+
+            
+
+            
+            //Create loadout interactors
+            loadInteractor = new LoadoutInteractor(false);
+			LoadCluster = loadInteractor.Cluster;
+			LoadCluster.transform.SetParent(swapper.transform, false);
+			LoadCluster.transform.localPosition = new Vector3(0.144f, 0.42f, 0f);
+			LoadCluster.transform.localRotation = Quaternion.Euler(0, 180, 0);
+			LoadCluster.SetActive(true);
+
+			qssSaveInteractor = new LoadoutInteractor(true);
+			QssSaveCluster = qssSaveInteractor.Cluster;
+			QssSaveCluster.transform.SetParent(swapper.transform, false);
+			QssSaveCluster.transform.localPosition = new Vector3(0.144f, 0.72f, 0f);
+			QssSaveCluster.transform.localRotation = Quaternion.Euler(0, 180, 0);
+			QssSaveCluster.SetActive(true);
+
+
+            //Create Portable Stone Case
+            double mulCol = 0.1; double mulRow = 0.12;
             StoneCase = new GameObject("Portable Stone Case");
 
             for (int i = 0; i < 12; i++;)
@@ -66,13 +109,39 @@ namespace ShiftStoneRandomizer
 					boxDisplay.transform.rotation = Quaternion.Euler(0, 90, 0);
 				}
 
-                
+                boxDisplay.transform.SetParent(box.transform, false);
+
+                boxDisplay.SetActive(true);
+
+                box.transform.GetChild(1).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+				{
+					Hands usedHand = FindCulprit(box);
+
+					LoadoutInteractor.HighlightItem(currentStonePref, usedHand);
+				});
+
+                StoneCase.transform.SetParent(swapper.transform, false);
+                StoneCase.SetActive(true);
+                StoneCase.transform.localPosition = new Vector3(0.3f, 0.6f, 0.0f);
             }
 
 
-
+            //Create replacement swapper button
             NewQssButton = GameObject.Instantiate(qssReplacementBase);
+            //TODO: Disable original swapper button
+            NewQssButton.transform.localPosition = new Vector3(0.0131f, 0.0179f, 0.0577f);
+            NewQssButton.transform.SetParent(swapper.transform.GetChild(0), false);
+            NewQssButton.SetActive(true);
 
+            NewQssButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onToggleStateChanged.AddListener((System.Action<bool>)delegate (bool isOn)
+			{
+				Debug.Log("Pressed", true);
+				StoneCase.SetActive(qssButton.IsPressed);
+				QssSaveCluster.SetActive(qssButton.IsPressed);
+			
+				loadInteractor.Cluster.SetActive(!qssButton.IsPressed);
+				
+			});
 
 
 

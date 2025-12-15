@@ -215,7 +215,7 @@ namespace ShiftStoneRandomizer
 			ActivateEffect(true, true);
 		}
 
-		private void CycleHandLock()
+		public void CycleHandLock()
 		{
 			EnabledHand++;
 			if ((int)EnabledHand > 1)
