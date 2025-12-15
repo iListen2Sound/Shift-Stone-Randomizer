@@ -78,7 +78,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="TargetParent">Box to parent the icons to</param>
 		/// <returns>Reference to the blacklist icon for the shiftstone</returns>
-		private GameObject CreateBlackListIcons(GameObject TargetParent)
+		private static GameObject CreateBlackListIcons(GameObject TargetParent)
 		{
 			System.Random jitter = new System.Random(TargetParent.GetHashCode());
 
