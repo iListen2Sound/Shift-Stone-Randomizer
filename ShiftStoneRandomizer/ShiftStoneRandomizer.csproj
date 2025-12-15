@@ -698,6 +698,7 @@
     <Compile Include="LoadoutInteractor.cs" />
     <Compile Include="Preferences.cs" />
     <Compile Include="StoneItem.cs" />
+    <Compile Include="PortableCabinet.cs" />
     <Compile Include="UI.cs" />
   </ItemGroup>
   <ItemGroup>
