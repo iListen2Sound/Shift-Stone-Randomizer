@@ -78,7 +78,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="TargetParent">Box to parent the icons to</param>
 		/// <returns>Reference to the blacklist icon for the shiftstone</returns>
-		private static GameObject CreateBlackListIcons(GameObject TargetParent)
+		public static GameObject CreateBlackListIcons(GameObject TargetParent)
 		{
 			System.Random jitter = new System.Random(TargetParent.GetHashCode());
 
@@ -203,9 +203,10 @@ namespace ShiftStoneRandomizer
 
 		private void CreateQuickSwapButtons(GameObject swapper)
 		{
+			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
 
 			//RandomizedHandButton
-            GameObject keepHandButton = GameObject.Instantiate(Button);
+			GameObject keepHandButton = GameObject.Instantiate(Button);
 			keepHandButton.transform.SetParent(swapper.transform.GetChild(0), false);
 			keepHandButton.transform.localPosition = new Vector3(0.1835f, -0.001f, -0.02f);
 			keepHandButton.transform.localRotation = Quaternion.Euler(43.108f, 348.0498f, 275.3816f);
@@ -218,7 +219,7 @@ namespace ShiftStoneRandomizer
 
             leftHand = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
 
-			rightHand = GameObject.Instantiate(ShiftStoneRandomizerIndicatorsBase.transform.GetChild(1).gameObject);
+			rightHand = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(1).gameObject);
 
 			leftHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
 			leftHand.transform.localPosition = new Vector3(-0.14f, 0.01f, 0.07f);
@@ -232,7 +233,7 @@ namespace ShiftStoneRandomizer
 
 
 			isQssReplacementPressed = false;
-			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
+			
 
 			loadInteractor = new LoadoutInteractor(false);
 			LoadCluster = loadInteractor.Cluster;

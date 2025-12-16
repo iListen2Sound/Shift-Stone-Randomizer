@@ -22,12 +22,12 @@ namespace ShiftStoneRandomizer
         /// </summary>
         static PortableCabinet()
         {
-            qssReplacementBase = GameObject.Instantiate( /*Swapper button in API*/);
+            qssReplacementBase = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneQuickswapper.FloatingButton.InteractionButtonToggleVariant.GetGameObject());
             ShiftStoneBoxSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject());
         }
 
 
-        private GameObject Cubbies {get; private set;}
+        private GameObject Cubbies {get; set;}
         public GameObject StoneCase {get; private set; }
         private GameObject NewQssButton {get; set; }
 
@@ -80,13 +80,13 @@ namespace ShiftStoneRandomizer
             double mulCol = 0.1; double mulRow = 0.12;
             StoneCase = new GameObject("Portable Stone Case");
 
-            for (int i = 0; i < 12; i++;)
+            for (int i = 0; i < 12; i++)
             {
                 ShiftStonePrefs currentStonePref = i < 8 ? (ShiftStonePrefs) i : (ShiftStonePrefs) (i - 12);
 
                 GameObject box = GameObject.Instantiate(ShiftStoneBoxSource);
                 box.name = $"{currentStonePref.ToString()}_Case";
-                box.transform.localPosition = new Vector3((float)(mulCol * (i % 4) * -1), (float)(mulRow * (Math.Floor(i / 4) * -1)), 0.07f);
+                box.transform.localPosition = new Vector3((float)(mulCol * (i % 4) * -1), (float)(mulRow * (i / 4) * -1), 0.07f);
                 box.transform.rotation = Quaternion.Euler(0, 90, 0);
                 box.transform.GetChild(0).localPosition = new Vector3(-0.03f, -0.04f, -0f);
                 box.transform.SetParent(StoneCase.transform, false);
@@ -99,12 +99,12 @@ namespace ShiftStoneRandomizer
 
                 GameObject boxDisplay = StoneItem.GetDisplayObject(currentStonePref);
                 //Standard shift stones should be rotated on their broad face to show off their outline. But charge's outline is clearer from the side				
-                if (currentStoneItem >= 0 && currentStoneItem != ShiftStonePrefs.Charge)
+                if (currentStonePref >= 0 && currentStonePref != ShiftStonePrefs.Charge)
 				{
 					boxDisplay.transform.rotation = Quaternion.Euler(0, 0, 90);
 				}
                 //The current placeholder icons for control stones are best displayed rotated this way
-				else if (currentStoneItem < 0)
+				else if (currentStonePref < 0)
 				{
 					boxDisplay.transform.rotation = Quaternion.Euler(0, 90, 0);
 				}
@@ -132,21 +132,30 @@ namespace ShiftStoneRandomizer
             NewQssButton.transform.localPosition = new Vector3(0.0131f, 0.0179f, 0.0577f);
             NewQssButton.transform.SetParent(swapper.transform.GetChild(0), false);
             NewQssButton.SetActive(true);
-
-            NewQssButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onToggleStateChanged.AddListener((System.Action<bool>)delegate (bool isOn)
+            InteractionButton interaction = NewQssButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>();
+			NewQssButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onToggleStateChanged.AddListener((System.Action<bool>)delegate (bool isOn)
 			{
 				Debug.Log("Pressed", true);
-				StoneCase.SetActive(qssButton.IsPressed);
-				QssSaveCluster.SetActive(qssButton.IsPressed);
+				StoneCase.SetActive(interaction.IsPressed);
+				QssSaveCluster.SetActive(interaction.IsPressed);
 			
-				loadInteractor.Cluster.SetActive(!qssButton.IsPressed);
+				loadInteractor.Cluster.SetActive(!interaction.IsPressed);
 				
 			});
 
 
 
         }
+		Hands FindCulprit(GameObject selectedButton)
+		{
+			float leftDist = Vector3.Distance(ShiftStoneRandomizer.leftPoint.transform.position, selectedButton.transform.position);
+			float rightDist = Vector3.Distance(ShiftStoneRandomizer.rightPoint.transform.position, selectedButton.transform.position);
+
+			Debug.Log($"LeftDist: {leftDist} RightDist: {rightDist}", true);
+
+			return leftDist < rightDist ? Hands.Left : Hands.Right;
+		}
 
 
-    }
+	}
 }
