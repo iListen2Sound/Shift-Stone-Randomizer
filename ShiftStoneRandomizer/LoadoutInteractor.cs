@@ -349,16 +349,29 @@ namespace ShiftStoneRandomizer
 			else 
 			{
 				int[] currentEquipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				bool itemIsEquipped = false;
+				foreach (int stoneInHand in currentEquipped)
+				{
+					if((ShiftStonePrefs) stoneInHand == item)
+					{
+						itemIsEquipped == true;
+					}
+				}
 
-				if (hand == Hands.Left)
+				if(!itemIsEquipped)
 				{
-					ShiftStoneRandomizer.EquipStones(currentEquipped[0] == (int)item ? new StoneItem() : StoneItem.AllStones[(int) item], null, false);
+					
+					if (hand == Hands.Left)
+					{
+						ShiftStoneRandomizer.EquipStones(currentEquipped[0] == (int)item ? new StoneItem() : StoneItem.AllStones[(int) item], null, false);
+						
+					}
+					else
+					{
+						ShiftStoneRandomizer.EquipStones(null, currentEquipped[1] == (int) item ? new StoneItem() : StoneItem.AllStones[(int)item], false);
+					}
 				}
-				else
-				{
-					ShiftStoneRandomizer.EquipStones(null, currentEquipped[1] == (int) item ? new StoneItem() : StoneItem.AllStones[(int)item], false);
-				}
-				HighlightCurrentEquippedStones();
+				//HighlightCurrentEquippedStones();
 			}
 		}
 
