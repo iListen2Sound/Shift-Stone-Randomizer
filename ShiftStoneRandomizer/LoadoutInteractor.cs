@@ -159,7 +159,7 @@ namespace ShiftStoneRandomizer
 				{
 					//Selecting a command stone will have the shift stone socket empty
 					//If a command isn't selected, then assign the equivalent enum to the shift stone or lack of it to selected
-					if (Selection[i] >= ShiftStonePrefs.Empty || true)
+					if (Selection[i] >= ShiftStonePrefs.Empty)
 					{
 						Selection[i] = (ShiftStonePrefs)stonesInHand[i];
 
@@ -196,7 +196,7 @@ namespace ShiftStoneRandomizer
 				}
 				else
 				{
-					ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
+					//ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
 					for(int i = 0; i < 2; i++)
 					{
 						switch (eachHand[i])
@@ -216,8 +216,8 @@ namespace ShiftStoneRandomizer
 								}
 								break;
 							
-							case ShiftStonePrefs.Stay: 
-								//Don't do anything really
+							case ShiftStonePrefs.Stay:
+								
 								break;
 							case ShiftStonePrefs.Empty: 
 								ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());

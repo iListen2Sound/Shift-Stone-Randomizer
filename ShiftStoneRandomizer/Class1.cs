@@ -330,6 +330,10 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		public static void RandomizeStones(int[] Equipped, Hands hand = Hands.Both)
 		{
+			int handIndex = (int)hand;
+			int otherHandIndex = hand == Hands.Left ? (int)Hands.Right : (int)Hands.Left; 
+			
+			
 			List<StoneItem> randomStones = new List<StoneItem>();
 			Debug.Log("Stone check:", true);
 			for (int i = 0; i < StoneItem.AllStones.Length; i++)
@@ -348,7 +352,7 @@ namespace ShiftStoneRandomizer
 			}
 
 
-			if (randomStones.Count <= 2 && EnabledHand == Hands.Both)
+			if (randomStones.Count <= 2 && hand == Hands.Both)
 			{
 				Debug.Log("Not enough stones to disallow repeats", true);
 				// If there are less than 4 stones available, add the equipped stones to the list
@@ -364,7 +368,18 @@ namespace ShiftStoneRandomizer
 			if (randomStones.Count < 2)
 			{
 				Debug.Log("Not enough stones to randomize, using equipped stones instead.");
-				return;
+				if (hand == Hands.Both)
+				{
+					randomStones.AddRange(new StoneItem[] {
+						StoneItem.AllStones[Equipped[0]],
+						StoneItem.AllStones[Equipped[1]]
+					});
+
+				}
+				else
+				{
+					randomStones.Add(StoneItem.AllStones[Equipped[handIndex]]);
+				}
 			}
 
 			switch (hand)
