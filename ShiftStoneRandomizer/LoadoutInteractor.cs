@@ -327,14 +327,14 @@ namespace ShiftStoneRandomizer
 
 		private static void ClearSlot(GameObject parent)
 		{
-			for(int i = 0; i < parent.transform.childCount, i++)
+			for(int i = 0; i < parent.transform.childCount; i++)
 			{
 				GameObject child = parent.transform.GetChild(i).gameObject;
 				if(child.name.Contains("Indicator"))
 				{
 					try  
 					{
-						Debug.Log($"Clearing slot: {child.name}", true)
+						Debug.Log($"Clearing slot: {child.name}", true);
 						UnityEngine.Object.Destroy(parent.transform.GetChild(i).gameObject);
 					}catch(Exception ex)
 					{
@@ -391,7 +391,7 @@ namespace ShiftStoneRandomizer
 					hand == Hands.Right ? toEquip : null,
 					false);
 				
-				Selection[handIndex] = toEquip.GetEnum;
+				Selection[handIndex] = toEquip.GetEnum();
 
 				
 				//HighlightCurrentEquippedStones();
