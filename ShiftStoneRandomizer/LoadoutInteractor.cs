@@ -324,53 +324,76 @@ namespace ShiftStoneRandomizer
 		private static GameObject[] Sockets = new GameObject[2];
 		public static GameObject LeftSocket {get {return Sockets[0];} set{Sockets[0] = value;}}
 		public static GameObject RightSocket {get {return Sockets[1];} set{Sockets[1] = value;}}
+
+		private static void ClearSlot(GameObject parent)
+		{
+			for(int i = 0; i < parent.transform.childCount, i++)
+			{
+				GameObject child = parent.transform.GetChild(i).gameObject;
+				if(child.name.Contains("Indicator"))
+				{
+					try  
+					{
+						Debug.Log($"Clearing slot: {child.name}", true)
+						UnityEngine.Object.Destroy(parent.transform.GetChild(i).gameObject);
+					}catch(Exception ex)
+					{
+						Debug.Log(ex.Message, false, 1);
+					}
+
+				}
+			}
+		}
 		
 		public static void HighlightItem(ShiftStonePrefs item, Hands hand)
 		{
+			int handIndex = (int) hand;
+			int otherHandIndex = hand == Hands.Left ? (int)Hands.Right : (int)Hands.Left;
+			int itemIndex = (int) item;
+			
+			//destroy previously selected item indicators
+			ClearSlot(Sockets[handIndex]);
+			//When an indicator is selected
 			if(item < ShiftStonePrefs.Empty)
 			{
-				Slot.Infanticide(Sockets[(int) hand]);
-				Selection[(int) hand] = Selection[(int) hand] == item ? ShiftStonePrefs.Empty : item;
+				//Unequip shift stones when selecting indicators
+				ShiftStoneRandomizer.EquipStones(
+					hand == Hands.Left ? new StoneItem() : null, 
+					hand == Hands.Right ? new StoneItem() : null,
+					false);
 
-				if (Selection[(int)hand] != ShiftStonePrefs.Empty)
+				Selection[handIndex] = Selection[handIndex] == item ? ShiftStonePrefs.Empty : item;
+
+				if (Selection[handIndex] != ShiftStonePrefs.Empty)
 				{
-					GameObject displayItem = StoneItem.GetDisplayObject(Selection[(int)hand]);
-					displayItem.transform.SetParent(Sockets[(int)hand].transform, false);
+					GameObject displayItem = StoneItem.GetDisplayObject(Selection[handIndex]);
+					displayItem.transform.SetParent(Sockets[handIndex].transform, false);
 					displayItem.SetActive(true);
 
-				}//Unequip current shift stone from selected hand;
+				}
 
-				//Highlight should be on top of empty shift stone socket
-				if (hand == Hands.Left)
-					ShiftStoneRandomizer.EquipStones(new StoneItem(), null, false);
-				else 
-					ShiftStoneRandomizer.EquipStones(null, new StoneItem(), false);
 			}
+			//When standard shift stones are selected
 			else 
 			{
-				int[] currentEquipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-				bool itemIsEquipped = false;
-				foreach (int stoneInHand in currentEquipped)
-				{
-					if((ShiftStonePrefs) stoneInHand == item)
-					{
-						itemIsEquipped == true;
-					}
-				}
 
-				if(!itemIsEquipped)
-				{
-					
-					if (hand == Hands.Left)
-					{
-						ShiftStoneRandomizer.EquipStones(currentEquipped[0] == (int)item ? new StoneItem() : StoneItem.AllStones[(int) item], null, false);
-						
-					}
-					else
-					{
-						ShiftStoneRandomizer.EquipStones(null, currentEquipped[1] == (int) item ? new StoneItem() : StoneItem.AllStones[(int)item], false);
-					}
-				}
+				
+				int[] currentEquipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				
+				if(currentEquipped[otherHandIndex] == itemIndex)
+					return;
+
+				StoneItem? toEquip = currentEquipped[handIndex] == itemIndex ? new StoneItem() : StoneItem.AllStones[itemIndex];
+				
+				
+				ShiftStoneRandomizer.EquipStones(
+					hand == Hands.Left ? toEquip : null, 
+					hand == Hands.Right ? toEquip : null,
+					false);
+				
+				Selection[handIndex] = toEquip.GetEnum;
+
+				
 				//HighlightCurrentEquippedStones();
 			}
 		}
