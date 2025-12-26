@@ -16,7 +16,7 @@ namespace ShiftStoneRandomizer
 	public class LoadoutInteractor
 	{
 		//TODO: Create logic for all loadout interactors in the world to display the same shiftstones
-#region Slot
+		#region Slot
 		public class Slot
 		{
 			public static Vector3[] Sections = new Vector3[]
@@ -28,9 +28,9 @@ namespace ShiftStoneRandomizer
 			};
 
 			public GameObject Button { get; private set; }
-			public GameObject ActualButton 
+			public GameObject ActualButton
 			{
-				get 
+				get
 				{
 					return Button.transform.GetChild(0).gameObject;
 				}
@@ -108,12 +108,12 @@ namespace ShiftStoneRandomizer
 
 				Button = GameObject.Instantiate(ButtonSource);
 				Button.name = "Loadout Button";
-				Button.transform.localPosition = Sections[(int) Quadrant];
-				if(isSaveButton)
+				Button.transform.localPosition = Sections[(int)Quadrant];
+				if (isSaveButton)
 				{
 					ActualButton.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
 				}
-				
+
 				Button.SetActive(true);
 
 				_leftStoneSlot = new GameObject("LeftSlot");
@@ -134,7 +134,7 @@ namespace ShiftStoneRandomizer
 				//TODO: Define save vs load event handlers
 				if (isSaveButton)
 				{
-					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
+					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 					{
 						SaveSelectedToLoadout();
 						Debug.Log("Slot: Event handler assigned for save", true);
@@ -142,7 +142,7 @@ namespace ShiftStoneRandomizer
 				}
 				else
 				{
-					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate
+					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 					{
 						ApplyLoadOut();
 					});
@@ -153,13 +153,13 @@ namespace ShiftStoneRandomizer
 			{
 				Debug.Log("Saving Loadout...");
 				int[] stonesInHand = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-				
+
 				//Templogic for not adding listeners to stone case yet
-				for(int i = 0; i < 2; i++)
+				for (int i = 0; i < 2; i++)
 				{
 					//Selecting a command stone will have the shift stone socket empty
 					//If a command isn't selected, then assign the equivalent enum to the shift stone or lack of it to selected
-					if (Selection[i] >= ShiftStonePrefs.Empty || true)
+					if (Selection[i] >= ShiftStonePrefs.Empty)
 					{
 						Selection[i] = (ShiftStonePrefs)stonesInHand[i];
 
@@ -179,56 +179,63 @@ namespace ShiftStoneRandomizer
 			{
 				Debug.Log("Applying Loadout...");
 				ShiftStonePrefs left;
-				if(!Enum.TryParse<ShiftStonePrefs>(LeftHandPref.Value, out left))
+				if (!Enum.TryParse<ShiftStonePrefs>(LeftHandPref.Value, out left))
 					Debug.Log($"AppyloLoadout Failed to parse: {LeftHandPref.Value}");
 				ShiftStonePrefs right;
-				if(!Enum.TryParse<ShiftStonePrefs>(RightHandPref.Value, out right))
+				if (!Enum.TryParse<ShiftStonePrefs>(RightHandPref.Value, out right))
 					Debug.Log($"AppyloLoadout Failed to parse: {RightHandPref.Value}");
-				
-				ShiftStonePrefs[] eachHand = {left, right};
+
+				ShiftStonePrefs[] eachHand = { left, right };
 
 				int[] currentEquipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 				//If both are random, use standard randomization method
-				if(left == ShiftStonePrefs.Random && right == ShiftStonePrefs.Random)
+				if (left == ShiftStonePrefs.Random && right == ShiftStonePrefs.Random)
 				{
 					ShiftStoneRandomizer.RandomizeStones(currentEquipped);
-					
+
 				}
 				else
 				{
 					ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
-					for(int i = 0; i < 2; i++)
+
+
+					for (int i = 0; i < 2; i++)
 					{
+						Hands currentHand = (Hands)i;
+						LoadoutInteractor.ClearSlot(LoadoutInteractor.Sockets[i]);
 						switch (eachHand[i])
 						{
 							case ShiftStonePrefs.Random:
-								ShiftStoneRandomizer.RandomizeStones(currentEquipped, (Hands) i);
+								ShiftStoneRandomizer.RandomizeStones(currentEquipped, (Hands)i);
 								break;
-							
+
 							case ShiftStonePrefs.Mirror:
-								if(ShiftStoneRandomizer.CurrentLoadedScene.Contains("map") && PlayerManager.instance.AllPlayers.Count >= 2)
+								if (ShiftStoneRandomizer.CurrentLoadedScene.Contains("map") && PlayerManager.instance.AllPlayers.Count >= 2)
 								{
 									//Copy other player's shift stone
 								}
-								else 
+								else
 								{
 									//ignore
 								}
 								break;
-							
-							case ShiftStonePrefs.Stay: 
-								//Don't do anything really
+
+							case ShiftStonePrefs.Stay:
+								ShiftStoneRandomizer.EquipStones(
+									currentHand == Hands.Left ? StoneItem.AllStones[(int)currentEquipped[i]] : null,
+									currentHand == Hands.Right ? StoneItem.AllStones[(int)currentEquipped[i]] : null);
 								break;
-							case ShiftStonePrefs.Empty: 
+							case ShiftStonePrefs.Empty:
 								ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
 								break;
 							default:
-								if(i == 0)
-									ShiftStoneRandomizer.EquipStones(StoneItem.AllStones[(int) eachHand[i]], null);
-								else if(i == 1)
-									ShiftStoneRandomizer.EquipStones(null, StoneItem.AllStones[(int) eachHand[i]]);
+								if (i == 0)
+
+									ShiftStoneRandomizer.EquipStones(StoneItem.AllStones[(int)eachHand[i]], null);
+								else if (i == 1)
+									ShiftStoneRandomizer.EquipStones(null, StoneItem.AllStones[(int)eachHand[i]]);
 								break;
-								
+
 						}
 					}
 				}
@@ -244,7 +251,7 @@ namespace ShiftStoneRandomizer
 			/// <param name="right"></param>
 			internal void DisplayShiftStones(Quadrants quadrant, ShiftStonePrefs left, ShiftStonePrefs right)
 			{
-				if(quadrant != this.Quadrant)
+				if (quadrant != this.Quadrant)
 					return;
 				if (LeftStoneSlot == null || RightStoneSlot == null)
 				{
@@ -261,43 +268,44 @@ namespace ShiftStoneRandomizer
 					Debug.Log($"Failed to parse left: {LeftHandPref.Value}, defaulting to Empty", false, 1);
 				}
 
-				if(!Enum.TryParse<ShiftStonePrefs>(RightHandPref.Value, out right))
+				if (!Enum.TryParse<ShiftStonePrefs>(RightHandPref.Value, out right))
 				{
 					Debug.Log($"Failed to parse right: {RightHandPref.Value}, defaulting to Empty", false, 1);
 				}
 
 				GameObject leftItem = StoneItem.GetDisplayObject(left);
-				if(left == ShiftStonePrefs.Charge)
+				if (left == ShiftStonePrefs.Charge)
 				{
 					leftItem.transform.localRotation = Quaternion.Euler(0f, 0f, 270f);
-					
+
 				}
 				leftItem.transform.SetParent(LeftStoneSlot.transform, false);
 				leftItem.SetActive(true);
 
 				GameObject rightItem = StoneItem.GetDisplayObject(right);
-				if(right == ShiftStonePrefs.Charge)
+				if (right == ShiftStonePrefs.Charge)
 				{
 					rightItem.transform.localRotation = Quaternion.Euler(0f, 0f, 270f);
-					
+
 				}
 				rightItem.transform.SetParent(RightStoneSlot.transform, false);
 				rightItem.SetActive(true);
 
 			}
-			
+
 			public static void Infanticide(GameObject parent)
 			{
-				
+
 				Debug.Log($"Infanticide: parent is null? {parent == null}", true);
 				//if(parent == null)
-					//return;
+				//return;
 				for (int i = 0; i < parent.transform.childCount; i++)
 				{
 					try
 					{
 						UnityEngine.Object.Destroy(parent.transform.GetChild(i).gameObject);
-					}catch(Exception ex)
+					}
+					catch (Exception ex)
 					{
 						Debug.Log(ex.Message);
 					}
@@ -306,10 +314,10 @@ namespace ShiftStoneRandomizer
 
 
 		}
-#endregion
+		#endregion
 
 
-#region static Members
+		#region static Members
 		public static List<ShiftStonePrefs> Selection = new List<ShiftStonePrefs> {
 			ShiftStonePrefs.Stay,
 			ShiftStonePrefs.Stay,
@@ -322,51 +330,88 @@ namespace ShiftStoneRandomizer
 		public static GameObject ButtonSource;
 
 		private static GameObject[] Sockets = new GameObject[2];
-		public static GameObject LeftSocket {get {return Sockets[0];} set{Sockets[0] = value;}}
-		public static GameObject RightSocket {get {return Sockets[1];} set{Sockets[1] = value;}}
-		
+		public static GameObject LeftSocket { get { return Sockets[0]; } set { Sockets[0] = value; } }
+		public static GameObject RightSocket { get { return Sockets[1]; } set { Sockets[1] = value; } }
+
+		public static void ClearSlot(GameObject parent)
+		{
+			for (int i = 0; i < parent.transform.childCount; i++)
+			{
+				GameObject child = parent.transform.GetChild(i).gameObject;
+				if (child.name.Contains("Indicator"))
+				{
+					try
+					{
+						Debug.Log($"Clearing slot: {child.name}", true);
+						UnityEngine.Object.Destroy(parent.transform.GetChild(i).gameObject);
+					}
+					catch (Exception ex)
+					{
+						Debug.Log(ex.Message, false, 1);
+					}
+
+				}
+			}
+		}
+
 		public static void HighlightItem(ShiftStonePrefs item, Hands hand)
 		{
-			if(item < ShiftStonePrefs.Empty)
-			{
-				Slot.Infanticide(Sockets[(int) hand]);
-				Selection[(int) hand] = Selection[(int) hand] == item ? ShiftStonePrefs.Empty : item;
+			int handIndex = (int)hand;
+			int otherHandIndex = hand == Hands.Left ? (int)Hands.Right : (int)Hands.Left;
+			int itemIndex = (int)item;
 
-				if (Selection[(int)hand] != ShiftStonePrefs.Empty)
+			//destroy previously selected item indicators
+			ClearSlot(Sockets[handIndex]);
+			//When an indicator is selected
+			if (item < ShiftStonePrefs.Empty)
+			{
+				//Unequip shift stones when selecting indicators
+				ShiftStoneRandomizer.EquipStones(
+					hand == Hands.Left ? new StoneItem() : null,
+					hand == Hands.Right ? new StoneItem() : null,
+					false);
+
+				Selection[handIndex] = Selection[handIndex] == item ? ShiftStonePrefs.Empty : item;
+
+				if (Selection[handIndex] != ShiftStonePrefs.Empty)
 				{
-					GameObject displayItem = StoneItem.GetDisplayObject(Selection[(int)hand]);
-					displayItem.transform.SetParent(Sockets[(int)hand].transform, false);
+					GameObject displayItem = StoneItem.GetDisplayObject(Selection[handIndex]);
+					displayItem.transform.SetParent(Sockets[handIndex].transform, false);
 					displayItem.SetActive(true);
 
-				}//Unequip current shift stone from selected hand;
+				}
 
-				//Highlight should be on top of empty shift stone socket
-				if (hand == Hands.Left)
-					ShiftStoneRandomizer.EquipStones(new StoneItem(), null, false);
-				else 
-					ShiftStoneRandomizer.EquipStones(null, new StoneItem(), false);
 			}
-			else 
+			//When standard shift stones are selected
+			else
 			{
+
+
 				int[] currentEquipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 
-				if (hand == Hands.Left)
-				{
-					ShiftStoneRandomizer.EquipStones(currentEquipped[0] == (int)item ? new StoneItem() : StoneItem.AllStones[(int) item], null, false);
-				}
-				else
-				{
-					ShiftStoneRandomizer.EquipStones(null, currentEquipped[1] == (int) item ? new StoneItem() : StoneItem.AllStones[(int)item], false);
-				}
-				HighlightCurrentEquippedStones();
+				if (currentEquipped[otherHandIndex] == itemIndex)
+					return;
+
+				StoneItem toEquip = currentEquipped[handIndex] == itemIndex ? new StoneItem() : StoneItem.AllStones[itemIndex];
+
+
+				ShiftStoneRandomizer.EquipStones(
+					hand == Hands.Left ? toEquip : null,
+					hand == Hands.Right ? toEquip : null,
+					false);
+
+				Selection[handIndex] = toEquip.GetEnum();
+
+
+				//HighlightCurrentEquippedStones();
 			}
 		}
 
 		public static void HighlightCurrentEquippedStones()
 		{
 			int[] equipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-			Selection[0] = (ShiftStonePrefs) equipped[0];
-			Selection[1] = (ShiftStonePrefs) equipped[1];
+			Selection[0] = (ShiftStonePrefs)equipped[0];
+			Selection[1] = (ShiftStonePrefs)equipped[1];
 		}
 
 		//Create an action slots could subscribe to. This lets slots from every interactor know that the display should be updated without having to keep a reference to them
@@ -392,7 +437,7 @@ namespace ShiftStoneRandomizer
 		{
 			ButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
 			ButtonSource.transform.GetChild(0).GetComponent<InteractionButton>().enabled = true;
-			
+
 			ButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
 			ButtonSource.transform.localPosition = Vector3.zero;
 			ButtonSource.SetActive(false);
@@ -407,9 +452,9 @@ namespace ShiftStoneRandomizer
 		public static void SelectBaseStone()
 		{
 			int[] stonesInHand = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-			for(int i = 0; i < 2; i++)
+			for (int i = 0; i < 2; i++)
 			{
-				Selection[i] = (ShiftStonePrefs) stonesInHand[i];
+				Selection[i] = (ShiftStonePrefs)stonesInHand[i];
 			}
 		}
 
@@ -418,29 +463,29 @@ namespace ShiftStoneRandomizer
 			Hands handTrigger = Hands.Left; /*= determine which hand pressed the button*/
 
 			//Toggle between commandStone and empty when selecting a command stone.
-			if(Selection[(int) handTrigger] == commandStone)
+			if (Selection[(int)handTrigger] == commandStone)
 			{
-				Selection[(int) handTrigger] = ShiftStonePrefs.Empty;
+				Selection[(int)handTrigger] = ShiftStonePrefs.Empty;
 			}
-			else 
+			else
 			{
-				Selection[(int) handTrigger] = commandStone;
+				Selection[(int)handTrigger] = commandStone;
 			}
-			 
-			
+
+
 		}
 
 		public static void DisplayCommandOnHand(ShiftStonePrefs command, Hands hand)
 		{
-			
+
 		}
 
 		//public static List<GameObject> AllDisplaySlots = new List<GameObject>();
 
-		
-#endregion
 
-#region Instance Members
+		#endregion
+
+		#region Instance Members
 
 		private Slot _map0Host;
 		public Slot Map0Host { get { return _map0Host; } }
@@ -454,7 +499,7 @@ namespace ShiftStoneRandomizer
 		private Slot _map1Client;
 		public Slot Map1Client { get { return _map1Client; } }
 
-		public GameObject Cluster {get; private set;}
+		public GameObject Cluster { get; private set; }
 
 		public static List<MelonPreferences_Entry<string>> PrefList = new List<MelonPreferences_Entry<string>>()
 		{
@@ -477,15 +522,15 @@ namespace ShiftStoneRandomizer
 		{
 			SlotList = new List<Slot>() { Map0Host, Map1Host, Map0Client, Map1Client };
 			Cluster = GameObject.Instantiate(ClusterSource);
-			for(int i = 0; i < 4; i++)
+			for (int i = 0; i < 4; i++)
 			{
-				SlotList[i] = new Slot((Quadrants) i, PrefList[i * 2], PrefList[(i * 2) + 1], isForSaving);
+				SlotList[i] = new Slot((Quadrants)i, PrefList[i * 2], PrefList[(i * 2) + 1], isForSaving);
 				SlotList[i].Button.transform.SetParent(Cluster.transform, false);
 			}
 			Cluster.SetActive(false);
 		}
 
-		
+
 	}
 
 	#endregion
