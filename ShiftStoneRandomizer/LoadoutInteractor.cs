@@ -196,11 +196,15 @@ namespace ShiftStoneRandomizer
 				}
 				else
 				{
-					//ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
+					ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
+					
+
 					for(int i = 0; i < 2; i++)
 					{
+						Hands currentHand = (Hands) i;
 						switch (eachHand[i])
 						{
+							
 							LoadoutInteractor.ClearSlot(LoadoutInteractor.Sockets[i]);
 							case ShiftStonePrefs.Random:
 								ShiftStoneRandomizer.RandomizeStones(currentEquipped, (Hands) i);
@@ -218,13 +222,16 @@ namespace ShiftStoneRandomizer
 								break;
 							
 							case ShiftStonePrefs.Stay:
-								
+								ShiftStoneRandomizer.EquipStones(
+									currentHand == Hands.Left ? StoneItem.AllStones[(int) currentEquipped] : null,
+									currentHand == Hands.Right ? StoneItem.AllStones[(int) currentEquipped]);
 								break;
 							case ShiftStonePrefs.Empty: 
 								ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
 								break;
 							default:
 								if(i == 0)
+									
 									ShiftStoneRandomizer.EquipStones(StoneItem.AllStones[(int) eachHand[i]], null);
 								else if(i == 1)
 									ShiftStoneRandomizer.EquipStones(null, StoneItem.AllStones[(int) eachHand[i]]);
