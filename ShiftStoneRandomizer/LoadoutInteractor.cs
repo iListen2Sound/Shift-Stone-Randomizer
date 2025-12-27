@@ -201,6 +201,7 @@ namespace ShiftStoneRandomizer
 					{
 						switch (eachHand[i])
 						{
+							LoadoutInteractor.ClearSlot(LoadoutInteractor.Sockets[i]);
 							case ShiftStonePrefs.Random:
 								ShiftStoneRandomizer.RandomizeStones(currentEquipped, (Hands) i);
 								break;
@@ -325,7 +326,7 @@ namespace ShiftStoneRandomizer
 		public static GameObject LeftSocket {get {return Sockets[0];} set{Sockets[0] = value;}}
 		public static GameObject RightSocket {get {return Sockets[1];} set{Sockets[1] = value;}}
 
-		private static void ClearSlot(GameObject parent)
+		public static void ClearSlot(GameObject parent)
 		{
 			for(int i = 0; i < parent.transform.childCount; i++)
 			{
