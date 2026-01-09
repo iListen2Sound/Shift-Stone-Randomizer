@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using Il2CppRUMBLE.Managers;
+using Il2CppRUMBLE.Players;
 using UnityEngine.Bindings;
 
 namespace ShiftStoneRandomizer
@@ -22,8 +23,8 @@ namespace ShiftStoneRandomizer
 			public static Vector3[] Sections = new Vector3[]
 			{
 				new Vector3(-0.04f, 0.06f, 0.07f),
-				new Vector3(0.04f, 0.06f, 0.07f),
 				new Vector3(-0.04f, -0.06f, 0.07f),
+				new Vector3(0.04f, 0.06f, 0.07f),
 				new Vector3(0.04f, -0.06f, 0.07f),
 			};
 
@@ -212,7 +213,13 @@ namespace ShiftStoneRandomizer
 							case ShiftStonePrefs.Mirror:
 								if (ShiftStoneRandomizer.CurrentLoadedScene.Contains("map") && PlayerManager.instance.AllPlayers.Count >= 2)
 								{
-									//Copy other player's shift stone
+									//Copy other player's shift stonePlayerShiftstoneSystem
+									Il2CppSystem.Collections.Generic.List<Player> players = PlayerManager.instance.AllPlayers;
+									if (players.Count > 1)
+									{
+										int[] opponentEquipped = players[1].Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+
+									}
 								}
 								else
 								{
@@ -322,6 +329,11 @@ namespace ShiftStoneRandomizer
 			ShiftStonePrefs.Stay,
 			ShiftStonePrefs.Stay,
 		};
+
+		public static List<ShiftStonePrefs> OpponentSelection = new List<ShiftStonePrefs> {
+			ShiftStonePrefs.Invalid,
+			ShiftStonePrefs.Invalid,
+		}; 
 
 
 
