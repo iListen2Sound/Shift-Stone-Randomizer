@@ -16,7 +16,7 @@ namespace ShiftStoneRandomizer
 				Transform current = queue.Dequeue();
 				if (current.name == name) return current;
 
-				for(int i = 0; i < current.childCount; i++)
+				for (int i = 0; i < current.childCount; i++)
 				{
 					queue.Enqueue(current.GetChild(i));
 				}

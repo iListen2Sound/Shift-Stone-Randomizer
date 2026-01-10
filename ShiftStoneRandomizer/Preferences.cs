@@ -2,8 +2,6 @@
 using MelonLoader;
 
 using System.IO;
-using Action = System.Action;
-using Type = Il2CppSystem.Type;
 
 namespace ShiftStoneRandomizer
 {
@@ -139,7 +137,7 @@ namespace ShiftStoneRandomizer
 				Debug.Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
 				EnabledHand = Hands.Both;
 			}
-			if(CurrentScene == "Gym")
+			if (CurrentScene == "Gym")
 			{
 				ShowRandomedHand();
 			}

@@ -1,16 +1,14 @@
-﻿using Il2CppTMPro;
+﻿
 using MelonLoader;
 using Il2CppRUMBLE.Combat.ShiftStones;
 using Il2CppRUMBLE.Interactions.InteractionBase;
 using UnityEngine;
-using UnityEngine.InputSystem.Utilities;
+
 using RumbleModdingAPI;
 using System.Collections.Generic;
-using System.Linq;
+
 using System;
-using Il2CppRUMBLE.Managers;
-using Il2CppRUMBLE.Players;
-using UnityEngine.Bindings;
+
 
 namespace ShiftStoneRandomizer
 {
@@ -153,7 +151,7 @@ namespace ShiftStoneRandomizer
 			private void SaveSelectedToLoadout()
 			{
 				Debug.Log("Saving Loadout...");
-				int[] stonesInHand = ShiftStoneRandomizer.Player0..GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				int[] stonesInHand = ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 
 				//Templogic for not adding listeners to stone case yet
 				for (int i = 0; i < 2; i++)
@@ -213,11 +211,11 @@ namespace ShiftStoneRandomizer
 							case ShiftStonePrefs.Mirror:
 								if (ShiftStoneRandomizer.IsInMatch)
 								{
-									if(ShiftStoneRandomizer.Player1 != null)
+									if (ShiftStoneRandomizer.Player1 != null)
 									{
 										int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-										NextSelection[0] = opponentEquipped[0];
-										NextSelection[1] = opponentEquipped[1];
+										NextSelection[0] = (ShiftStonePrefs)opponentEquipped[0];
+										NextSelection[1] = (ShiftStonePrefs)opponentEquipped[1];
 									}
 								}
 								else
@@ -328,15 +326,15 @@ namespace ShiftStoneRandomizer
 
 
 		#region Game Flow 
-		public static bool IsNextSelectionPrimed
+		public static bool IsNextSelectionPrimed;
 		public static void OnMatchLoad()
 		{
-			if(ShiftStoneRandomizer.CurrentLoadedScene.Contains("map") && ShiftStoneRandomizer.Players.Count > 1)
+			if (ShiftStoneRandomizer.CurrentLoadedScene.Contains("map") && ShiftStoneRandomizer.Players.Count > 1)
 			{
 
-			}	
+			}
 		}
-		 
+
 
 		#endregion
 
@@ -348,7 +346,7 @@ namespace ShiftStoneRandomizer
 		public static List<ShiftStonePrefs> NextSelection = new List<ShiftStonePrefs> {
 			ShiftStonePrefs.Invalid,
 			ShiftStonePrefs.Invalid,
-		}; 
+		};
 
 
 
@@ -380,7 +378,7 @@ namespace ShiftStoneRandomizer
 				}
 			}
 		}
-		
+
 		public static void HighlightItem(ShiftStonePrefs item, Hands hand)
 		{
 			int handIndex = (int)hand;
@@ -433,6 +431,7 @@ namespace ShiftStoneRandomizer
 				//HighlightCurrentEquippedStones();
 			}
 		}
+
 
 		public static void HighlightCurrentEquippedStones()
 		{

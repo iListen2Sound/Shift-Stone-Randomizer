@@ -1,32 +1,12 @@
 using AsmResolver.PE.DotNet.Cil;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using Il2CppInterop.Runtime.Runtime.VersionSpecific.Class;
-using Il2CppPhoton.Realtime;
-using Il2CppRootMotion;
-using Il2CppRUMBLE.CharacterCreation.Interactable;
+
 using Il2CppRUMBLE.Combat.ShiftStones;
-using Il2CppRUMBLE.Interactions.InteractionBase;
-using Il2CppRUMBLE.Managers;
-using Il2CppRUMBLE.Players.Subsystems;
-using Il2CppSystem;
-using Il2CppSystem.Data;
-using Il2CppTMPro;
-using MelonLoader;
-using MelonLoader.TinyJSON;
-using MelonLoader.Utils;
 using RumbleModdingAPI;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem.Utilities;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Action = System.Action;
-using Type = Il2CppSystem.Type;
 
 namespace ShiftStoneRandomizer
 {
@@ -82,16 +62,16 @@ namespace ShiftStoneRandomizer
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
 				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
 			};
-		
-		
+
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="stoneEnum"></param>
 		/// <returns></returns>
-		public static GameObject GetDisplayObject (ShiftStonePrefs stoneEnum)
+		public static GameObject GetDisplayObject(ShiftStonePrefs stoneEnum)
 		{
-			Debug.Log($"GetDisplayObject called for {stoneEnum} Index: {(int) stoneEnum}", true);
+			Debug.Log($"GetDisplayObject called for {stoneEnum} Index: {(int)stoneEnum}", true);
 			if ((int)stoneEnum >= 0 && (int)stoneEnum <= 7)
 			{
 				//null ref
@@ -103,17 +83,17 @@ namespace ShiftStoneRandomizer
 				{
 					Debug.Log($"Error instantiating stone object for {stoneEnum}: {ex.Message}", false, 2);
 					return GameObject.Instantiate(RecreateStoneItems()[(int)stoneEnum].ShiftStone.gameObject);
-					
+
 				}
 			}
 			else
 			{
 				return GameObject.Instantiate(Specials[((int)stoneEnum + 4)]);
-			}	
+			}
 		}
 		public static void ResetAllIcons()
 		{
-			foreach(StoneItem stone in AllStones)
+			foreach (StoneItem stone in AllStones)
 			{
 				stone.ResetIcons();
 			}
@@ -161,7 +141,7 @@ namespace ShiftStoneRandomizer
 				_isEnabled = value;
 
 				//MelonLogger.Msg($"{Name} Icon: {_icon.active}");
-				if(ShiftStone is null)
+				if (ShiftStone is null)
 					return;
 
 				if (value)
@@ -170,15 +150,16 @@ namespace ShiftStoneRandomizer
 				else
 					_blacklistCount--;
 
-				if(_iconList == null)
+				if (_iconList == null)
 					return;
-				
-				foreach(GameObject icon in _iconList)
+
+				foreach (GameObject icon in _iconList)
 				{
 					try
 					{
 						icon.SetActive(!_isEnabled);
-					}catch(System.Exception ex)
+					}
+					catch (System.Exception ex)
 					{
 						Debug.Log(ex.Message, false, 1);
 					}
@@ -192,7 +173,7 @@ namespace ShiftStoneRandomizer
 		public ShiftStonePrefs GetEnum()
 		{
 			ShiftStonePrefs result;
-			if(!System.Enum.TryParse<ShiftStonePrefs>(Name, out result))
+			if (!System.Enum.TryParse<ShiftStonePrefs>(Name, out result))
 			{
 				Debug.Log("Error: Failed to parse stone item enum");
 				return ShiftStonePrefs.Invalid;
@@ -201,7 +182,7 @@ namespace ShiftStoneRandomizer
 			return result;
 		}
 		private List<GameObject> _iconList = new List<GameObject>();
-		public List<GameObject> IconList {get {return _iconList;} set { _iconList = value; }}
+		public List<GameObject> IconList { get { return _iconList; } set { _iconList = value; } }
 
 		public StoneItem(ShiftStone shiftStone)
 		{
@@ -209,10 +190,10 @@ namespace ShiftStoneRandomizer
 			ShiftStone = shiftStone;
 			_isEnabled = true;
 		}
-		
+
 		public StoneItem(ShiftStonePrefs stoneSelection)
 		{
-			ShiftStone stone = AllStones[(int) stoneSelection].ShiftStone;
+			ShiftStone stone = AllStones[(int)stoneSelection].ShiftStone;
 			_isEnabled = true;
 		}
 		/// <summary>
@@ -234,6 +215,6 @@ namespace ShiftStoneRandomizer
 			_iconList = new List<GameObject>();
 		}
 
-		
+
 	}
 }
