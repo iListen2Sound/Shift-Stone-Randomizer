@@ -153,7 +153,7 @@ namespace ShiftStoneRandomizer
 			private void SaveSelectedToLoadout()
 			{
 				Debug.Log("Saving Loadout...");
-				int[] stonesInHand = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				int[] stonesInHand = ShiftStoneRandomizer.Player0..GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 
 				//Templogic for not adding listeners to stone case yet
 				for (int i = 0; i < 2; i++)
@@ -188,7 +188,7 @@ namespace ShiftStoneRandomizer
 
 				ShiftStonePrefs[] eachHand = { left, right };
 
-				int[] currentEquipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				int[] currentEquipped = ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 				//If both are random, use standard randomization method
 				if (left == ShiftStonePrefs.Random && right == ShiftStonePrefs.Random)
 				{
@@ -211,14 +211,13 @@ namespace ShiftStoneRandomizer
 								break;
 
 							case ShiftStonePrefs.Mirror:
-								if (ShiftStoneRandomizer.CurrentLoadedScene.Contains("map") && PlayerManager.instance.AllPlayers.Count >= 2)
+								if (ShiftStoneRandomizer.IsInMatch)
 								{
-									//Copy other player's shift stonePlayerShiftstoneSystem
-									Il2CppSystem.Collections.Generic.List<Player> players = PlayerManager.instance.AllPlayers;
-									if (players.Count > 1)
+									if(ShiftStoneRandomizer.Player1 != null)
 									{
-										int[] opponentEquipped = players[1].Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-
+										int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+										NextSelection[0] = opponentEquipped[0];
+										NextSelection[1] = opponentEquipped[1];
 									}
 								}
 								else
@@ -325,12 +324,28 @@ namespace ShiftStoneRandomizer
 
 
 		#region static Members
+
+
+
+		#region Game Flow 
+		public static bool IsNextSelectionPrimed
+		public static void OnMatchLoad()
+		{
+			if(ShiftStoneRandomizer.CurrentLoadedScene.Contains("map") && ShiftStoneRandomizer.Players.Count > 1)
+			{
+
+			}	
+		}
+		 
+
+		#endregion
+
 		public static List<ShiftStonePrefs> Selection = new List<ShiftStonePrefs> {
 			ShiftStonePrefs.Stay,
 			ShiftStonePrefs.Stay,
 		};
 
-		public static List<ShiftStonePrefs> OpponentSelection = new List<ShiftStonePrefs> {
+		public static List<ShiftStonePrefs> NextSelection = new List<ShiftStonePrefs> {
 			ShiftStonePrefs.Invalid,
 			ShiftStonePrefs.Invalid,
 		}; 
@@ -365,7 +380,7 @@ namespace ShiftStoneRandomizer
 				}
 			}
 		}
-
+		
 		public static void HighlightItem(ShiftStonePrefs item, Hands hand)
 		{
 			int handIndex = (int)hand;

@@ -47,13 +47,20 @@ namespace ShiftStoneRandomizer
 			ShiftStonePrefs.Random,
 			ShiftStonePrefs.Random,
 		};
+		
+		private static string CurrentScene;
+		public static string CurrentLoadedScene { get { return CurrentScene.ToLower().Trim(); } }
 
+		public static Il2CppSystem.Collections.Generic.List<Player> Players {get; set;};
+		public static int PlayerCount {get {return Players.Count}};
+		public static bool IsInMatch {get {return CurrentLoadedScene.Contains("map") && Players.Count == 2}};
+		
 
 		//private int[] blackList = new int[0];
 		private bool firstLoad = true;
-		private static string CurrentScene;
+		
 		private static bool IsSceneLoaded = false;
-		public static string CurrentLoadedScene { get { return CurrentScene.ToLower().Trim(); } }
+		
 		//private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
 		public static GameObject RandomizerAssets { get; private set; }
 		public static GameObject IndicatorsBase { get; private set; }
@@ -68,9 +75,12 @@ namespace ShiftStoneRandomizer
 		private PlayerHaptics haptics;
 
 
-		private static Il2CppRUMBLE.Players.PlayerController Player0;
+		public static Il2CppRUMBLE.Players.PlayerController Player0 {get; set;}
+		public static Il2CppRUMBLE.Players.PlayerController Player1 { get { return Players.Count > 1 ? Players[1].Controller : null; } }
+	
 		public static GameObject leftPoint;
 		public static GameObject rightPoint;
+		
 		
 		
 
@@ -116,7 +126,8 @@ namespace ShiftStoneRandomizer
 		{
 
 			//InitializeShiftStones();
-
+			Players = PlayerManager.instance.AllPlayers;
+			
 			if (CurrentScene == "Gym")
 			{
 				
@@ -144,7 +155,7 @@ namespace ShiftStoneRandomizer
 			{
 				Debug.CreateDebugUi(PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(6).GetChild(0).gameObject);
 				IsSceneLoaded = true;
-				Player0 = Calls.Managers.GetPlayerManager().LocalPlayer.Controller;
+				Player0 = Players[0].Controller;
 
 				//Left Point: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/Bone_Pointer_A_L/Bone_Pointer_B_L/Bone_Pointer_C_L
 				//Left Socket: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/ShifstoneSocket_L
