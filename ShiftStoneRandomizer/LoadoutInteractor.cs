@@ -1,16 +1,14 @@
-﻿using Il2CppTMPro;
+﻿
 using MelonLoader;
 using Il2CppRUMBLE.Combat.ShiftStones;
 using Il2CppRUMBLE.Interactions.InteractionBase;
 using UnityEngine;
-using UnityEngine.InputSystem.Utilities;
+
 using RumbleModdingAPI;
 using System.Collections.Generic;
-using System.Linq;
+
 using System;
-using Il2CppRUMBLE.Managers;
-using Il2CppRUMBLE.Players;
-using UnityEngine.Bindings;
+
 
 namespace ShiftStoneRandomizer
 {
@@ -146,6 +144,7 @@ namespace ShiftStoneRandomizer
 					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 					{
 						ApplyLoadOut();
+						LoadoutInteractor.IsNextSelectionPrimed = false;
 					});
 				}
 			}
@@ -153,7 +152,7 @@ namespace ShiftStoneRandomizer
 			private void SaveSelectedToLoadout()
 			{
 				Debug.Log("Saving Loadout...");
-				int[] stonesInHand = ShiftStoneRandomizer.Player0..GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				int[] stonesInHand = ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 
 				//Templogic for not adding listeners to stone case yet
 				for (int i = 0; i < 2; i++)
@@ -176,7 +175,7 @@ namespace ShiftStoneRandomizer
 			}
 
 
-			private void ApplyLoadOut()
+			public void ApplyLoadOut()
 			{
 				Debug.Log("Applying Loadout...");
 				ShiftStonePrefs left;
@@ -213,11 +212,11 @@ namespace ShiftStoneRandomizer
 							case ShiftStonePrefs.Mirror:
 								if (ShiftStoneRandomizer.IsInMatch)
 								{
-									if(ShiftStoneRandomizer.Player1 != null)
+									if (ShiftStoneRandomizer.Player1 != null)
 									{
 										int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-										NextSelection[0] = opponentEquipped[0];
-										NextSelection[1] = opponentEquipped[1];
+										NextSelection[0] = (ShiftStonePrefs)opponentEquipped[0];
+										NextSelection[1] = (ShiftStonePrefs)opponentEquipped[1];
 									}
 								}
 								else
@@ -328,15 +327,61 @@ namespace ShiftStoneRandomizer
 
 
 		#region Game Flow 
-		public static bool IsNextSelectionPrimed
+		public static bool IsNextSelectionPrimed;
+		public static AutomationPrefs AutomationMode;
 		public static void OnMatchLoad()
 		{
-			if(ShiftStoneRandomizer.CurrentLoadedScene.Contains("map") && ShiftStoneRandomizer.Players.Count > 1)
+			//Debug override. Remove on release
+			if (AutomationMode == AutomationPrefs.None && Debug.debugMode)
 			{
-
-			}	
+				AutomationMode = AutomationPrefs.Auto;
+				IsNextSelectionPrimed = true;
+				Debug.Log("Overriding automation mode for debug. ");
+			}
+			//only do matchload shift stone apply on first load into match
+			if(ShiftStoneRandomizer.IsFirstMatchLoad)
+			{
+				AutoApply(true);
+			}
 		}
-		 
+		
+		//Runs in between matches called onMatchEnded()
+		public static void ReplayPrep()
+		{
+			IsNextSelectionPrimed = AutomationMode != AutomationPrefs.None; //reset nextselection primed every match end
+			AutoApply(false);
+		}
+
+		public static void AutoApply(bool isFirstMatchLoad)
+		{
+			if(!IsNextSelectionPrimed)
+				return; 
+				
+			if(AutomationMode == AutomationPrefs.Auto)
+			{
+				int hostStartIndex = ShiftStoneRandomizer.IsHost ? 2 : 0; //Invert host/client selection when in between matches to prepare for next match
+				if(isFirstMatchLoad) //Reverse selection if call is for first mapload
+					hostStartIndex = ShiftStoneRandomizer.IsHost ? 0 : 2;
+
+				int mapIndex = ShiftStoneRandomizer.CurrentLoadedScene == "map0" ? 0 : 1;
+
+				MainInteractor.SlotList[hostStartIndex + mapIndex].ApplyLoadOut();
+			}
+			else if(AutomationMode == AutomationPrefs.Mirror)
+			{
+				if (ShiftStoneRandomizer.Player1 != null)
+				{
+					int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+					NextSelection[0] = (ShiftStonePrefs)opponentEquipped[0];
+					NextSelection[1] = (ShiftStonePrefs)opponentEquipped[1];
+				}
+			}
+			else if(AutomationMode == AutomationPrefs.Random)
+			{
+				ShiftStoneRandomizer.RandomizeStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+			}
+		}
+
 
 		#endregion
 
@@ -348,7 +393,7 @@ namespace ShiftStoneRandomizer
 		public static List<ShiftStonePrefs> NextSelection = new List<ShiftStonePrefs> {
 			ShiftStonePrefs.Invalid,
 			ShiftStonePrefs.Invalid,
-		}; 
+		};
 
 
 
@@ -380,7 +425,7 @@ namespace ShiftStoneRandomizer
 				}
 			}
 		}
-		
+
 		public static void HighlightItem(ShiftStonePrefs item, Hands hand)
 		{
 			int handIndex = (int)hand;
@@ -390,7 +435,7 @@ namespace ShiftStoneRandomizer
 			//destroy previously selected item indicators
 			ClearSlot(Sockets[handIndex]);
 			//When an indicator is selected
-			if (item < ShiftStonePrefs.Empty)
+			if (item <= ShiftStonePrefs.Empty)
 			{
 				//Unequip shift stones when selecting indicators
 				ShiftStoneRandomizer.EquipStones(
@@ -434,6 +479,7 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
+
 		public static void HighlightCurrentEquippedStones()
 		{
 			int[] equipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
@@ -473,6 +519,13 @@ namespace ShiftStoneRandomizer
 			ClusterSource = new GameObject("Loadout Cluster");
 			GameObject.DontDestroyOnLoad(ClusterSource);
 
+			//Assign delegates for match flow
+			Calls.onMapInitialized += OnMatchLoad;
+			Calls.onMatchEnded += ReplayPrep;
+
+			AutomationMode = ShiftStoneRandomizer.AutomationMode;
+
+			
 		}
 
 		//Add this as a listener to the shift stone interaction for the existing base stones
@@ -508,6 +561,8 @@ namespace ShiftStoneRandomizer
 		}
 
 		//public static List<GameObject> AllDisplaySlots = new List<GameObject>();
+
+		public static LoadoutInteractor MainInteractor = null;
 
 
 		#endregion
@@ -555,6 +610,15 @@ namespace ShiftStoneRandomizer
 				SlotList[i].Button.transform.SetParent(Cluster.transform, false);
 			}
 			Cluster.SetActive(false);
+
+			//Select one loadaout applyer as main interactor. 
+			//TODO: Might not work as game objects get destroyed. 
+			// Either create an interactor agnostic way to apply shift stones (and might as well pivot all interactors to call on that) 
+			// or create a DDOL interactor that is enabled but placed far under the map.
+			if (MainInteractor == null && !isForSaving)
+			{
+				MainInteractor = this;
+			}
 		}
 
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MelonLoader;
+﻿using MelonLoader;
 using Il2CppTMPro;
 using RumbleModdingAPI;
 using UnityEngine;
@@ -12,10 +7,10 @@ namespace ShiftStoneRandomizer
 {
 	public static class Debug
 	{
-		public static bool debugMode {get; set;} = true;
+		public static bool debugMode { get; set; } = true;
 		public static void Log(string message, bool debugOnly = false, int logLevel = 0)
 		{
-			
+
 			if (debugOnly && !debugMode)
 				return;
 
@@ -34,8 +29,8 @@ namespace ShiftStoneRandomizer
 
 		}
 
-		public static GameObject DebugUi {get; private set;}
-		public static TextMeshPro DebugUiText {get; private set;}
+		public static GameObject DebugUi { get; private set; }
+		public static TextMeshPro DebugUiText { get; private set; }
 		public static GameObject CreateDebugUi(GameObject PlayerUi)
 		{
 			DebugUi = Calls.Create.NewText("Placeholder text. You shouldn't be seeing this without some UE Shenanigans\n or decompiled code. Doesn't count if it's you, Ava. I (probably) told you about this.", 1f, Color.white, new Vector3(0f, 0.1f, 1f), Quaternion.Euler(0, 0, 0));
@@ -49,13 +44,13 @@ namespace ShiftStoneRandomizer
 
 		public static void PrintInGame(string message)
 		{
-			if(!(DebugUi is null))
+			if (!(DebugUi is null))
 			{
 				//DebugUi.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(1, 0.21);
 				DebugUiText.enableWordWrapping = false;
 				DebugUiText.text = message;
 			}
-			else 
+			else
 			{
 				Log($"Can't print message: \"{message}\" to debug ui. Not created and assigned", true, 2);
 			}

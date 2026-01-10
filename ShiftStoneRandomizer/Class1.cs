@@ -1,20 +1,16 @@
-﻿using AsmResolver.PE.DotNet.Cil;
-using HarmonyLib;
-using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using Il2CppInterop.Runtime.Runtime.VersionSpecific.Class;
-using Il2CppPhoton.Realtime;
+﻿using Il2CppPhoton.Pun;
+
 using Il2CppRootMotion;
-using Il2CppRUMBLE.CharacterCreation.Interactable;
+
 using Il2CppRUMBLE.Combat.ShiftStones;
-using Il2CppRUMBLE.Interactions.InteractionBase;
+
 using Il2CppRUMBLE.Managers;
 using Il2CppRUMBLE.Players.Subsystems;
 using Il2CppSystem;
-using Il2CppSystem.Data;
-using Il2CppTMPro;
+using Il2CppRUMBLE.Players;
+
 using MelonLoader;
-using MelonLoader.TinyJSON;
-using MelonLoader.Utils;
+
 using RumbleModdingAPI;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,20 +43,27 @@ namespace ShiftStoneRandomizer
 			ShiftStonePrefs.Random,
 			ShiftStonePrefs.Random,
 		};
-		
+
 		private static string CurrentScene;
 		public static string CurrentLoadedScene { get { return CurrentScene.ToLower().Trim(); } }
 
-		public static Il2CppSystem.Collections.Generic.List<Player> Players {get; set;};
-		public static int PlayerCount {get {return Players.Count}};
-		public static bool IsInMatch {get {return CurrentLoadedScene.Contains("map") && Players.Count == 2}};
-		
+		private static string LastScene;
+		public static string LastLoadedScene { get { return LastScene.ToLower().Trim(); } }
+
+		public static bool IsFirstMatchLoad { get; private set; }
+
+		public static Il2CppSystem.Collections.Generic.List<Player> Players { get; set; }
+		public static int PlayerCount { get { return Players.Count; } }
+		public static bool IsInMatch { get { return CurrentLoadedScene.Contains("map") && Players.Count == 2; } }
+
+
+		public static bool IsHost {get {return PhotonNetwork.IsMasterClient;}}
 
 		//private int[] blackList = new int[0];
 		private bool firstLoad = true;
-		
+
 		private static bool IsSceneLoaded = false;
-		
+
 		//private int lockedHand = -1; // -1 no lock, 0 left hand, 1 right hand 
 		public static GameObject RandomizerAssets { get; private set; }
 		public static GameObject IndicatorsBase { get; private set; }
@@ -75,14 +78,14 @@ namespace ShiftStoneRandomizer
 		private PlayerHaptics haptics;
 
 
-		public static Il2CppRUMBLE.Players.PlayerController Player0 {get; set;}
+		public static Il2CppRUMBLE.Players.PlayerController Player0 { get; set; }
 		public static Il2CppRUMBLE.Players.PlayerController Player1 { get { return Players.Count > 1 ? Players[1].Controller : null; } }
-	
+
 		public static GameObject leftPoint;
 		public static GameObject rightPoint;
-		
-		
-		
+
+
+
 
 		public override void OnLateInitializeMelon()
 		{
@@ -90,6 +93,7 @@ namespace ShiftStoneRandomizer
 			//CreateCosmetics();
 			Calls.onMapInitialized += SceneReady;
 			Calls.onMatchEnded += CreateButtonsForAll;//CreateButtonsForAll;
+			
 
 			InitPreferences();
 
@@ -124,13 +128,14 @@ namespace ShiftStoneRandomizer
 
 		private void SceneReady()
 		{
+			
 
 			//InitializeShiftStones();
 			Players = PlayerManager.instance.AllPlayers;
-			
+
 			if (CurrentScene == "Gym")
 			{
-				
+
 				if (firstLoad)
 				{
 					IndicatorsBase = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
@@ -145,7 +150,7 @@ namespace ShiftStoneRandomizer
 				{
 					StoneItem.AllStones[i].AddIcon(CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject));
 				}
-			
+
 				firstLoad = false;
 			}
 			CreateButtonsForAll();
@@ -153,10 +158,12 @@ namespace ShiftStoneRandomizer
 			ApplyPrefsToState();
 			if (CurrentScene.ToLower().Trim() != "loader")
 			{
-				Debug.CreateDebugUi(PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(6).GetChild(0).gameObject);
-				IsSceneLoaded = true;
 				Player0 = Players[0].Controller;
-
+				Debug.CreateDebugUi(Player0.gameObject.transform.GetChild(6).GetChild(0).gameObject);
+				IsSceneLoaded = true;
+				
+				
+				LoadoutInteractor.MainInteractor = null;
 				//Left Point: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/Bone_Pointer_A_L/Bone_Pointer_B_L/Bone_Pointer_C_L
 				//Left Socket: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/ShifstoneSocket_L
 
@@ -183,7 +190,10 @@ namespace ShiftStoneRandomizer
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
+			LastScene = CurrentScene;
 			CurrentScene = sceneName;
+
+			IsFirstMatchLoad = CurrentLoadedScene.Contains("map") && LastLoadedScene == "gym";
 		}
 		/// <summary>
 		/// Blacklists stones and writes to file.
@@ -296,7 +306,7 @@ namespace ShiftStoneRandomizer
 
 		public static void ActivateEffect(bool left, bool right)
 		{
-			
+
 			if (left)
 				Player0.GetComponent<PlayerShiftstoneSystem>().ActivateUseShiftstoneEffects(Il2CppRUMBLE.Input.InputManager.Hand.Left);
 			if (right)
@@ -342,9 +352,9 @@ namespace ShiftStoneRandomizer
 		public static void RandomizeStones(int[] Equipped, Hands hand = Hands.Both)
 		{
 			int handIndex = (int)hand;
-			int otherHandIndex = hand == Hands.Left ? (int)Hands.Right : (int)Hands.Left; 
-			
-			
+			int otherHandIndex = hand == Hands.Left ? (int)Hands.Right : (int)Hands.Left;
+
+
 			List<StoneItem> randomStones = new List<StoneItem>();
 			Debug.Log("Stone check:", true);
 			for (int i = 0; i < StoneItem.AllStones.Length; i++)
@@ -420,7 +430,7 @@ namespace ShiftStoneRandomizer
 		public static void EquipStones(StoneItem leftStone, StoneItem rightStone, bool applyEffect = true)
 		{
 			Debug.Log("Equipping stones: " + (leftStone != null ? leftStone.Name : "Null") + " | " + (rightStone != null ? rightStone.Name : "Null"), true);
-			
+
 			if (rightStone != null) //Makes sure you don't equip a stone on the left hand if it's already equipped in the right hand
 				Player0.GetComponent<PlayerShiftstoneSystem>().RemoveShiftStone(1, true, true);
 			if (leftStone != null)
@@ -443,7 +453,7 @@ namespace ShiftStoneRandomizer
 					Player0.GetComponent<PlayerShiftstoneSystem>().RemoveAndReattachShiftstones(true, true);
 				}
 			}
-			if(applyEffect)
+			if (applyEffect)
 				ActivateEffect(leftStone != null, rightStone != null);
 		}
 
@@ -522,7 +532,7 @@ namespace ShiftStoneRandomizer
 				return null;
 			}
 		}
-		
-		
+
+
 	}
 }
