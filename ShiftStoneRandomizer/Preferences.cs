@@ -43,7 +43,7 @@ namespace ShiftStoneRandomizer
 		public MelonPreferences_Entry<string> PrefLobLeft;
 		public MelonPreferences_Entry<string> PrefLobRight;
 
-		AutomationPrefs AutomationMode;
+		public static AutomationPrefs AutomationMode;
 
 
 		private void InitPreferences()
@@ -130,7 +130,7 @@ namespace ShiftStoneRandomizer
 			if (!System.Enum.TryParse<AutomationPrefs>(PrefAutomation.Value, out AutomationMode))
 			{
 				Debug.Log($"Failed to parse automation mode preference: {PrefAutomation.Value}");
-				AutomationMode = AutomationPrefs.Random;
+				AutomationMode = AutomationPrefs.None;
 			}
 			if (!System.Enum.TryParse<Hands>(PrefEnabledHand.Value, out EnabledHand))
 			{

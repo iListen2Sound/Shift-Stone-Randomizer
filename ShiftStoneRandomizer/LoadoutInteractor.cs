@@ -174,7 +174,7 @@ namespace ShiftStoneRandomizer
 			}
 
 
-			private void ApplyLoadOut()
+			public void ApplyLoadOut()
 			{
 				Debug.Log("Applying Loadout...");
 				ShiftStonePrefs left;
@@ -327,11 +327,39 @@ namespace ShiftStoneRandomizer
 
 		#region Game Flow 
 		public static bool IsNextSelectionPrimed;
+		public static AutomationPrefs AutomationMode;
 		public static void OnMatchLoad()
 		{
-			if (ShiftStoneRandomizer.CurrentLoadedScene.Contains("map") && ShiftStoneRandomizer.Players.Count > 1)
-			{
+			//only do matchload shift stone apply on first load into match
+			if(ShiftStoneRandomizer.IsFirstMatchLoad)
+				AutoApply(true);
+		}
+		
+		//Runs in between matches called onMatchEnded()
+		public static void ReplayPrep()
+		{
+			AutoApply(false);
+		}
 
+		public static void AutoApply(bool isFirstMatchLoad)
+		{
+			if(!IsNextSelectionPrimed)
+				return; 
+				
+			if(AutomationMode == AutomationPrefs.Auto)
+			{
+				if (IsNextSelectionPrimed)
+				{
+
+					int hostStartIndex = ShiftStoneRandomizer.IsHost ? 2 : 0; //Invert host/client selection when in between matches to prepare for next match
+					if(isFirstMatchLoad) //Reverse selection if call is for first mapload
+						hostStartIndex = ShiftStoneRandomizer.IsHost ? 0 : 2;
+
+
+					int mapIndex = ShiftStoneRandomizer.CurrentLoadedScene == "map0" ? 0 : 1;
+
+					MainInteractor.SlotList[hostStartIndex + mapIndex].ApplyLoadOut();
+				}
 			}
 		}
 
@@ -472,6 +500,15 @@ namespace ShiftStoneRandomizer
 			ClusterSource = new GameObject("Loadout Cluster");
 			GameObject.DontDestroyOnLoad(ClusterSource);
 
+			//Assign delegates for match flow
+			Calls.onMapInitialized += OnMatchLoad;
+			Calls.onMatchEnded += ReplayPrep;
+
+			if (!System.Enum.TryParse<AutomationPrefs>(PrefAutomation.Value, out AutomationMode))
+			{
+				Debug.Log($"LoadoutInteractor: Failed to parse automation mode preference: {PrefAutomation.Value}");
+				AutomationMode = AutomationPrefs.None;
+			}
 		}
 
 		//Add this as a listener to the shift stone interaction for the existing base stones
@@ -507,6 +544,8 @@ namespace ShiftStoneRandomizer
 		}
 
 		//public static List<GameObject> AllDisplaySlots = new List<GameObject>();
+
+		public static LoadoutInteractor MainInteractor = null;
 
 
 		#endregion
@@ -554,6 +593,12 @@ namespace ShiftStoneRandomizer
 				SlotList[i].Button.transform.SetParent(Cluster.transform, false);
 			}
 			Cluster.SetActive(false);
+
+			//Select one loadaout applyer as main interactor. 
+			if (MainInteractor == null && !isForSaving)
+			{
+				MainInteractor = this;
+			}
 		}
 
 

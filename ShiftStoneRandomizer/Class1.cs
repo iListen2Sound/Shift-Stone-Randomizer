@@ -1,4 +1,4 @@
-﻿
+﻿using Il2CppPhoton.Pun;
 
 using Il2CppRootMotion;
 
@@ -47,10 +47,17 @@ namespace ShiftStoneRandomizer
 		private static string CurrentScene;
 		public static string CurrentLoadedScene { get { return CurrentScene.ToLower().Trim(); } }
 
+		private static string LastScene;
+		public static string LastLoadedScene { get { return LastScene.ToLower().Trim(); } }
+
+		public static bool IsFirstMatchLoad { get; private set; }
+
 		public static Il2CppSystem.Collections.Generic.List<Player> Players { get; set; }
 		public static int PlayerCount { get { return Players.Count; } }
 		public static bool IsInMatch { get { return CurrentLoadedScene.Contains("map") && Players.Count == 2; } }
 
+
+		public static bool IsHost {get {return PhotonNetwork.IsMasterClient;}}
 
 		//private int[] blackList = new int[0];
 		private bool firstLoad = true;
@@ -86,6 +93,7 @@ namespace ShiftStoneRandomizer
 			//CreateCosmetics();
 			Calls.onMapInitialized += SceneReady;
 			Calls.onMatchEnded += CreateButtonsForAll;//CreateButtonsForAll;
+			
 
 			InitPreferences();
 
@@ -120,6 +128,7 @@ namespace ShiftStoneRandomizer
 
 		private void SceneReady()
 		{
+			LoadoutInteractor.MainInteractor = null;
 
 			//InitializeShiftStones();
 			Players = PlayerManager.instance.AllPlayers;
@@ -179,7 +188,10 @@ namespace ShiftStoneRandomizer
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
+			LastScene = CurrentScene;
 			CurrentScene = sceneName;
+
+			IsFirstMatchLoad = CurrentLoadedScene.Contains("map") && LastLoadedScene == "gym";
 		}
 		/// <summary>
 		/// Blacklists stones and writes to file.
