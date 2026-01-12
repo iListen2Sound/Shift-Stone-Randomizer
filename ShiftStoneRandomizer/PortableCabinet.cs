@@ -71,9 +71,25 @@ namespace ShiftStoneRandomizer
 			QssSaveCluster.SetActive(false);
 
 
+			
+
 			//Create Portable Stone Case
 			double mulCol = 0.1; double mulRow = 0.12;
 			StoneCase = new GameObject("Portable Stone Case");
+
+			GameObject blackListButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
+			blackListButton.name = "BlackList";
+			blackListButton.localPosition = new Vector3(0.04f, 0.06f, 0.07f);
+			blackListButton.transform.SetParent(StoneCase.transform, false);
+			blackListButton.SetActive(true);
+
+			GameObject automationButton  = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
+
+			automationButton.name = "Auto Enable";
+			automationButton.localPosition = new Vector3(-0.04f, 0.06f, 0.07f);
+			automationButton.transform.SetParent(StoneCase.transform, false);
+			automationButton.SetActive(true);
+
 
 			for (int i = 0; i < 12; i++)
 			{

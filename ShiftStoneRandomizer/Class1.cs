@@ -103,8 +103,12 @@ namespace ShiftStoneRandomizer
 		{
 			IsSceneLoaded = false;
 			Debug.Log("Unloaded " + sceneName);
+			LoadoutInteractor.UnsubAll;
+
 			if (sceneName == "Gym" || sceneName == "Park" || sceneName.Contains("Map"))
 				StoneItem.ResetAllIcons();
+			
+
 		}
 		public override void OnUpdate()
 		{

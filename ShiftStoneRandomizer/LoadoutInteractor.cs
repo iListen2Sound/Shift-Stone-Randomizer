@@ -497,10 +497,8 @@ namespace ShiftStoneRandomizer
 
 		public static void UnsubAll()
 		{
-			lock (typeof(LoadoutInteractor))
-			{
-				LoadoutInteractor.Display = null;
-			}
+
+			LoadoutInteractor.Display = null;
 		}
 
 		public static GameObject ClusterSource;
