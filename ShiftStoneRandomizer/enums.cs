@@ -29,9 +29,10 @@ namespace ShiftStoneRandomizer
 
 	public enum AutomationPrefs
 	{
+		None,
 		Random,
 		Auto,
-		Mirror,
-		None
+		Mirror
+		
 	}
 }

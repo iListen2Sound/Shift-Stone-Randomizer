@@ -185,7 +185,7 @@ namespace ShiftStoneRandomizer
 
 			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				ToggleStones(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+				ToggleStones(Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
 				ActivateEffect(true, true);
 			});
 
@@ -196,7 +196,7 @@ namespace ShiftStoneRandomizer
 
 			saveLoadOutButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				SaveLoadOut(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+				SaveLoadOut(Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
 			});
 
 		}
@@ -257,7 +257,7 @@ namespace ShiftStoneRandomizer
 
 			RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				RandomizeStones(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+				RandomizeStones(Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
 			});
 
 

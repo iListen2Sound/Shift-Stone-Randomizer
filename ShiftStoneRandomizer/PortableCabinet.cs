@@ -82,6 +82,11 @@ namespace ShiftStoneRandomizer
 			blackListButton.localPosition = new Vector3(0.04f, 0.06f, 0.07f);
 			blackListButton.transform.SetParent(StoneCase.transform, false);
 			blackListButton.SetActive(true);
+			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
+			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate{
+				ToggleStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+				ActivateEffect(true, true);
+			})
 
 			GameObject automationButton  = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
 
@@ -89,7 +94,17 @@ namespace ShiftStoneRandomizer
 			automationButton.localPosition = new Vector3(-0.04f, 0.06f, 0.07f);
 			automationButton.transform.SetParent(StoneCase.transform, false);
 			automationButton.SetActive(true);
-
+			automationButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
+			automationButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action) delegate{
+				int nextAutomationMode = ShiftStoneRandomizer.AutomationMode + 1;
+				if (nextAutomationMode > (int)Enum.GetValues<AutomationPrefs>().Max())
+				{
+					ShiftStoneRandomizer.AutomationMode = AutomationMode.None;
+				}
+				LoadoutInteractor.AutomationMode = ShiftStoneRandomizer.AutomationMode;
+				ShiftStoneRandomizer.PrefAutomation.Value = ShiftStoneRandomizer.AutomationMode.ToString();
+				ShiftStoneRandomizer.CatSettings.SaveToFile();
+			})
 
 			for (int i = 0; i < 12; i++)
 			{
