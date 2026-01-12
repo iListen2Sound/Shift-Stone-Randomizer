@@ -113,6 +113,9 @@ namespace ShiftStoneRandomizer
 					Hands usedHand = FindCulprit(box);
 
 					LoadoutInteractor.HighlightItem(currentStonePref, usedHand);
+					InteractionButton ib = box.transform.GetChild(1).gameObject.GetComponent<InteractionButton>();
+					ib.enabled = false;
+					MelonCoroutines.Start(Debouncer(ib));
 				});
 				box.transform.GetChild(1).gameObject.GetComponent<InteractionButton>().enabled = true;
 				StoneCase.transform.SetParent(swapper.transform, false);
@@ -151,6 +154,10 @@ namespace ShiftStoneRandomizer
 			return leftDist < rightDist ? Hands.Left : Hands.Right;
 		}
 
-
+		private IEnumerator Debouncer(InteractionButton ib)
+		{
+			yield return new WaitForSeconds(0.5f);
+			ib.enabled = true;
+		}
 	}
 }

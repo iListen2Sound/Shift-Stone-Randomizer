@@ -33,9 +33,9 @@ namespace ShiftStoneRandomizer
 		//private const string USER_DATA = "Userdata/ShiftStoneRandomizer/";
 
 
-		private const string BLACKLIST_FILE = "blacklist.txt";
-		private const string LOADOUT_FILE = "loadout.txt";
-		private const string DEBUG_FILE = ".debug";
+		private static const string BLACKLIST_FILE = "blacklist.txt";
+		private static const string LOADOUT_FILE = "loadout.txt";
+		private static const string DEBUG_FILE = ".debug";
 		private static System.Random random = new System.Random();
 		//private ShiftStone[] shiftStones;
 		//private StoneItem[] stones;

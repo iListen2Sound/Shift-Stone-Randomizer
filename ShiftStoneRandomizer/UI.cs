@@ -41,7 +41,7 @@ namespace ShiftStoneRandomizer
 	{
 		#region UI
 
-
+		public static SmallButtonSource; 
 		GameObject LoadCluster;
 		GameObject SaveCluster;
 		public GameObject QssSaveCluster;
@@ -322,6 +322,12 @@ namespace ShiftStoneRandomizer
 			ShiftStoneBoxSource.SetActive(false);
 			ShiftStoneBoxSource.name = "ShiftStoneBoxSource";
 			GameObject.DontDestroyOnLoad(ShiftStoneBoxSource);
+			SmallButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
+		}
+
+		private void GrabTemplates()
+		{
+			
 		}
 		private void BuildPortableCase(GameObject swapper)
 		{

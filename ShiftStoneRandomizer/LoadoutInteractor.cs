@@ -508,7 +508,7 @@ namespace ShiftStoneRandomizer
 		//Static constructor. Make sure to make no reference to this class before first load
 		static LoadoutInteractor()
 		{
-			ButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
+			ButtonSource = ShiftStoneRandomizer.SmallButtonSource;
 			ButtonSource.transform.GetChild(0).GetComponent<InteractionButton>().enabled = true;
 
 			ButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);

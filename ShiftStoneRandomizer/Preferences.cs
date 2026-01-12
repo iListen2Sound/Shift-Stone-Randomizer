@@ -11,42 +11,42 @@ namespace ShiftStoneRandomizer
 		private const string USER_DATA = "UserData/ShiftStoneRandomizer/";
 		private const string CONFIG_FILE = "config.cfg";
 
-		private MelonPreferences_Category CatSettings;
-		public MelonPreferences_Entry<bool> CatDebugMode;
-		public MelonPreferences_Entry<string> PrefEnabledHand;
-		public MelonPreferences_Entry<string> PrefAutomation;
+		private static MelonPreferences_Category CatSettings;
+		public static MelonPreferences_Entry<bool> CatDebugMode;
+		public static MelonPreferences_Entry<string> PrefEnabledHand;
+		public static MelonPreferences_Entry<string> PrefAutomation;
 
 
-		private MelonPreferences_Category CatEnabledStones;
-		public MelonPreferences_Entry<bool> PrefAdamant;
-		public MelonPreferences_Entry<bool> PrefCharge;
-		public MelonPreferences_Entry<bool> PrefFlow;
-		public MelonPreferences_Entry<bool> PrefGuard;
-		public MelonPreferences_Entry<bool> PrefStubborn;
-		public MelonPreferences_Entry<bool> PrefSurge;
-		public MelonPreferences_Entry<bool> PrefVigor;
-		public MelonPreferences_Entry<bool> PrefVolitile;
+		private static MelonPreferences_Category CatEnabledStones;
+		public static MelonPreferences_Entry<bool> PrefAdamant;
+		public static MelonPreferences_Entry<bool> PrefCharge;
+		public static MelonPreferences_Entry<bool> PrefFlow;
+		public static MelonPreferences_Entry<bool> PrefGuard;
+		public static MelonPreferences_Entry<bool> PrefStubborn;
+		public static MelonPreferences_Entry<bool> PrefSurge;
+		public static MelonPreferences_Entry<bool> PrefVigor;
+		public static MelonPreferences_Entry<bool> PrefVolitile;
 
-		private MelonPreferences_Category CatMap0;
-		public MelonPreferences_Entry<string> PrefMap0HostLeft { get; private set; }
-		public MelonPreferences_Entry<string> PrefMap0HostRight { get; private set; }
-		public MelonPreferences_Entry<string> PrefMap0ClientLeft { get; private set; }
-		public MelonPreferences_Entry<string> PrefMap0ClientRight { get; private set; }
+		private static MelonPreferences_Category CatMap0;
+		public static  MelonPreferences_Entry<string> PrefMap0HostLeft { get; private set; }
+		public static  MelonPreferences_Entry<string> PrefMap0HostRight { get; private set; }
+		public static  MelonPreferences_Entry<string> PrefMap0ClientLeft { get; private set; }
+		public static  MelonPreferences_Entry<string> PrefMap0ClientRight { get; private set; }
 
-		private MelonPreferences_Category CatMap1;
-		public MelonPreferences_Entry<string> PrefMap1HostLeft { get; private set; }
-		public MelonPreferences_Entry<string> PrefMap1HostRight { get; private set; }
-		public MelonPreferences_Entry<string> PrefMap1ClientLeft { get; private set; }
-		public MelonPreferences_Entry<string> PrefMap1ClientRight { get; private set; }
+		private static MelonPreferences_Category CatMap1;
+		public static  MelonPreferences_Entry<string> PrefMap1HostLeft { get; private set; }
+		public static  MelonPreferences_Entry<string> PrefMap1HostRight { get; private set; }
+		public static  MelonPreferences_Entry<string> PrefMap1ClientLeft { get; private set; }
+		public static  MelonPreferences_Entry<string> PrefMap1ClientRight { get; private set; }
 
-		private MelonPreferences_Category CatLoadOutButton;
-		public MelonPreferences_Entry<string> PrefLobLeft;
-		public MelonPreferences_Entry<string> PrefLobRight;
+		private static MelonPreferences_Category CatLoadOutButton;
+		public static MelonPreferences_Entry<string> PrefLobLeft;
+		public static MelonPreferences_Entry<string> PrefLobRight;
 
 		public static AutomationPrefs AutomationMode;
 
 
-		private void InitPreferences()
+		private static void InitPreferences()
 		{
 			if (!Directory.Exists(USER_DATA))
 			{
@@ -175,7 +175,7 @@ namespace ShiftStoneRandomizer
 			EquipStones(left, right);
 		}
 
-		private void ToggleStones(int[] equipped, Hands hand = Hands.Both)
+		public static void ToggleStones(int[] equipped, Hands hand = Hands.Both)
 		{
 			StoneItem left;
 			StoneItem right;
