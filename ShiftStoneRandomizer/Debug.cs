@@ -33,7 +33,7 @@ namespace ShiftStoneRandomizer
 		public static TextMeshPro DebugUiText { get; private set; }
 		public static GameObject CreateDebugUi(GameObject PlayerUi)
 		{
-			DebugUi = Calls.Create.NewText("Placeholder text. You shouldn't be seeing this without some UE Shenanigans\n or decompiled code. Doesn't count if it's you, Ava. I (probably) told you about this.", 1f, Color.white, new Vector3(0f, 0.1f, 1f), Quaternion.Euler(0, 0, 0));
+			DebugUi = Calls.Create.NewText("Placeholder text.", 1f, Color.white, new Vector3(0f, 0.1f, 1f), Quaternion.Euler(0, 0, 0));
 			DebugUi.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
 			DebugUi.transform.localPosition = new Vector3(0f, 0.1f, 0.96f);
 			DebugUi.transform.SetParent(PlayerUi.transform, false);

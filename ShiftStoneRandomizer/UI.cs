@@ -41,7 +41,7 @@ namespace ShiftStoneRandomizer
 	{
 		#region UI
 
-		public static SmallButtonSource; 
+		public static GameObject SmallButtonSource; 
 		GameObject LoadCluster;
 		GameObject SaveCluster;
 		public GameObject QssSaveCluster;

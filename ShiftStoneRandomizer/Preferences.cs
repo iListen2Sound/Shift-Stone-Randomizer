@@ -11,7 +11,7 @@ namespace ShiftStoneRandomizer
 		private const string USER_DATA = "UserData/ShiftStoneRandomizer/";
 		private const string CONFIG_FILE = "config.cfg";
 
-		private static MelonPreferences_Category CatSettings;
+		public static MelonPreferences_Category CatSettings;
 		public static MelonPreferences_Entry<bool> CatDebugMode;
 		public static MelonPreferences_Entry<string> PrefEnabledHand;
 		public static MelonPreferences_Entry<string> PrefAutomation;
@@ -123,14 +123,13 @@ namespace ShiftStoneRandomizer
 			StoneItem.AllStones[6].IsEnabled = PrefVigor.Value;
 			StoneItem.AllStones[7].IsEnabled = PrefVolitile.Value;
 
-			if (!System.Enum.TryParse<Hands>(PrefEnabledHand.Value, out EnabledHand)) ;
+			if (!System.Enum.TryParse<Hands>(PrefEnabledHand.Value, out EnabledHand))
 			{
 				Debug.Log($"Failed to parse enabled hand preference: {PrefEnabledHand.Value}");
 			}
 			if (!System.Enum.TryParse<AutomationPrefs>(PrefAutomation.Value, out AutomationMode))
 			{
 				Debug.Log($"Failed to parse automation mode preference: {PrefAutomation.Value}");
-				LoadoutInteractor.AutomationMode = AutomationMode;
 			}
 			if (!System.Enum.TryParse<Hands>(PrefEnabledHand.Value, out EnabledHand))
 			{
@@ -143,7 +142,7 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
-		private void UpdatePrefsFromState()
+		private static void UpdatePrefsFromState()
 		{
 			PrefAdamant.Value = StoneItem.AllStones[0].IsEnabled;
 			PrefCharge.Value = StoneItem.AllStones[1].IsEnabled;

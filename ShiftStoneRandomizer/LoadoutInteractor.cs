@@ -143,6 +143,7 @@ namespace ShiftStoneRandomizer
 				{
 					ActualButton.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 					{
+
 						ApplyLoadOut();
 						LoadoutInteractor.IsNextSelectionPrimed = false;
 					});
@@ -214,9 +215,13 @@ namespace ShiftStoneRandomizer
 								{
 									if (ShiftStoneRandomizer.Player1 != null)
 									{
-										int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+										/*int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 										NextSelection[0] = (ShiftStonePrefs)opponentEquipped[0];
-										NextSelection[1] = (ShiftStonePrefs)opponentEquipped[1];
+										NextSelection[1] = (ShiftStonePrefs)opponentEquipped[1];*/
+										int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+										ShiftStoneRandomizer.EquipStones(
+											currentHand == Hands.Left ? StoneItem.AllStones[opponentEquipped[0]] : null,
+											currentHand == Hands.Right ? StoneItem.AllStones[opponentEquipped[1]] : null);
 									}
 								}
 								else
@@ -327,22 +332,25 @@ namespace ShiftStoneRandomizer
 
 
 		#region Game Flow 
-		public static bool IsNextSelectionPrimed;
-		public static AutomationPrefs AutomationMode;
+		public static bool IsNextSelectionPrimed { get; set; } = true;
+		public static AutomationPrefs AutomationMode { get { return ShiftStoneRandomizer.AutomationMode; } set { ShiftStoneRandomizer.AutomationMode = value ; } }
 		public static void OnMatchLoad()
 		{
 			//Debug override. Remove on release
-			if (AutomationMode == AutomationPrefs.None && Debug.debugMode)
-			{
-				AutomationMode = AutomationPrefs.Auto;
-				IsNextSelectionPrimed = true;
-				Debug.Log("Overriding automation mode for debug. ");
-			}
+			//if (AutomationMode == AutomationPrefs.None && Debug.debugMode)
+			//{
+			//	AutomationMode = AutomationPrefs.Auto;
+			//	IsNextSelectionPrimed = true;
+			//	Debug.Log("Overriding automation mode for debug. ");
+			//}
 			//only do matchload shift stone apply on first load into match
+			Debug.Log("LoadoutInteractor: OnMatchLoad called", true);
 			if(ShiftStoneRandomizer.IsFirstMatchLoad)
 			{
 				AutoApply(true);
+				Debug.Log("LoadoutInteractor: OnMatchLoad applying stones for first match load", true);
 			}
+			
 		}
 		
 		//Runs in between matches called onMatchEnded()
@@ -372,8 +380,7 @@ namespace ShiftStoneRandomizer
 				if (ShiftStoneRandomizer.Player1 != null)
 				{
 					int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-					NextSelection[0] = (ShiftStonePrefs)opponentEquipped[0];
-					NextSelection[1] = (ShiftStonePrefs)opponentEquipped[1];
+					ShiftStoneRandomizer.EquipStones(StoneItem.AllStones[opponentEquipped[0]], StoneItem.AllStones[opponentEquipped[1]]);
 				}
 			}
 			else if(AutomationMode == AutomationPrefs.Random)
@@ -518,12 +525,9 @@ namespace ShiftStoneRandomizer
 			GameObject.DontDestroyOnLoad(ClusterSource);
 
 			//Assign delegates for match flow
-			Calls.onMapInitialized += OnMatchLoad;
+			
 			Calls.onMatchEnded += ReplayPrep;
 
-			AutomationMode = ShiftStoneRandomizer.AutomationMode;
-
-			
 		}
 
 		//Add this as a listener to the shift stone interaction for the existing base stones
@@ -583,14 +587,14 @@ namespace ShiftStoneRandomizer
 
 		public static List<MelonPreferences_Entry<string>> PrefList = new List<MelonPreferences_Entry<string>>()
 		{
-			ShiftStoneRandomizer.Instance.PrefMap0HostLeft,
-			ShiftStoneRandomizer.Instance.PrefMap0HostRight,
-			ShiftStoneRandomizer.Instance.PrefMap1HostLeft,
-			ShiftStoneRandomizer.Instance.PrefMap1HostRight,
-			ShiftStoneRandomizer.Instance.PrefMap0ClientLeft,
-			ShiftStoneRandomizer.Instance.PrefMap0ClientRight,
-			ShiftStoneRandomizer.Instance.PrefMap1ClientLeft,
-			ShiftStoneRandomizer.Instance.PrefMap1ClientRight,
+			ShiftStoneRandomizer.PrefMap0HostLeft,
+			ShiftStoneRandomizer.PrefMap0HostRight,
+			ShiftStoneRandomizer.PrefMap1HostLeft,
+			ShiftStoneRandomizer.PrefMap1HostRight,
+			ShiftStoneRandomizer.PrefMap0ClientLeft,
+			ShiftStoneRandomizer.PrefMap0ClientRight,
+			ShiftStoneRandomizer.PrefMap1ClientLeft,
+			ShiftStoneRandomizer.PrefMap1ClientRight,
 		};
 
 		public readonly List<Slot> SlotList;

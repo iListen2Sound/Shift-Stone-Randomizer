@@ -33,9 +33,9 @@ namespace ShiftStoneRandomizer
 		//private const string USER_DATA = "Userdata/ShiftStoneRandomizer/";
 
 
-		private static const string BLACKLIST_FILE = "blacklist.txt";
-		private static const string LOADOUT_FILE = "loadout.txt";
-		private static const string DEBUG_FILE = ".debug";
+		private const string BLACKLIST_FILE = "blacklist.txt";
+		private const string LOADOUT_FILE = "loadout.txt";
+		private const string DEBUG_FILE = ".debug";
 		private static System.Random random = new System.Random();
 		//private ShiftStone[] shiftStones;
 		//private StoneItem[] stones;
@@ -54,10 +54,10 @@ namespace ShiftStoneRandomizer
 
 		public static Il2CppSystem.Collections.Generic.List<Player> Players { get; set; }
 		public static int PlayerCount { get { return Players.Count; } }
-		public static bool IsInMatch { get { return CurrentLoadedScene.Contains("map") && Players.Count == 2; } }
+		public static bool IsInMatch { get { return CurrentLoadedScene.Contains("map") && Players.Count > 0; } }
 
 
-		public static bool IsHost {get {return PhotonNetwork.IsMasterClient;}}
+		public static bool IsHost { get { return PhotonNetwork.IsMasterClient; } }
 
 		//private int[] blackList = new int[0];
 		private bool firstLoad = true;
@@ -93,7 +93,7 @@ namespace ShiftStoneRandomizer
 			//CreateCosmetics();
 			Calls.onMapInitialized += SceneReady;
 			Calls.onMatchEnded += CreateButtonsForAll;//CreateButtonsForAll;
-			
+
 
 			InitPreferences();
 
@@ -102,12 +102,14 @@ namespace ShiftStoneRandomizer
 		public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
 		{
 			IsSceneLoaded = false;
-			Debug.Log("Unloaded " + sceneName);
-			LoadoutInteractor.UnsubAll;
+			Debug.Log($"Unloaded: \"{sceneName}\"");
 
 			if (sceneName == "Gym" || sceneName == "Park" || sceneName.Contains("Map"))
+			{
 				StoneItem.ResetAllIcons();
-			
+				LoadoutInteractor.UnsubAll();
+			}
+
 
 		}
 		public override void OnUpdate()
@@ -122,7 +124,7 @@ namespace ShiftStoneRandomizer
 			if (IsSceneLoaded)
 			{
 				//Debug.PrintInGame($"{LoadoutInteractor.Selection[0].ToString()} \n{LoadoutInteractor.Selection[1].ToString()}");
-				Debug.PrintInGame($"{LoadoutInteractor.Selection[0]} \n {LoadoutInteractor.Selection[1]}");
+				Debug.PrintInGame($"Automation Mode: {LoadoutInteractor.AutomationMode} \n IsFirstMatchLoad: {IsFirstMatchLoad} \n IsInMatch: {IsInMatch} \n LoadoutIsPrimed: {LoadoutInteractor.IsNextSelectionPrimed}");
 			}
 		}
 		public void logOnMatchEnded()
@@ -132,12 +134,12 @@ namespace ShiftStoneRandomizer
 
 		private void SceneReady()
 		{
-			
+
 
 			//InitializeShiftStones();
 			Players = PlayerManager.instance.AllPlayers;
 
-			if (CurrentScene == "Gym")
+			if (CurrentLoadedScene == "gym")
 			{
 
 				if (firstLoad)
@@ -160,13 +162,13 @@ namespace ShiftStoneRandomizer
 			CreateButtonsForAll();
 
 			ApplyPrefsToState();
-			if (CurrentScene.ToLower().Trim() != "loader")
+			if (CurrentLoadedScene != "loader")
 			{
 				Player0 = Players[0].Controller;
 				Debug.CreateDebugUi(Player0.gameObject.transform.GetChild(6).GetChild(0).gameObject);
 				IsSceneLoaded = true;
-				
-				
+
+
 				LoadoutInteractor.MainInteractor = null;
 				//Left Point: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/Bone_Pointer_A_L/Bone_Pointer_B_L/Bone_Pointer_C_L
 				//Left Socket: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/ShifstoneSocket_L
@@ -183,6 +185,7 @@ namespace ShiftStoneRandomizer
 				LoadoutInteractor.LeftSocket = leftArm.transform.DeepFind("SnapTransform").gameObject;
 				LoadoutInteractor.RightSocket = rightArm.transform.DeepFind("SnapTransform").gameObject;
 				LoadoutInteractor.HighlightCurrentEquippedStones();
+				LoadoutInteractor.OnMatchLoad();
 			}
 
 		}
