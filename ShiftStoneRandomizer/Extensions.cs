@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace ShiftStoneRandomizer
@@ -20,7 +19,6 @@ namespace ShiftStoneRandomizer
 				{
 					queue.Enqueue(current.GetChild(i));
 				}
-
 			}
 			return null;
 		}

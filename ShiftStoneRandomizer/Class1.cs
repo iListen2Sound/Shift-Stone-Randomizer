@@ -12,14 +12,10 @@ using Il2CppRUMBLE.Players;
 using MelonLoader;
 
 using RumbleModdingAPI;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Action = System.Action;
 using Type = Il2CppSystem.Type;
@@ -71,15 +67,15 @@ namespace ShiftStoneRandomizer
 		private GameObject rightHand;
 
 
-		private static Hands EnabledHand;
+		public static Hands EnabledHand;
 
 		private GameObject dropSign;
 
 		private PlayerHaptics haptics;
 
 
-		public static Il2CppRUMBLE.Players.PlayerController Player0 { get; set; }
-		public static Il2CppRUMBLE.Players.PlayerController Player1 { get { return Players.Count > 1 ? Players[1].Controller : null; } }
+		public static PlayerController Player0 { get; set; }
+		public static PlayerController Player1 { get { return Players.Count > 1 ? Players[1].Controller : null; } }
 
 		public static GameObject leftPoint;
 		public static GameObject rightPoint;
@@ -102,7 +98,7 @@ namespace ShiftStoneRandomizer
 		public override void OnSceneWasUnloaded(int buildIndex, string sceneName)
 		{
 			IsSceneLoaded = false;
-			Debug.Log($"Unloaded: \"{sceneName}\"");
+			Debug.Log($"Unloaded: \"{sceneName}\"", true);
 
 			if (sceneName == "Gym" || sceneName == "Park" || sceneName.Contains("Map"))
 			{
@@ -127,10 +123,7 @@ namespace ShiftStoneRandomizer
 				Debug.PrintInGame($"Automation Mode: {LoadoutInteractor.AutomationMode} \n IsFirstMatchLoad: {IsFirstMatchLoad} \n IsInMatch: {IsInMatch} \n LoadoutIsPrimed: {LoadoutInteractor.IsNextSelectionPrimed}");
 			}
 		}
-		public void logOnMatchEnded()
-		{
-			Debug.Log("Match Ended", true);
-		}
+
 
 		private void SceneReady()
 		{
@@ -159,7 +152,7 @@ namespace ShiftStoneRandomizer
 
 				firstLoad = false;
 			}
-			CreateButtonsForAll();
+
 
 			ApplyPrefsToState();
 			if (CurrentLoadedScene != "loader")
@@ -169,12 +162,8 @@ namespace ShiftStoneRandomizer
 				IsSceneLoaded = true;
 
 
-				LoadoutInteractor.MainInteractor = null;
-				//Left Point: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/Bone_Pointer_A_L/Bone_Pointer_B_L/Bone_Pointer_C_L
-				//Left Socket: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/ShifstoneSocket_L
+				//LoadoutInteractor.MainInteractor = null;
 
-				//Right Point: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/Bone_Pointer_A_R/Bone_Pointer_B_R/Bone_Pointer_C_R
-				//Right Socket: Player Controller(Clone)/Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/ShiftstoneSocket_R
 
 				leftPoint = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_L/Bone_Shoulder_L/Bone_Lowerarm_L/Bone_HandAlpha_L/Bone_Pointer_A_L/Bone_Pointer_B_L/Bone_Pointer_C_L").gameObject;
 				rightPoint = Player0.gameObject.transform.Find("Visuals/Skelington/Bone_Pelvis/Bone_Spine_A/Bone_Chest/Bone_Shoulderblade_R/Bone_Shoulder_R/Bone_Lowerarm_R/Bone_HandAlpha_R/Bone_Pointer_A_R/Bone_Pointer_B_R/Bone_Pointer_C_R").gameObject;
@@ -186,6 +175,7 @@ namespace ShiftStoneRandomizer
 				LoadoutInteractor.RightSocket = rightArm.transform.DeepFind("SnapTransform").gameObject;
 				LoadoutInteractor.HighlightCurrentEquippedStones();
 				LoadoutInteractor.OnMatchLoad();
+				CreateButtonsForAll();
 			}
 
 		}
@@ -206,7 +196,7 @@ namespace ShiftStoneRandomizer
 		/// Blacklists stones and writes to file.
 		/// </summary>
 		/// <param name="Stones">Equipped stones</param>
-		private void BlackListStones(int[] Hand)
+		/*private void BlackListStones(int[] Hand)
 		{
 			bool hasEnabledEquipedStones = false;
 			foreach (int i in Hand)
@@ -241,7 +231,7 @@ namespace ShiftStoneRandomizer
 			}
 			File.WriteAllText(Path.Combine(USER_DATA, BLACKLIST_FILE), blackListOut);
 			ActivateEffect(true, true);
-		}
+		}*/
 
 		public void CycleHandLock()
 		{
@@ -251,7 +241,7 @@ namespace ShiftStoneRandomizer
 				EnabledHand = (Hands)(-1);
 			}
 			Hands hand = (Hands)EnabledHand;
-			Debug.Log($"Hand lock set to: {hand}");
+			Debug.Log($"Hand lock set to: {hand}", true);
 
 			switch (hand)
 			{
@@ -395,7 +385,7 @@ namespace ShiftStoneRandomizer
 			randomStones = randomStones.OrderBy(x => random.Next()).ToList();
 			if (randomStones.Count < 2)
 			{
-				Debug.Log("Not enough stones to randomize, using equipped stones instead.");
+				Debug.Log("Not enough stones to randomize, using equipped stones instead.", false, 1);
 				if (hand == Hands.Both)
 				{
 					randomStones.AddRange(new StoneItem[] {

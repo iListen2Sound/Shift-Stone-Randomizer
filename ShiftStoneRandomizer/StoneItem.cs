@@ -1,6 +1,3 @@
-using AsmResolver.PE.DotNet.Cil;
-using HarmonyLib;
-using Il2CppInterop.Runtime.InteropTypes.Arrays;
 
 using Il2CppRUMBLE.Combat.ShiftStones;
 using RumbleModdingAPI;
@@ -208,6 +205,8 @@ namespace ShiftStoneRandomizer
 		public void AddIcon(GameObject icon)
 		{
 			_iconList.Add(icon);
+
+			icon.SetActive(!_isEnabled);
 		}
 		public void ResetIcons()
 		{

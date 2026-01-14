@@ -28,16 +28,16 @@ namespace ShiftStoneRandomizer
 		public static MelonPreferences_Entry<bool> PrefVolitile;
 
 		private static MelonPreferences_Category CatMap0;
-		public static  MelonPreferences_Entry<string> PrefMap0HostLeft { get; private set; }
-		public static  MelonPreferences_Entry<string> PrefMap0HostRight { get; private set; }
-		public static  MelonPreferences_Entry<string> PrefMap0ClientLeft { get; private set; }
-		public static  MelonPreferences_Entry<string> PrefMap0ClientRight { get; private set; }
+		public static MelonPreferences_Entry<string> PrefMap0HostLeft { get; private set; }
+		public static MelonPreferences_Entry<string> PrefMap0HostRight { get; private set; }
+		public static MelonPreferences_Entry<string> PrefMap0ClientLeft { get; private set; }
+		public static MelonPreferences_Entry<string> PrefMap0ClientRight { get; private set; }
 
 		private static MelonPreferences_Category CatMap1;
-		public static  MelonPreferences_Entry<string> PrefMap1HostLeft { get; private set; }
-		public static  MelonPreferences_Entry<string> PrefMap1HostRight { get; private set; }
-		public static  MelonPreferences_Entry<string> PrefMap1ClientLeft { get; private set; }
-		public static  MelonPreferences_Entry<string> PrefMap1ClientRight { get; private set; }
+		public static MelonPreferences_Entry<string> PrefMap1HostLeft { get; private set; }
+		public static MelonPreferences_Entry<string> PrefMap1HostRight { get; private set; }
+		public static MelonPreferences_Entry<string> PrefMap1ClientLeft { get; private set; }
+		public static MelonPreferences_Entry<string> PrefMap1ClientRight { get; private set; }
 
 		private static MelonPreferences_Category CatLoadOutButton;
 		public static MelonPreferences_Entry<string> PrefLobLeft;

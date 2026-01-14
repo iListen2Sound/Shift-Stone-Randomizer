@@ -6,12 +6,10 @@ using RumbleModdingAPI;
 using System.Collections;
 
 using Il2CppRUMBLE.Interactions.InteractionBase;
-using Il2CppRUMBLE.Managers;
-using Il2CppRUMBLE.Players.Subsystems;
-using Il2CppSystem;
-using Il2CppRUMBLE.Players;
 using Il2CppRUMBLE.Combat.ShiftStones;
+using Il2CppSmartLocalization.Editor;
 using MelonLoader;
+using Il2CppTMPro;
 namespace ShiftStoneRandomizer
 {
 	public class PortableCabinet : MelonMod
@@ -69,45 +67,60 @@ namespace ShiftStoneRandomizer
 			loadInteractor = new LoadoutInteractor(false);
 			LoadCluster = loadInteractor.Cluster;
 			LoadCluster.transform.SetParent(swapper.transform, false);
-			LoadCluster.transform.localPosition = new Vector3(0.144f, 0.42f, 0f);
+			LoadCluster.transform.localPosition = new Vector3(0.144f, 0.53f, 0f);
 			LoadCluster.transform.localRotation = Quaternion.Euler(0, 180, 0);
 			LoadCluster.SetActive(true);
 
 			qssSaveInteractor = new LoadoutInteractor(true);
 			QssSaveCluster = qssSaveInteractor.Cluster;
 			QssSaveCluster.transform.SetParent(swapper.transform, false);
-			QssSaveCluster.transform.localPosition = new Vector3(0.144f, 0.72f, 0f);
+			QssSaveCluster.transform.localPosition = new Vector3(0.144f, 0.77f, 0.055f);
 			QssSaveCluster.transform.localRotation = Quaternion.Euler(0, 180, 0);
 			QssSaveCluster.SetActive(false);
 
 
-			
+
 
 			//Create Portable Stone Case
 			double mulCol = 0.1; double mulRow = 0.12;
 			StoneCase = new GameObject("Portable Stone Case");
 
 			GameObject blackListButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
+			GameObject blackListButtonLabel = Calls.Create.NewText("Blacklist", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
+			blackListButtonLabel.name = "BlackListLabel";
+			blackListButtonLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
+			blackListButtonLabel.transform.SetParent(blackListButton.transform, false);
+			blackListButtonLabel.transform.localRotation = Quaternion.Euler(90, 270, 0);
+			blackListButtonLabel.transform.localPosition = new Vector3(0.05f, 0.09f, 0f);
+
+
 			blackListButton.name = "BlackList";
-			blackListButton.transform.localPosition = new Vector3(0.04f, 0.06f, -0.07f);
+			blackListButton.transform.localPosition = new Vector3(0.04f, 0.225f, -0.01f);
 			blackListButton.transform.localRotation = Quaternion.Euler(0, 270, 270);
 			blackListButton.transform.SetParent(StoneCase.transform, false);
 			blackListButton.SetActive(true);
 			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
-			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate {
+			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			{
 				ShiftStoneRandomizer.ToggleStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
 				ShiftStoneRandomizer.ActivateEffect(true, true);
 			});
 
-			GameObject automationButton  = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
+			GameObject automationButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
+			GameObject automationButtonLabel = Calls.Create.NewText($"Auto Mode\n{ShiftStoneRandomizer.AutomationMode.ToString()}", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
+			automationButtonLabel.name = "AutomationLabel";
+			automationButtonLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
+			automationButtonLabel.transform.SetParent(automationButton.transform, false);
+			automationButtonLabel.transform.localRotation = Quaternion.Euler(90, 270, 0);
+			//0.05 0.09 0
+			automationButtonLabel.transform.localPosition = new Vector3(0.05f, 0.09f, 0f);
 
 			automationButton.name = "Auto Enable";
-			automationButton.transform.localPosition = new Vector3(-0.04f, 0.06f, -0.07f);
+			automationButton.transform.localPosition = new Vector3(0.04f, 0.11f, -0.01f);
 			automationButton.transform.localRotation = Quaternion.Euler(0, 270, 270);
 			automationButton.transform.SetParent(StoneCase.transform, false);
 			automationButton.SetActive(true);
 			automationButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
-
 			automationButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
 				int nextAutomationMode = (int)ShiftStoneRandomizer.AutomationMode + 1;
@@ -122,6 +135,9 @@ namespace ShiftStoneRandomizer
 				ShiftStoneRandomizer.PrefAutomation.Value = ShiftStoneRandomizer.AutomationMode.ToString();
 				ShiftStoneRandomizer.CatSettings.SaveToFile();
 				Debug.PrintInGame($"Automation Mode: {LoadoutInteractor.AutomationMode}");
+
+				automationButtonLabel.GetComponent<TextMeshPro>().text = $"Auto Mode\n{ShiftStoneRandomizer.AutomationMode.ToString()}";
+
 			});
 
 			for (int i = 0; i < 12; i++)
@@ -133,13 +149,23 @@ namespace ShiftStoneRandomizer
 				box.transform.localPosition = new Vector3((float)(mulCol * (i % 4) * -1), (float)(mulRow * (i / 4) * -1), 0.07f);
 				box.transform.rotation = Quaternion.Euler(0, 90, 0);
 				box.transform.GetChild(0).localPosition = new Vector3(-0.03f, -0.04f, -0f);
+				box.transform.GetChild(0).gameObject.GetComponent<LocalizedTextTMPro>().enabled = false;
+				box.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().enabled = false;
 				box.transform.SetParent(StoneCase.transform, false);
+
 				box.SetActive(true);
+
 
 				if (i < 8)
 				{
 					StoneItem.AllStones[i].AddIcon(ShiftStoneRandomizer.CreateBlackListIcons(box));
 				}
+
+				GameObject replacementText = Calls.Create.NewText(currentStonePref.ToString(), 0.2f, Color.white, new Vector3(0.0f, -0.0f, 0f), Quaternion.Euler(0, 0, 0));
+				replacementText.name = "ReplacementLabel";
+				replacementText.transform.SetParent(box.transform, false);
+				replacementText.transform.localPosition = new Vector3(-0.03f, -0.04f, -0.332f);
+				replacementText.transform.localRotation = Quaternion.Euler(0, 90, 0);
 
 				GameObject boxDisplay = StoneItem.GetDisplayObject(currentStonePref);
 				//Standard shift stones should be rotated on their broad face to show off their outline. But charge's outline is clearer from the side				
@@ -187,7 +213,6 @@ namespace ShiftStoneRandomizer
 				QssSaveCluster.SetActive(interaction.IsPressed);
 
 				loadInteractor.Cluster.SetActive(!interaction.IsPressed);
-
 			});
 
 

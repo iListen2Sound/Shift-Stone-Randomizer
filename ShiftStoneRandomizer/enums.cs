@@ -33,6 +33,6 @@ namespace ShiftStoneRandomizer
 		Random,
 		Auto,
 		Mirror
-		
+
 	}
 }

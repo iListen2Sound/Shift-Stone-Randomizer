@@ -2,12 +2,15 @@
 using MelonLoader;
 using Il2CppRUMBLE.Combat.ShiftStones;
 using Il2CppRUMBLE.Interactions.InteractionBase;
+using Il2CppTMPro;
 using UnityEngine;
 
 using RumbleModdingAPI;
 using System.Collections.Generic;
 
 using System;
+
+
 
 
 namespace ShiftStoneRandomizer
@@ -306,7 +309,7 @@ namespace ShiftStoneRandomizer
 			public static void Infanticide(GameObject parent)
 			{
 
-				Debug.Log($"Infanticide: parent is null? {parent == null}", true);
+				//Debug.Log($"Infanticide: parent is null? {parent == null}", true);
 				//if(parent == null)
 				//return;
 				for (int i = 0; i < parent.transform.childCount; i++)
@@ -333,7 +336,7 @@ namespace ShiftStoneRandomizer
 
 		#region Game Flow 
 		public static bool IsNextSelectionPrimed { get; set; } = true;
-		public static AutomationPrefs AutomationMode { get { return ShiftStoneRandomizer.AutomationMode; } set { ShiftStoneRandomizer.AutomationMode = value ; } }
+		public static AutomationPrefs AutomationMode { get { return ShiftStoneRandomizer.AutomationMode; } set { ShiftStoneRandomizer.AutomationMode = value; } }
 		public static void OnMatchLoad()
 		{
 			//Debug override. Remove on release
@@ -345,14 +348,18 @@ namespace ShiftStoneRandomizer
 			//}
 			//only do matchload shift stone apply on first load into match
 			Debug.Log("LoadoutInteractor: OnMatchLoad called", true);
-			if(ShiftStoneRandomizer.IsFirstMatchLoad)
+			if (ShiftStoneRandomizer.IsFirstMatchLoad)
 			{
 				AutoApply(true);
 				Debug.Log("LoadoutInteractor: OnMatchLoad applying stones for first match load", true);
+				if (AutomationMode == AutomationPrefs.Mirror && IsNextSelectionPrimed)
+				{
+					AutoApply(false);
+				}
 			}
-			
+
 		}
-		
+
 		//Runs in between matches called onMatchEnded()
 		public static void ReplayPrep()
 		{
@@ -362,20 +369,20 @@ namespace ShiftStoneRandomizer
 
 		public static void AutoApply(bool isFirstMatchLoad)
 		{
-			if(!IsNextSelectionPrimed)
-				return; 
-				
-			if(AutomationMode == AutomationPrefs.Auto)
+			if (!IsNextSelectionPrimed)
+				return;
+
+			if (AutomationMode == AutomationPrefs.Auto)
 			{
 				int hostStartIndex = ShiftStoneRandomizer.IsHost ? 2 : 0; //Invert host/client selection when in between matches to prepare for next match
-				if(isFirstMatchLoad) //Reverse selection if call is for first mapload
+				if (isFirstMatchLoad) //Reverse selection if call is for first mapload
 					hostStartIndex = ShiftStoneRandomizer.IsHost ? 0 : 2;
 
 				int mapIndex = ShiftStoneRandomizer.CurrentLoadedScene == "map0" ? 0 : 1;
 
 				MainInteractor.SlotList[hostStartIndex + mapIndex].ApplyLoadOut();
 			}
-			else if(AutomationMode == AutomationPrefs.Mirror)
+			else if (AutomationMode == AutomationPrefs.Mirror)
 			{
 				if (ShiftStoneRandomizer.Player1 != null)
 				{
@@ -383,9 +390,9 @@ namespace ShiftStoneRandomizer
 					ShiftStoneRandomizer.EquipStones(StoneItem.AllStones[opponentEquipped[0]], StoneItem.AllStones[opponentEquipped[1]]);
 				}
 			}
-			else if(AutomationMode == AutomationPrefs.Random)
+			else if (AutomationMode == AutomationPrefs.Random)
 			{
-				ShiftStoneRandomizer.RandomizeStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+				ShiftStoneRandomizer.RandomizeStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration(), ShiftStoneRandomizer.EnabledHand);
 			}
 		}
 
@@ -525,7 +532,7 @@ namespace ShiftStoneRandomizer
 			GameObject.DontDestroyOnLoad(ClusterSource);
 
 			//Assign delegates for match flow
-			
+
 			Calls.onMatchEnded += ReplayPrep;
 
 		}
@@ -621,10 +628,46 @@ namespace ShiftStoneRandomizer
 			{
 				MainInteractor = this;
 			}
+
+			GameObject functionLabel = Calls.Create.NewText(
+				isForSaving ? "Save Loadout" : "Apply Loadout",
+				0.4f,
+				Color.white,
+				new Vector3(0f, 0f, 0f),
+				Quaternion.Euler(0f, 0f, 0f));
+			functionLabel.transform.SetParent(Cluster.transform, false);
+			functionLabel.transform.localPosition = new Vector3(0f, -0.12f, 0f);
+			functionLabel.SetActive(true);
+			functionLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
+
+			GameObject posHost = Calls.Create.NewText("Host", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
+			posHost.transform.SetParent(Cluster.transform, false);
+			posHost.name = "Position Label";
+			posHost.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
+			posHost.transform.localPosition = new Vector3(-0.04f, 0.14f, 0f);
+
+			GameObject posClient = Calls.Create.NewText("Client", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
+			posClient.transform.SetParent(Cluster.transform, false);
+			posClient.name = "Position Label";
+			posClient.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
+			posClient.transform.localPosition = new Vector3(0.04f, 0.14f, 0f);
+
+			GameObject posRing = Calls.Create.NewText("Ring", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
+			posRing.transform.SetParent(Cluster.transform, false);
+			posRing.name = "Position Label";
+			posRing.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
+			posRing.transform.localPosition = new Vector3(0.1f, 0.06f, 0.0f);
+
+			GameObject posPit = Calls.Create.NewText("Pit", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
+			posPit.transform.SetParent(Cluster.transform, false);
+			posPit.name = "Position Label";
+			posPit.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
+			posPit.transform.localPosition = new Vector3(0.1f, -0.06f, 0.0f);
+
 		}
 
 
 	}
 
-	#endregion
+		#endregion
 }

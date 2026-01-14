@@ -1,29 +1,4 @@
-﻿using AsmResolver.PE.DotNet.Cil;
-using HarmonyLib;
-using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using Il2CppInterop.Runtime.Runtime.VersionSpecific.Class;
-using Il2CppPhoton.Realtime;
-using Il2CppRootMotion;
-using Il2CppRUMBLE.CharacterCreation.Interactable;
-
-using Il2CppRUMBLE.Managers;
-using Il2CppRUMBLE.Players.Subsystems;
-using Il2CppSystem;
-using Il2CppSystem.Data;
-
-using MelonLoader.TinyJSON;
-using MelonLoader.Utils;
-
-using System.Collections;
-
-using System.IO;
-
-using UnityEditor;
-
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using Action = System.Action;
-using Type = Il2CppSystem.Type;
+﻿
 using Il2CppTMPro;
 using MelonLoader;
 using Il2CppRUMBLE.Combat.ShiftStones;
@@ -31,7 +6,6 @@ using Il2CppRUMBLE.Interactions.InteractionBase;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
 using RumbleModdingAPI;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ShiftStoneRandomizer
@@ -41,7 +15,7 @@ namespace ShiftStoneRandomizer
 	{
 		#region UI
 
-		public static GameObject SmallButtonSource; 
+		public static GameObject SmallButtonSource;
 		GameObject LoadCluster;
 		GameObject SaveCluster;
 		public GameObject QssSaveCluster;
@@ -86,9 +60,9 @@ namespace ShiftStoneRandomizer
 			//GameObject blackListIcon = indicator;//.transform.GetChild(0).gameObject;
 			blackListIcon.SetActive(false);
 			blackListIcon.transform.SetParent(TargetParent.transform, false);
-			blackListIcon.transform.localScale = Vector3.one * 0.0002f;
+			blackListIcon.transform.localScale = Vector3.one * 0.00005f;
 			blackListIcon.transform.localRotation = Quaternion.Euler(-0f, 90f * jitter.Next(1, 2), (90f * jitter.Next(4)) + jitter.Next(-10, 10));
-			blackListIcon.transform.localPosition = new Vector3(-0.053f, 0f + jitter.Next(-100, 100) * 0.0001f, 0f + jitter.Next(-100, 100) * 0.0001f);
+			blackListIcon.transform.localPosition = new Vector3(-0.053f, -0.02f + jitter.Next(-100, 100) * 0.0001f, 0.02f + jitter.Next(-100, 100) * 0.0001f);// + jitter.Next(-100, 100) * 0.0001f, 0.01f + jitter.Next(-100, 100) * 0.0001f);
 			return blackListIcon;
 		}
 
@@ -208,32 +182,44 @@ namespace ShiftStoneRandomizer
 			//RandomizedHandButton
 			GameObject keepHandButton = GameObject.Instantiate(Button);
 			keepHandButton.transform.SetParent(swapper.transform.GetChild(0), false);
+
 			keepHandButton.transform.localPosition = new Vector3(0.1835f, -0.001f, -0.02f);
 			keepHandButton.transform.localRotation = Quaternion.Euler(43.108f, 348.0498f, 275.3816f);
 			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
-            keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
 				ShiftStoneRandomizer.Instance.CycleHandLock();
 			});
 
-            leftHand = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
+			GameObject handHolder = new GameObject("Hand Holder");
+			handHolder.transform.SetParent(keepHandButton.transform, false);
+			//-0.04 0.25 - 0.16
+			handHolder.transform.localPosition = new Vector3(-0.04f, 0.25f, -0.16f);
+			//284.9999 315.0001 150
+			handHolder.transform.localRotation = Quaternion.Euler(285f, 315f, 150f);
+
+			leftHand = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
 
 			rightHand = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(1).gameObject);
 
-			leftHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
-			leftHand.transform.localPosition = new Vector3(-0.14f, 0.01f, 0.07f);
-			leftHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+			leftHand.transform.SetParent(handHolder.transform, false);
+			//-0.18 0.01 0.05
+			leftHand.transform.localPosition = new Vector3(-0.18f, 0.01f, 0.05f);
+			//90 45 0
+			leftHand.transform.localRotation = Quaternion.Euler(90f, 45f, 0f);
 			leftHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
 
-			rightHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
+			rightHand.transform.SetParent(handHolder.transform, false);
+			//-0.14 0.01 - 0.07
 			rightHand.transform.localPosition = new Vector3(-0.14f, 0.01f, -0.07f);
-			rightHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+			//90 105 0
+			rightHand.transform.localRotation = Quaternion.Euler(90f, 105f, 0f);
 			rightHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
 
 
 			isQssReplacementPressed = false;
-			
+
 
 			//loadInteractor = new LoadoutInteractor(false);
 			//LoadCluster = loadInteractor.Cluster;
@@ -257,7 +243,7 @@ namespace ShiftStoneRandomizer
 
 			RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				RandomizeStones(Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+				RandomizeStones(Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration(), EnabledHand);
 			});
 
 
@@ -290,11 +276,11 @@ namespace ShiftStoneRandomizer
 			PortableCabinet portaStones = new PortableCabinet(swapper);
 
 			Button.SetActive(false);
-			
+
 			//BuildPortableCase(swapper);
-			
+
 			//Replace default qss button with custom button that pulls up the portable stone case instead of the qss tablets 
-			
+
 			// Button.SetActive(false);
 			// GameObject qssReplacement = GameObject.Instantiate(Button);
 			// //0.0131 0.0179 0.0577
@@ -308,16 +294,16 @@ namespace ShiftStoneRandomizer
 			// 	Debug.Log("Pressed", true);
 			// 	PortableStoneCase.SetActive(qssButton.IsPressed);
 			// 	QssSaveCluster.SetActive(qssButton.IsPressed);
-			
+
 			// 	loadInteractor.Cluster.SetActive(!qssButton.IsPressed);
-				
+
 			// });
 		}
 
-		
+
 		private void GrabBoxSource()
 		{
-			
+
 			ShiftStoneBoxSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject());
 			ShiftStoneBoxSource.SetActive(false);
 			ShiftStoneBoxSource.name = "ShiftStoneBoxSource";
@@ -327,9 +313,9 @@ namespace ShiftStoneRandomizer
 
 		private void GrabTemplates()
 		{
-			
+
 		}
-		private void BuildPortableCase(GameObject swapper)
+		/*private void BuildPortableCase(GameObject swapper)
 		{
 
 			double mulCol = 0.1;
@@ -387,7 +373,7 @@ namespace ShiftStoneRandomizer
 			PortableStoneCase.transform.SetParent(swapper.transform, false);
 			PortableStoneCase.SetActive(true);
 			PortableStoneCase.transform.localPosition = new Vector3(0.3f, 0.6f, 0.0f);
-		}
+		}*/
 
 		#endregion
 		#region UI Logic
