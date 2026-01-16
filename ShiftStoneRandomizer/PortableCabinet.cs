@@ -45,7 +45,7 @@ namespace ShiftStoneRandomizer
 		public PortableCabinet(GameObject swapper)
 		{
 			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
-			Button.SetActive(true);
+			Button.SetActive(false);
 
 			//Create loadout interactors
 			loadInteractor = new LoadoutInteractor(false);
@@ -62,26 +62,7 @@ namespace ShiftStoneRandomizer
 			QssSaveCluster.transform.localRotation = Quaternion.Euler(0, 180, 0);
 			QssSaveCluster.SetActive(false);
 
-			GameObject blackListButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
-			GameObject blackListButtonLabel = Calls.Create.NewText("Blacklist", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
-			blackListButtonLabel.name = "BlackListLabel";
-			blackListButtonLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
-			blackListButtonLabel.transform.SetParent(blackListButton.transform, false);
-			blackListButtonLabel.transform.localRotation = Quaternion.Euler(90, 270, 0);
-			blackListButtonLabel.transform.localPosition = new Vector3(0.05f, 0.09f, 0f);
-
-			blackListButton.name = "BlackList";
-			blackListButton.transform.localPosition = new Vector3(0.04f, 0.225f, -0.01f);
-			blackListButton.transform.localRotation = Quaternion.Euler(0, 270, 270);
-			blackListButton.transform.SetParent(StoneCase.transform, false);
-			blackListButton.SetActive(true);
-			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
-			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
-			{
-				ShiftStoneRandomizer.ToggleStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
-				ShiftStoneRandomizer.ActivateEffect(true, true);
-			});
-
+			
 
 			//TODO: test clear and copy buttons
 			GameObject auxPanel = new GameObject("Aux Buttons");
@@ -135,6 +116,8 @@ namespace ShiftStoneRandomizer
 			clearButton.name = "Clear Shift Stones";
 			clearButton.transform.localPosition = new Vector3(-0.04f, 0.11f, -0.01f);
 			clearButton.SetActive(true);
+			clearButton.transform.localRotation = Quaternion.Euler(0, 270, 270);
+			clearButton.transform.SetParent(auxPanel.transform, false);
 			clearButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
 			clearButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
@@ -153,6 +136,8 @@ namespace ShiftStoneRandomizer
 
 			copyButton.name = "Mirror Shift Stones";
 			copyButton.transform.localPosition = new Vector3(0.04f, 0.22f, -0.01f);
+			copyButton.transform.localRotation = Quaternion.Euler(0, 270, 270);
+			copyButton.transform.SetParent(auxPanel.transform, false);
 			copyButton.SetActive(true);
 			copyButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
 			copyButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
@@ -227,6 +212,29 @@ namespace ShiftStoneRandomizer
 				StoneCase.transform.localPosition = new Vector3(0.3f, 0.6f, 0.0f);
 			}
 
+			//TODO: Move blacklist button to aux panel
+
+			GameObject blackListButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
+			GameObject blackListButtonLabel = Calls.Create.NewText("Blacklist", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
+			blackListButtonLabel.name = "BlackListLabel";
+			blackListButtonLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
+			blackListButtonLabel.transform.SetParent(blackListButton.transform, false);
+			blackListButtonLabel.transform.localRotation = Quaternion.Euler(90, 270, 0);
+			blackListButtonLabel.transform.localPosition = new Vector3(0.05f, 0.09f, 0f);
+
+			blackListButton.name = "BlackList";
+			blackListButton.transform.localPosition = new Vector3(0.045f, 0.22f, -0.015f);
+			blackListButton.transform.localRotation = Quaternion.Euler(0, 270, 270);
+			blackListButton.transform.SetParent(StoneCase.transform, false);
+			blackListButton.SetActive(true);
+			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
+			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			{
+				ShiftStoneRandomizer.ToggleStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+				ShiftStoneRandomizer.ActivateEffect(true, true);
+			});
+
+
 
 			//Create replacement swapper button
 			NewQssButton = GameObject.Instantiate(qssReplacementBase);
@@ -243,7 +251,7 @@ namespace ShiftStoneRandomizer
 
 				loadInteractor.Cluster.SetActive(!interaction.IsPressed);
 
-				auxPanel.transform.localPosition = interaction.IsPressed ? new Vector3(0.144f, 0.77f, 0.055f) : new Vector3(0.144f, 0.77f, 0.055f);
+				auxPanel.transform.localPosition = interaction.IsPressed ? new Vector3(0.385f, 0.6f, -0.005f) : new Vector3(0.385f, 0.36f, -0.06f);
 
 				LoadoutInteractor.ClearAllSlots();
 			});
