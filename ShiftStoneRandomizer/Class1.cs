@@ -192,10 +192,6 @@ namespace ShiftStoneRandomizer
 
 			IsFirstMatchLoad = CurrentLoadedScene.Contains("map") && LastLoadedScene == "gym";
 		}
-		/// <summary>
-		/// Blacklists stones and writes to file.
-		/// </summary>
-		/// <param name="Stones">Equipped stones</param>
 		/*private void BlackListStones(int[] Hand)
 		{
 			bool hasEnabledEquipedStones = false;
@@ -469,7 +465,7 @@ namespace ShiftStoneRandomizer
 				Debug.Log("EquipStones: Single Equip method given invalid hand either neither or both");
 			}
 		}
-
+		
 		private static void EquipStones(ShiftStonePrefs left, ShiftStonePrefs right)
 		{
 			StoneItem leftStone = null;

@@ -46,22 +46,6 @@ namespace ShiftStoneRandomizer
 		{
 			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
 			Button.SetActive(false);
-			//Randomizer Button
-			// GameObject RandomButton = GameObject.Instantiate(Button);
-			// RandomButton.transform.SetParent(swapper.transform.GetChild(0));
-			// RandomButton.transform.localPosition = new Vector3(-0.096f, 0.064f, -0.025f);
-			// RandomButton.transform.localRotation = Quaternion.Euler(298.0022f, 83.3369f, 359.8999f);
-			// RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
-
-			// RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
-			// {
-			// 	ShiftStoneRandomizer.RandomizeStones(Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
-			// });
-
-
-
-
-
 
 			//Create loadout interactors
 			loadInteractor = new LoadoutInteractor(false);
@@ -78,13 +62,6 @@ namespace ShiftStoneRandomizer
 			QssSaveCluster.transform.localRotation = Quaternion.Euler(0, 180, 0);
 			QssSaveCluster.SetActive(false);
 
-
-
-
-			//Create Portable Stone Case
-			double mulCol = 0.1; double mulRow = 0.12;
-			StoneCase = new GameObject("Portable Stone Case");
-
 			GameObject blackListButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
 			GameObject blackListButtonLabel = Calls.Create.NewText("Blacklist", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
 			blackListButtonLabel.name = "BlackListLabel";
@@ -92,7 +69,6 @@ namespace ShiftStoneRandomizer
 			blackListButtonLabel.transform.SetParent(blackListButton.transform, false);
 			blackListButtonLabel.transform.localRotation = Quaternion.Euler(90, 270, 0);
 			blackListButtonLabel.transform.localPosition = new Vector3(0.05f, 0.09f, 0f);
-
 
 			blackListButton.name = "BlackList";
 			blackListButton.transform.localPosition = new Vector3(0.04f, 0.225f, -0.01f);
@@ -106,19 +82,25 @@ namespace ShiftStoneRandomizer
 				ShiftStoneRandomizer.ActivateEffect(true, true);
 			});
 
+
+			//TODO: test clear and copy buttons
+			GameObject auxPanel = new GameObject("Aux Buttons");
+			auxPanel.transform.SetParent(swapper.transform, false);
+			auxpanel.transform.localPosition = new Vector3(0.144f, 0.53f, 0f);
+
+
 			GameObject automationButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
 			GameObject automationButtonLabel = Calls.Create.NewText($"Auto Mode\n{ShiftStoneRandomizer.AutomationMode.ToString()}", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
 			automationButtonLabel.name = "AutomationLabel";
 			automationButtonLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
 			automationButtonLabel.transform.SetParent(automationButton.transform, false);
 			automationButtonLabel.transform.localRotation = Quaternion.Euler(90, 270, 0);
-			//0.05 0.09 0
 			automationButtonLabel.transform.localPosition = new Vector3(0.05f, 0.09f, 0f);
 
 			automationButton.name = "Auto Enable";
 			automationButton.transform.localPosition = new Vector3(0.04f, 0.11f, -0.01f);
 			automationButton.transform.localRotation = Quaternion.Euler(0, 270, 270);
-			automationButton.transform.SetParent(StoneCase.transform, false);
+			automationButton.transform.SetParent(auxPanel.transform, false);
 			automationButton.SetActive(true);
 			automationButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
 			automationButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
@@ -140,6 +122,56 @@ namespace ShiftStoneRandomizer
 
 			});
 
+			GameObject clearButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
+			GameObject clearLabel = Calls.Create.NewText($"Clear Stones", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
+
+			clearLabel.name = "Clear Label";
+			clearLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
+			clearLabel.transform.SetParent(clearButton.transform, false);
+			clearLabel.transform.localRotation = Quaternion.Euler(90, 270, 0);
+			clearLabel.transform.localPosition = new Vector3(0.05f, 0.09f, 0f);
+
+
+			clearButton.name = "Clear Shift Stones";
+			clearButton.transform.localPosition = new Vector3(-0.04f, 0.11f, -0.01f);
+			clearButton.SetActive(true);
+			clearButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
+			clearButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			{
+				ShifdtStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
+
+			});
+
+			GameObject copyButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
+			GameObject copyLabel = Calls.Create.NewText($"Copy Stones", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
+
+			copyLabel.name = "Copy Label";
+			copyLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
+			copyLabel.transform.SetParent(copyButton.transform, false);
+			copyLabel.transform.localRotation = Quaternion.Euler(90, 270, 0);
+			copyLabel.transform.localPosition = new Vector3(0.05f, 0.09f, 0f);
+
+			copyButton.name = "Mirror Shift Stones";
+			copyButton.transform.localPosition = new Vector3(0.04f, 0.22f, -0.01f);
+			copyButton.SetActive(true);
+			copyButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
+			copyButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			{
+
+				if (ShiftStoneRandomizer.Player1 != null)
+				{
+					int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+					ShiftStoneRandomizer.EquipStones(
+						currentHand == Hands.Left ? StoneItem.AllStones[opponentEquipped[0]] : null,
+						currentHand == Hands.Right ? StoneItem.AllStones[opponentEquipped[1]] : null);
+				}
+				
+			});
+
+
+			//Create Portable Stone Case
+			double mulCol = 0.1; double mulRow = 0.12;
+			StoneCase = new GameObject("Portable Stone Case");
 			for (int i = 0; i < 12; i++)
 			{
 				ShiftStonePrefs currentStonePref = i < 8 ? (ShiftStonePrefs)i : (ShiftStonePrefs)(i - 12);
@@ -213,6 +245,10 @@ namespace ShiftStoneRandomizer
 				QssSaveCluster.SetActive(interaction.IsPressed);
 
 				loadInteractor.Cluster.SetActive(!interaction.IsPressed);
+
+				auxPanel.transform.localPosition = interaction.IsPressed ? new Vector3(0.144f, 0.77f, 0.055f) : new Vector3(0.144f, 0.77f, 0.055f);
+
+				LoadoutInteractor.ClearAllSlots();
 			});
 
 

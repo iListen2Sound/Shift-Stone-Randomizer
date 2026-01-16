@@ -419,6 +419,12 @@ namespace ShiftStoneRandomizer
 		public static GameObject LeftSocket { get { return Sockets[0]; } set { Sockets[0] = value; } }
 		public static GameObject RightSocket { get { return Sockets[1]; } set { Sockets[1] = value; } }
 
+		public static void ClearAllSlots()
+		{
+			ClearSlot(Sockets[0]);
+			ClearSlot(Sockets[1]);
+		}
+
 		public static void ClearSlot(GameObject parent)
 		{
 			for (int i = 0; i < parent.transform.childCount; i++)
