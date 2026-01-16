@@ -104,32 +104,32 @@ namespace ShiftStoneRandomizer
 			blackListLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Blacklist";
 
 
-			// GameObject keepHandButton = GameObject.Instantiate(Button);
-			// keepHandButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
-			// keepHandButton.transform.localPosition = new Vector3(-0.0509f, 1.3537f, 0.6836f);
-			// keepHandButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
-			// keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
+			GameObject keepHandButton = GameObject.Instantiate(Button);
+			keepHandButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
+			keepHandButton.transform.localPosition = new Vector3(-0.0509f, 1.3537f, 0.6836f);
+			keepHandButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
-			// GameObject keepHandLabel = GameObject.Instantiate(titleBar);
-			// keepHandLabel.transform.SetParent(keepHandButton.transform, false);
-			// keepHandLabel.transform.localScale = new Vector3(0.09f, 0.3f, 0.3f);
-			// keepHandLabel.transform.localPosition = new Vector3(0.168f, 0.02f, 0.212f);
-			// keepHandLabel.transform.localRotation = Quaternion.Euler(1.9346f, 97f, 268.269f);
-			// keepHandLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Lock Hand";
+			GameObject keepHandLabel = GameObject.Instantiate(titleBar);
+			keepHandLabel.transform.SetParent(keepHandButton.transform, false);
+			keepHandLabel.transform.localScale = new Vector3(0.09f, 0.3f, 0.3f);
+			keepHandLabel.transform.localPosition = new Vector3(0.168f, 0.02f, 0.212f);
+			keepHandLabel.transform.localRotation = Quaternion.Euler(1.9346f, 97f, 268.269f);
+			keepHandLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Lock Hand";
 
-			// leftHand = GameObject.Instantiate(IndicatorsBase.transform.GetChild(2).gameObject);
+			/*leftHand = GameObject.Instantiate(IndicatorsBase.transform.GetChild(2).gameObject);
 
-			// rightHand = GameObject.Instantiate(IndicatorsBase.transform.GetChild(1).gameObject);
+			rightHand = GameObject.Instantiate(IndicatorsBase.transform.GetChild(1).gameObject);
 
-			// leftHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
-			// leftHand.transform.localPosition = new Vector3(-0.14f, 0.01f, 0.07f);
-			// leftHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
-			// leftHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
+			leftHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
+			leftHand.transform.localPosition = new Vector3(-0.14f, 0.01f, 0.07f);
+			leftHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+			leftHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
 
-			// rightHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
-			// rightHand.transform.localPosition = new Vector3(-0.14f, 0.01f, -0.07f);
-			// rightHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
-			// rightHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
+			rightHand.transform.SetParent(keepHandButton.transform.GetChild(0), false);
+			rightHand.transform.localPosition = new Vector3(-0.14f, 0.01f, -0.07f);
+			rightHand.transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+			rightHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);*/
 
 
 

@@ -154,7 +154,6 @@ namespace ShiftStoneRandomizer
 			}
 
 
-			ApplyPrefsToState();
 			if (CurrentLoadedScene != "loader")
 			{
 				Player0 = Players[0].Controller;
@@ -177,6 +176,7 @@ namespace ShiftStoneRandomizer
 				LoadoutInteractor.OnMatchLoad();
 				CreateButtonsForAll();
 			}
+			ApplyPrefsToState();
 
 		}
 		/// <summary>

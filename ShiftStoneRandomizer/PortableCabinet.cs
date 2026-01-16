@@ -45,7 +45,7 @@ namespace ShiftStoneRandomizer
 		public PortableCabinet(GameObject swapper)
 		{
 			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
-			Button.SetActive(false);
+			Button.SetActive(true);
 
 			//Create loadout interactors
 			loadInteractor = new LoadoutInteractor(false);
@@ -86,7 +86,7 @@ namespace ShiftStoneRandomizer
 			//TODO: test clear and copy buttons
 			GameObject auxPanel = new GameObject("Aux Buttons");
 			auxPanel.transform.SetParent(swapper.transform, false);
-			auxpanel.transform.localPosition = new Vector3(0.144f, 0.53f, 0f);
+			auxPanel.transform.localPosition = new Vector3(0.144f, 0.53f, 0f);
 
 
 			GameObject automationButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
@@ -138,7 +138,7 @@ namespace ShiftStoneRandomizer
 			clearButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
 			clearButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				ShifdtStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
+				ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
 
 			});
 
@@ -161,11 +161,8 @@ namespace ShiftStoneRandomizer
 				if (ShiftStoneRandomizer.Player1 != null)
 				{
 					int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-					ShiftStoneRandomizer.EquipStones(
-						currentHand == Hands.Left ? StoneItem.AllStones[opponentEquipped[0]] : null,
-						currentHand == Hands.Right ? StoneItem.AllStones[opponentEquipped[1]] : null);
+					ShiftStoneRandomizer.EquipStones(StoneItem.AllStones[opponentEquipped[0]], StoneItem.AllStones[opponentEquipped[1]]);
 				}
-				
 			});
 
 
