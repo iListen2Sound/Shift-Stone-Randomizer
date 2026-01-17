@@ -419,6 +419,9 @@ namespace ShiftStoneRandomizer
 		public static GameObject LeftSocket { get { return Sockets[0]; } set { Sockets[0] = value; } }
 		public static GameObject RightSocket { get { return Sockets[1]; } set { Sockets[1] = value; } }
 
+		public static GameObject[] DisplayedItem = new GameObject[2];
+
+
 		public static void ClearAllSlots()
 		{
 			ClearSlot(Sockets[0]);
@@ -467,9 +470,17 @@ namespace ShiftStoneRandomizer
 
 				if (Selection[handIndex] != ShiftStonePrefs.Empty)
 				{
-					GameObject displayItem = StoneItem.GetDisplayObject(Selection[handIndex]);
+					/*GameObject displayItem = StoneItem.GetDisplayObject(Selection[handIndex]);
+					displayItem.transform.localPosition = new Vector3(0.0f, 0.025f, 0f);
 					displayItem.transform.SetParent(Sockets[handIndex].transform, false);
-					displayItem.SetActive(true);
+					displayItem.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+					displayItem.SetActive(true);*/
+
+					DisplayedItem[handIndex] = StoneItem.GetDisplayObject(Selection[handIndex]);
+					DisplayedItem[handIndex].transform.localPosition = new Vector3(0.0f, 0.025f, 0f);
+					DisplayedItem[handIndex].transform.SetParent(Sockets[handIndex].transform, false);
+					DisplayedItem[handIndex].transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+					DisplayedItem[handIndex].SetActive(true);
 
 				}
 

@@ -15,17 +15,16 @@ namespace ShiftStoneRandomizer
 	/// globally through <see cref="BlackListCount"/>.</remarks>
 	public class StoneItem
 	{
-		private static GameObject ObjMirror = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
-		private static GameObject ObjStay = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
-		private static GameObject ObjRandom = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
-		private static GameObject ObjEmpty = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
+		private static GameObject ObjMirror = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(3).gameObject);
+		private static GameObject ObjStay = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(4).gameObject);
+		private static GameObject ObjRandom = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(5).gameObject);
+		private static GameObject ObjEmpty = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(6).gameObject);
 
 		public readonly static GameObject[] Specials = new GameObject[] {
-			//TODO: Create source templates and prefabs
-			ObjMirror, //Possible icon: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpFLoTk1WnuNjDSu5WeOFhxRwb50LfWqaBHA&s
-			ObjStay, //Cube
+			ObjMirror, 
+			ObjStay, 
 			ObjRandom,
-			ObjEmpty //Either actually empty or disc
+			ObjEmpty
 		};
 
 		static StoneItem()

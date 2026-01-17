@@ -22,7 +22,7 @@ using Type = Il2CppSystem.Type;
 
 namespace ShiftStoneRandomizer
 {
-
+	
 	public partial class ShiftStoneRandomizer : MelonMod
 	{
 		public static ShiftStoneRandomizer Instance { get; private set; }
@@ -121,7 +121,27 @@ namespace ShiftStoneRandomizer
 			{
 				//Debug.PrintInGame($"{LoadoutInteractor.Selection[0].ToString()} \n{LoadoutInteractor.Selection[1].ToString()}");
 				Debug.PrintInGame($"Automation Mode: {LoadoutInteractor.AutomationMode} \n IsFirstMatchLoad: {IsFirstMatchLoad} \n IsInMatch: {IsInMatch} \n LoadoutIsPrimed: {LoadoutInteractor.IsNextSelectionPrimed}");
+				if (LoadoutInteractor.LeftSocket != null && LoadoutInteractor.RightSocket != null)
+				{
+					try
+					{
+						foreach(GameObject displayedItem in LoadoutInteractor.DisplayedItem)
+						{
+							if (displayedItem != null)
+							{
+								displayedItem.transform.rotation = Quaternion.LookRotation(displayedItem.transform.position - Camera.main.transform.position, Vector3.up);
+							}
+						}
+					}
+					catch (System.Exception e)
+					{
+						// Ignore
+					}
+				}
 			}
+
+			
+			
 		}
 
 

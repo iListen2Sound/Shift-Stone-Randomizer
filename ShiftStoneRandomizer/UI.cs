@@ -62,7 +62,7 @@ namespace ShiftStoneRandomizer
 			//GameObject blackListIcon = indicator;//.transform.GetChild(0).gameObject;
 			blackListIcon.SetActive(false);
 			blackListIcon.transform.SetParent(TargetParent.transform, false);
-			blackListIcon.transform.localScale = Vector3.one * 0.00005f;
+			blackListIcon.transform.localScale = Vector3.one * 0.000075f;
 			blackListIcon.transform.localRotation = Quaternion.Euler(-0f, 90f * jitter.Next(1, 2), (90f * jitter.Next(4)) + jitter.Next(-10, 10));
 			blackListIcon.transform.localPosition = new Vector3(-0.053f, -0.02f + jitter.Next(-100, 100) * 0.0001f, 0.02f + jitter.Next(-100, 100) * 0.0001f);// + jitter.Next(-100, 100) * 0.0001f, 0.01f + jitter.Next(-100, 100) * 0.0001f);
 			return blackListIcon;
