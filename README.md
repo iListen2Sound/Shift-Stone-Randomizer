@@ -1,13 +1,5 @@
-# Shift Stone ~~Randomizer~~ Manager
+# Shift Stone ~~Randomizer 2.0~~ Automator
 Adds more buttons to the shift stone quick swapper to allow to save loadouts and settings for shift stones. Also allows for automatic management and selection of stones depending on client/host status and maps.
-
-
-## Shiftstone Case:
-The buttons on the shift stone case are pretty self explanatory. 
-
--  Blacklist: Blacklists stones from the randomizer. Blacklisted stones can still be manually equipped.
--  Hand Lock: Choose to only randomize one hand. 
-
 
 ## Shiftstone Quick Swapper
 

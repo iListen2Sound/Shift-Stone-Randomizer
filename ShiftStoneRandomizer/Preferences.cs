@@ -221,30 +221,30 @@ namespace ShiftStoneRandomizer
 
 		}
 
-		private void SaveLoadOut(int[] Equipped)
-		{
-			StoneItem left;
-			StoneItem right;
-			if (Equipped[0] == -1)
-				left = new StoneItem();
-			else
-				left = StoneItem.AllStones[Equipped[0]];
+		// private void SaveLoadOut(int[] Equipped)
+		// {
+		// 	StoneItem left;
+		// 	StoneItem right;
+		// 	if (Equipped[0] == -1)
+		// 		left = new StoneItem();
+		// 	else
+		// 		left = StoneItem.AllStones[Equipped[0]];
 
-			if (Equipped[1] == -1)
-				right = new StoneItem();
-			else
-				right = StoneItem.AllStones[Equipped[1]];
-
-
-			PrefLobLeft.Value = left.Name;
-			PrefLobRight.Value = right.Name;
-
-			CatLoadOutButton.SaveToFile();
-
-			ActivateEffect(true, true);
+		// 	if (Equipped[1] == -1)
+		// 		right = new StoneItem();
+		// 	else
+		// 		right = StoneItem.AllStones[Equipped[1]];
 
 
-			SignFall();
-		}
+		// 	PrefLobLeft.Value = left.Name;
+		// 	PrefLobRight.Value = right.Name;
+
+		// 	CatLoadOutButton.SaveToFile();
+
+		// 	ActivateEffect(true, true);
+
+
+		// 	SignFall();
+		// }
 	}
 }

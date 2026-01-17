@@ -142,8 +142,10 @@ namespace ShiftStoneRandomizer
 					IndicatorsBase.SetActive(false);
 					GrabBoxSource();
 				}
-				CreatePhysicalGUI();
+				//CreatePhysicalGUI();
 
+				//Adds a blacklist icon game object to the the shift stone case. 
+				//Each stone item has a list of icons for every instance of that stone on the scene that this gets added to. 
 				GameObject Cabinet = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.GetGameObject();
 				for (int i = 0; i < StoneItem.AllStones.Length; i++)
 				{

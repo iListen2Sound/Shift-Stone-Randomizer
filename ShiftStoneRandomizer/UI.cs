@@ -43,7 +43,9 @@ namespace ShiftStoneRandomizer
 				}
 				catch (System.Exception e)
 				{
-					Debug.Log($"Error creating quickswap buttons: {e}", true, 2);
+					Debug.Log("-------", false, 1);
+					Debug.Log($"Error creating quickswap buttons: {e}", false, 2);
+					Debug.Log("-------", false, 1);
 				}
 			}
 		}
@@ -71,51 +73,49 @@ namespace ShiftStoneRandomizer
 
 
 
-			var Button = GameObject.Find("ShiftstoneQuickswapper").transform.GetChild(0).GetChild(2).gameObject;
-			GameObject titleBar = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.MatchConsole.MatchmakingSettings.TitleBar.GetGameObject());
-			GameObject titleText = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.MatchConsole.MatchmakingSettings.TitleText.GetGameObject());
+			// var Button = GameObject.Find("ShiftstoneQuickswapper").transform.GetChild(0).GetChild(2).gameObject;
+			// GameObject titleBar = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.MatchConsole.MatchmakingSettings.TitleBar.GetGameObject());
+			// GameObject titleText = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.MatchConsole.MatchmakingSettings.TitleText.GetGameObject());
 
-			//-0.07 1.334 -1.016
-			//-0 90 0
-			saveInteractor = new LoadoutInteractor(true);
-			SaveCluster = saveInteractor.Cluster;
-			SaveCluster.transform.SetParent(GameObject.Find("ShiftstoneCabinet").transform, false);
-			SaveCluster.transform.localPosition = new Vector3(-0.07f, 1.334f, -1.016f);
-			SaveCluster.transform.localRotation = Quaternion.Euler(0, 90, 0);
-			SaveCluster.SetActive(true);
+			// saveInteractor = new LoadoutInteractor(true);
+			// SaveCluster = saveInteractor.Cluster;
+			// SaveCluster.transform.SetParent(GameObject.Find("ShiftstoneCabinet").transform, false);
+			// SaveCluster.transform.localPosition = new Vector3(-0.07f, 1.334f, -1.016f);
+			// SaveCluster.transform.localRotation = Quaternion.Euler(0, 90, 0);
+			// SaveCluster.SetActive(true);
 
 
-			titleText.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
-			titleText.transform.localPosition = new Vector3(-0.09f, 0.736f, 0.0002f);
-			titleText.transform.localScale = new Vector3(6.8f, 4.9f, 1f);
-			titleText.transform.SetParent(titleBar.transform, false);
+			// titleText.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
+			// titleText.transform.localPosition = new Vector3(-0.09f, 0.736f, 0.0002f);
+			// titleText.transform.localScale = new Vector3(6.8f, 4.9f, 1f);
+			// titleText.transform.SetParent(titleBar.transform, false);
 
-			GameObject blackListButton = GameObject.Instantiate(Button);
-			blackListButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
-			blackListButton.transform.localPosition = new Vector3(-0.0509f, 1.6473f, 0.6836f);
-			blackListButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
-			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
+			// GameObject blackListButton = GameObject.Instantiate(Button);
+			// blackListButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
+			// blackListButton.transform.localPosition = new Vector3(-0.0509f, 1.6473f, 0.6836f);
+			// blackListButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+			// blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
-			GameObject blackListLabel = GameObject.Instantiate(titleBar);
-			blackListLabel.transform.SetParent(blackListButton.transform, false);
-			blackListLabel.transform.localScale = new Vector3(0.09f, 0.3f, 0.3f);
-			blackListLabel.transform.localPosition = new Vector3(0.118f, 0f, 0.212f);
-			blackListLabel.transform.localRotation = Quaternion.Euler(0.3f, 83.491f, 275.6874f);
-			blackListLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Blacklist";
+			// GameObject blackListLabel = GameObject.Instantiate(titleBar);
+			// blackListLabel.transform.SetParent(blackListButton.transform, false);
+			// blackListLabel.transform.localScale = new Vector3(0.09f, 0.3f, 0.3f);
+			// blackListLabel.transform.localPosition = new Vector3(0.118f, 0f, 0.212f);
+			// blackListLabel.transform.localRotation = Quaternion.Euler(0.3f, 83.491f, 275.6874f);
+			// blackListLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Blacklist";
 
 
-			GameObject keepHandButton = GameObject.Instantiate(Button);
-			keepHandButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
-			keepHandButton.transform.localPosition = new Vector3(-0.0509f, 1.3537f, 0.6836f);
-			keepHandButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
-			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
+			// GameObject keepHandButton = GameObject.Instantiate(Button);
+			// keepHandButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
+			// keepHandButton.transform.localPosition = new Vector3(-0.0509f, 1.3537f, 0.6836f);
+			// keepHandButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+			// keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
-			GameObject keepHandLabel = GameObject.Instantiate(titleBar);
-			keepHandLabel.transform.SetParent(keepHandButton.transform, false);
-			keepHandLabel.transform.localScale = new Vector3(0.09f, 0.3f, 0.3f);
-			keepHandLabel.transform.localPosition = new Vector3(0.168f, 0.02f, 0.212f);
-			keepHandLabel.transform.localRotation = Quaternion.Euler(1.9346f, 97f, 268.269f);
-			keepHandLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Lock Hand";
+			// GameObject keepHandLabel = GameObject.Instantiate(titleBar);
+			// keepHandLabel.transform.SetParent(keepHandButton.transform, false);
+			// keepHandLabel.transform.localScale = new Vector3(0.09f, 0.3f, 0.3f);
+			// keepHandLabel.transform.localPosition = new Vector3(0.168f, 0.02f, 0.212f);
+			// keepHandLabel.transform.localRotation = Quaternion.Euler(1.9346f, 97f, 268.269f);
+			// keepHandLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Lock Hand";
 
 			/*leftHand = GameObject.Instantiate(IndicatorsBase.transform.GetChild(2).gameObject);
 
@@ -133,45 +133,45 @@ namespace ShiftStoneRandomizer
 
 
 
-			GameObject saveLoadOutButton = GameObject.Instantiate(Button);
-			saveLoadOutButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
-			saveLoadOutButton.transform.localPosition = new Vector3(-0.0509f, 1.6473f, -1.0164f);
-			saveLoadOutButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
-			saveLoadOutButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
+			// GameObject saveLoadOutButton = GameObject.Instantiate(Button);
+			// saveLoadOutButton.transform.parent = GameObject.Find("ShiftstoneCabinet").transform;
+			// saveLoadOutButton.transform.localPosition = new Vector3(-0.0509f, 1.6473f, -1.0164f);
+			// saveLoadOutButton.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+			// saveLoadOutButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
 
-			GameObject saveLoadOutLabel = GameObject.Instantiate(titleBar);
-			saveLoadOutLabel.transform.SetParent(saveLoadOutButton.transform, false);
-			saveLoadOutLabel.transform.localPosition = new Vector3(0.128f, 0.025f, 0.212f);
-			saveLoadOutLabel.transform.localScale = new Vector3(0.09f, 0.3f, 0.3f);
-			saveLoadOutLabel.transform.localRotation = Quaternion.Euler(5.0254f, 87.0001f, 271.7236f);
-			saveLoadOutLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Loadout";
+			// GameObject saveLoadOutLabel = GameObject.Instantiate(titleBar);
+			// saveLoadOutLabel.transform.SetParent(saveLoadOutButton.transform, false);
+			// saveLoadOutLabel.transform.localPosition = new Vector3(0.128f, 0.025f, 0.212f);
+			// saveLoadOutLabel.transform.localScale = new Vector3(0.09f, 0.3f, 0.3f);
+			// saveLoadOutLabel.transform.localRotation = Quaternion.Euler(5.0254f, 87.0001f, 271.7236f);
+			// saveLoadOutLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Loadout";
 
-			GameObject saveLabel = GameObject.Instantiate(titleBar);
-			saveLabel.transform.SetParent(saveLoadOutButton.transform.GetChild(0), false);
-			saveLabel.transform.localPosition = new Vector3(0.208f, -0.05f, 0.212f);
-			saveLabel.transform.localScale = new Vector3(0.09f, 0.2f, 0.3f);
-			saveLabel.transform.localRotation = Quaternion.Euler(5.0254f, 82.3274f, 274.8562f);
-			saveLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Save";
-			saveLabel.transform.GetChild(0).gameObject.transform.localScale = new Vector3(9.7f, 4.9f, 1f);
+			// GameObject saveLabel = GameObject.Instantiate(titleBar);
+			// saveLabel.transform.SetParent(saveLoadOutButton.transform.GetChild(0), false);
+			// saveLabel.transform.localPosition = new Vector3(0.208f, -0.05f, 0.212f);
+			// saveLabel.transform.localScale = new Vector3(0.09f, 0.2f, 0.3f);
+			// saveLabel.transform.localRotation = Quaternion.Euler(5.0254f, 82.3274f, 274.8562f);
+			// saveLabel.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().text = "Save";
+			// saveLabel.transform.GetChild(0).gameObject.transform.localScale = new Vector3(9.7f, 4.9f, 1f);
 
-			dropSign = saveLabel;
+			// dropSign = saveLabel;
 
 
-			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
-			{
-				ToggleStones(Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
-				ActivateEffect(true, true);
-			});
+			// blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			// {
+			// 	ToggleStones(Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+			// 	ActivateEffect(true, true);
+			// });
 
 			// keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			// {
 			// 	CycleHandLock();
 			// });
 
-			saveLoadOutButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
-			{
-				SaveLoadOut(Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
-			});
+			// saveLoadOutButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			// {
+			// 	SaveLoadOut(Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+			// });
 
 		}
 
