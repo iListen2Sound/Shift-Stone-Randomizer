@@ -67,7 +67,7 @@ namespace ShiftStoneRandomizer
 			//TODO: test clear and copy buttons
 			GameObject auxPanel = new GameObject("Aux Buttons");
 			auxPanel.transform.SetParent(swapper.transform, false);
-			auxPanel.transform.localPosition = new Vector3(0.144f, 0.53f, 0f);
+			auxPanel.transform.localPosition = new Vector3(0.385f, 0.36f, -0.06f);
 
 
 			GameObject automationButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
@@ -160,7 +160,7 @@ namespace ShiftStoneRandomizer
 			blackListButtonLabel.transform.localPosition = new Vector3(0.05f, 0.09f, 0f);
 
 			blackListButton.name = "BlackList";
-			blackListButton.transform.localPosition = new Vector3(-0.04f, 0.22f, -0.01);
+			blackListButton.transform.localPosition = new Vector3(-0.04f, 0.22f, -0.01f);
 			blackListButton.transform.localRotation = Quaternion.Euler(0, 270, 270);
 			blackListButton.transform.SetParent(auxPanel.transform, false);
 			blackListButton.SetActive(true);

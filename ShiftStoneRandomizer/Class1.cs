@@ -156,6 +156,7 @@ namespace ShiftStoneRandomizer
 			}
 
 
+			ApplyPrefsToState();
 			if (CurrentLoadedScene != "loader")
 			{
 				Player0 = Players[0].Controller;
@@ -178,8 +179,7 @@ namespace ShiftStoneRandomizer
 				LoadoutInteractor.OnMatchLoad();
 				CreateButtonsForAll();
 			}
-			ApplyPrefsToState();
-
+			ShowRandomedHand();
 		}
 		/// <summary>
 		/// 
@@ -262,6 +262,10 @@ namespace ShiftStoneRandomizer
 
 		private void ShowRandomedHand()
 		{
+			//Exit if hands arent initialized
+			if (leftHand == null || rightHand == null)
+				return;
+			
 			Hands hand = EnabledHand;
 			Color disabled = new Color(1f, 1f, 1f, 0.25f);
 			Color enabled = new Color(1f, 1f, 1f, 1f);
