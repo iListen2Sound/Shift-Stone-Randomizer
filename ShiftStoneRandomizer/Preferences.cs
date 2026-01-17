@@ -39,10 +39,6 @@ namespace ShiftStoneRandomizer
 		public static MelonPreferences_Entry<string> PrefMap1ClientLeft { get; private set; }
 		public static MelonPreferences_Entry<string> PrefMap1ClientRight { get; private set; }
 
-		private static MelonPreferences_Category CatLoadOutButton;
-		public static MelonPreferences_Entry<string> PrefLobLeft;
-		public static MelonPreferences_Entry<string> PrefLobRight;
-
 		public static AutomationPrefs AutomationMode;
 
 
@@ -74,22 +70,17 @@ namespace ShiftStoneRandomizer
 
 			CatMap0 = MelonPreferences.CreateCategory("Ring Automation Settings");
 			CatMap0.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-			PrefMap0HostLeft = CatMap0.CreateEntry("Ring Left Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Empty");
-			PrefMap0HostRight = CatMap0.CreateEntry("Ring Right Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Empty");
-			PrefMap0ClientLeft = CatMap0.CreateEntry("Ring Left Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Empty");
-			PrefMap0ClientRight = CatMap0.CreateEntry("Ring Right Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Empty");
+			PrefMap0HostLeft = CatMap0.CreateEntry("Ring Left Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap0HostRight = CatMap0.CreateEntry("Ring Right Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap0ClientLeft = CatMap0.CreateEntry("Ring Left Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap0ClientRight = CatMap0.CreateEntry("Ring Right Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
 
 			CatMap1 = MelonPreferences.CreateCategory("Pit Automation Settings");
 			CatMap1.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-			PrefMap1HostLeft = CatMap1.CreateEntry("Pit Left Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Empty");
-			PrefMap1HostRight = CatMap1.CreateEntry("Pit Right Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Empty");
-			PrefMap1ClientLeft = CatMap1.CreateEntry("Pit Left Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Empty");
-			PrefMap1ClientRight = CatMap1.CreateEntry("Pit Right Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Empty");
-
-			CatLoadOutButton = MelonPreferences.CreateCategory("Load Out Button Selection");
-			CatLoadOutButton.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-			PrefLobLeft = CatLoadOutButton.CreateEntry("Left Hand: ", "Empty", null, "[Preferred Stone] | Empty");
-			PrefLobRight = CatLoadOutButton.CreateEntry("Right Hand: ", "Empty", null, "[Preferred Stone] | Empty");
+			PrefMap1HostLeft = CatMap1.CreateEntry("Pit Left Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap1HostRight = CatMap1.CreateEntry("Pit Right Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Mirror| Empty");
+			PrefMap1ClientLeft = CatMap1.CreateEntry("Pit Left Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap1ClientRight = CatMap1.CreateEntry("Pit Right Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
 
 			Debug.debugMode = CatDebugMode.Value;
 		}
@@ -160,18 +151,18 @@ namespace ShiftStoneRandomizer
 
 		private void ApplyLoadOut()
 		{
-			ShiftStonePrefs left;
-			ShiftStonePrefs right;
+			// ShiftStonePrefs left;
+			// ShiftStonePrefs right;
 
-			if (!System.Enum.TryParse<ShiftStonePrefs>(PrefLobLeft.Value, out left))
-			{
-				Debug.Log("Failed to parse Left hand loadout from config file");
-			}
-			if (!System.Enum.TryParse<ShiftStonePrefs>(PrefLobRight.Value, out right))
-			{
-				Debug.Log("Failed to parse Right hand loadout from config file");
-			}
-			EquipStones(left, right);
+			// if (!System.Enum.TryParse<ShiftStonePrefs>(PrefLobLeft.Value, out left))
+			// {
+			// 	Debug.Log("Failed to parse Left hand loadout from config file");
+			// }
+			// if (!System.Enum.TryParse<ShiftStonePrefs>(PrefLobRight.Value, out right))
+			// {
+			// 	Debug.Log("Failed to parse Right hand loadout from config file");
+			// }
+			// EquipStones(left, right);
 		}
 
 		public static void ToggleStones(int[] equipped, Hands hand = Hands.Both)

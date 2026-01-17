@@ -101,6 +101,7 @@ namespace ShiftStoneRandomizer
 
 				automationButtonLabel.GetComponent<TextMeshPro>().text = $"Auto Mode\n{ShiftStoneRandomizer.AutomationMode.ToString()}";
 
+
 			});
 
 			GameObject clearButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
