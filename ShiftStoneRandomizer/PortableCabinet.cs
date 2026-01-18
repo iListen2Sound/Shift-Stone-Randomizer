@@ -22,9 +22,9 @@ namespace ShiftStoneRandomizer
 		static PortableCabinet()
 		{
 			qssReplacementBase = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneQuickswapper.FloatingButton.InteractionButtonToggleVariant.GetGameObject());
-			GameObject.DontDestroyOnLoad(qssReplacementBase);
+			qssReplacementBase.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform, false);
 			ShiftStoneBoxSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject());
-			GameObject.DontDestroyOnLoad(ShiftStoneBoxSource);
+			ShiftStoneBoxSource.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform, false);
 			qssReplacementBase.SetActive(false);
 			ShiftStoneBoxSource.SetActive(false);
 		}
@@ -147,7 +147,10 @@ namespace ShiftStoneRandomizer
 				if (ShiftStoneRandomizer.Player1 != null)
 				{
 					int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-					ShiftStoneRandomizer.EquipStones(StoneItem.AllStones[opponentEquipped[0]], StoneItem.AllStones[opponentEquipped[1]]);
+
+					ShiftStoneRandomizer.EquipStones(opponentEquipped[0] == -1 ? new StoneItem() : StoneItem.AllStones[opponentEquipped[0]],
+													 opponentEquipped[1] == -1 ? new StoneItem() : StoneItem.AllStones[opponentEquipped[0]]);
+
 				}
 			});
 
@@ -258,6 +261,8 @@ namespace ShiftStoneRandomizer
 				auxPanel.transform.localPosition = interaction.IsPressed ? new Vector3(0.385f, 0.6f, -0.005f) : new Vector3(0.385f, 0.36f, -0.06f);
 
 				LoadoutInteractor.ClearAllSlots();
+				LoadoutInteractor.Selection[0] = ShiftStonePrefs.Invalid;
+				LoadoutInteractor.Selection[1] = ShiftStonePrefs.Invalid;
 			});
 
 

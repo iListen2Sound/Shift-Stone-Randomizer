@@ -222,14 +222,17 @@ namespace ShiftStoneRandomizer
 										NextSelection[0] = (ShiftStonePrefs)opponentEquipped[0];
 										NextSelection[1] = (ShiftStonePrefs)opponentEquipped[1];*/
 										int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-										ShiftStoneRandomizer.EquipStones(
-											currentHand == Hands.Left ? StoneItem.AllStones[opponentEquipped[0]] : null,
-											currentHand == Hands.Right ? StoneItem.AllStones[opponentEquipped[1]] : null);
+										
+
+										if (currentHand == Hands.Left)
+										{
+											ShiftStoneRandomizer.EquipStones(opponentEquipped[(int)Hands.Left] >= 0 ? StoneItem.AllStones[opponentEquipped[(int)Hands.Left]] : new StoneItem(), null);
+										}
+										else if (currentHand == Hands.Right)
+										{
+											ShiftStoneRandomizer.EquipStones(null, opponentEquipped[(int)Hands.Right] >= 0 ? StoneItem.AllStones[opponentEquipped[(int)Hands.Right]] : new StoneItem());
+										}
 									}
-								}
-								else
-								{
-									//ignore
 								}
 								break;
 
@@ -387,7 +390,7 @@ namespace ShiftStoneRandomizer
 				if (ShiftStoneRandomizer.Player1 != null)
 				{
 					int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-					ShiftStoneRandomizer.EquipStones(StoneItem.AllStones[opponentEquipped[0]], StoneItem.AllStones[opponentEquipped[1]]);
+					ShiftStoneRandomizer.EquipStones(opponentEquipped[0] >= 0 ? StoneItem.AllStones[opponentEquipped[0]] : new StoneItem(), opponentEquipped[1] >= 0 ? StoneItem.AllStones[opponentEquipped[1]] : new StoneItem());
 				}
 			}
 			else if (AutomationMode == AutomationPrefs.Random)
@@ -543,10 +546,10 @@ namespace ShiftStoneRandomizer
 			ButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
 			ButtonSource.transform.localPosition = Vector3.zero;
 			ButtonSource.SetActive(false);
-			GameObject.DontDestroyOnLoad(ButtonSource);
+			ButtonSource.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform, false);
 
 			ClusterSource = new GameObject("Loadout Cluster");
-			GameObject.DontDestroyOnLoad(ClusterSource);
+			ClusterSource.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform, false);
 
 			//Assign delegates for match flow
 

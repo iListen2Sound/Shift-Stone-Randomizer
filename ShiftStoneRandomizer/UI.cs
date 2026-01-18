@@ -253,7 +253,7 @@ namespace ShiftStoneRandomizer
 			ShiftStoneBoxSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject());
 			ShiftStoneBoxSource.SetActive(false);
 			ShiftStoneBoxSource.name = "ShiftStoneBoxSource";
-			GameObject.DontDestroyOnLoad(ShiftStoneBoxSource);
+			ShiftStoneBoxSource.transform.SetParent(DDOLParent.transform, false);
 			SmallButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
 		}
 

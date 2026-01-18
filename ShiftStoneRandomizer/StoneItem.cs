@@ -42,7 +42,8 @@ namespace ShiftStoneRandomizer
 			{
 				obj.transform.localScale = Vector3.one * 0.00015f;
 				obj.transform.localRotation = Quaternion.Euler(90f, 90f, 0);
-				GameObject.DontDestroyOnLoad(obj);
+				obj.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform);
+				//GameObject.D=ontDestroyOnLoad(obj);
 				obj.SetActive(false);
 
 			}

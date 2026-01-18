@@ -80,6 +80,7 @@ namespace ShiftStoneRandomizer
 		public static GameObject leftPoint;
 		public static GameObject rightPoint;
 
+		public static GameObject DDOLParent;
 
 
 
@@ -157,8 +158,11 @@ namespace ShiftStoneRandomizer
 
 				if (firstLoad)
 				{
+					DDOLParent = new GameObject("ShiftStoneRandomizer_DDOLParent");
+					GameObject.DontDestroyOnLoad(DDOLParent);
 					IndicatorsBase = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
-					GameObject.DontDestroyOnLoad(IndicatorsBase);
+					IndicatorsBase.transform.SetParent(DDOLParent.transform);
+					//GameObject.D=ontDestroyOnLoad(IndicatorsBase);
 					IndicatorsBase.SetActive(false);
 					GrabBoxSource();
 				}
