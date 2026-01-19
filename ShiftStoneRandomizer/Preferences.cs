@@ -85,6 +85,9 @@ namespace ShiftStoneRandomizer
 			Debug.debugMode = CatDebugMode.Value;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		private void ReadPrefs()
 		{
 			CatSettings.LoadFromFile();
@@ -94,7 +97,9 @@ namespace ShiftStoneRandomizer
 
 
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
 		public void SavePrefs()
 		{
 			CatSettings.SaveToFile();
@@ -102,7 +107,9 @@ namespace ShiftStoneRandomizer
 			CatMap0.SaveToFile();
 			CatMap1.SaveToFile();
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
 		private void ApplyPrefsToState()
 		{
 			StoneItem.AllStones[0].IsEnabled = PrefAdamant.Value;
@@ -132,7 +139,9 @@ namespace ShiftStoneRandomizer
 				ShowRandomedHand();
 			}
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
 		private static void UpdatePrefsFromState()
 		{
 			PrefAdamant.Value = StoneItem.AllStones[0].IsEnabled;
@@ -148,23 +157,11 @@ namespace ShiftStoneRandomizer
 
 		}
 
-
-		private void ApplyLoadOut()
-		{
-			// ShiftStonePrefs left;
-			// ShiftStonePrefs right;
-
-			// if (!System.Enum.TryParse<ShiftStonePrefs>(PrefLobLeft.Value, out left))
-			// {
-			// 	Debug.Log("Failed to parse Left hand loadout from config file");
-			// }
-			// if (!System.Enum.TryParse<ShiftStonePrefs>(PrefLobRight.Value, out right))
-			// {
-			// 	Debug.Log("Failed to parse Right hand loadout from config file");
-			// }
-			// EquipStones(left, right);
-		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="equipped"></param>
+		/// <param name="hand"></param>
 		public static void ToggleStones(int[] equipped, Hands hand = Hands.Both)
 		{
 			StoneItem left;
@@ -220,31 +217,5 @@ namespace ShiftStoneRandomizer
 			CatEnabledStones.SaveToFile();
 
 		}
-
-		// private void SaveLoadOut(int[] Equipped)
-		// {
-		// 	StoneItem left;
-		// 	StoneItem right;
-		// 	if (Equipped[0] == -1)
-		// 		left = new StoneItem();
-		// 	else
-		// 		left = StoneItem.AllStones[Equipped[0]];
-
-		// 	if (Equipped[1] == -1)
-		// 		right = new StoneItem();
-		// 	else
-		// 		right = StoneItem.AllStones[Equipped[1]];
-
-
-		// 	PrefLobLeft.Value = left.Name;
-		// 	PrefLobRight.Value = right.Name;
-
-		// 	CatLoadOutButton.SaveToFile();
-
-		// 	ActivateEffect(true, true);
-
-
-		// 	SignFall();
-		// }
 	}
 }

@@ -26,7 +26,9 @@ namespace ShiftStoneRandomizer
 			ObjRandom,
 			ObjEmpty
 		};
-
+		/// <summary>
+		/// 
+		/// </summary>
 		static StoneItem()
 		{
 			ObjMirror.name = "Indicator_Mirror";
@@ -95,7 +97,10 @@ namespace ShiftStoneRandomizer
 				stone.ResetIcons();
 			}
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		public static StoneItem[] RecreateStoneItems()
 		{
 			StoneItem[] NewStones = new StoneItem[] {
@@ -114,10 +119,16 @@ namespace ShiftStoneRandomizer
 
 
 		private static int _blacklistCount = 0;
+		/// <summary>
+		/// 
+		/// </summary>
 		public static int BlackListCount
 		{
 			get { return _blacklistCount; }
 		}
+		/// <summary>
+		/// 
+		/// </summary>
 		public ShiftStone ShiftStone { get; private set; }
 		/// <summary>
 		/// Returns "None" if the stone is null.
@@ -130,6 +141,9 @@ namespace ShiftStoneRandomizer
 			}
 		}
 		private bool _isEnabled;
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool IsEnabled
 		{
 			get { return _isEnabled; }
@@ -166,7 +180,10 @@ namespace ShiftStoneRandomizer
 				_icon.SetActive(!_isEnabled);*/
 			}
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		public ShiftStonePrefs GetEnum()
 		{
 			ShiftStonePrefs result;
@@ -178,16 +195,28 @@ namespace ShiftStoneRandomizer
 
 			return result;
 		}
+		/// <summary>
+		/// 
+		/// </summary>
 		private List<GameObject> _iconList = new List<GameObject>();
+		/// <summary>
+		/// 
+		/// </summary>
 		public List<GameObject> IconList { get { return _iconList; } set { _iconList = value; } }
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="shiftStone"></param>
 		public StoneItem(ShiftStone shiftStone)
 		{
 			shiftStone.gameObject.SetActive(false);// Disable the stone so it doesn't show up in the game
 			ShiftStone = shiftStone;
 			_isEnabled = true;
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="stoneSelection"></param>
 		public StoneItem(ShiftStonePrefs stoneSelection)
 		{
 			ShiftStone stone = AllStones[(int)stoneSelection].ShiftStone;
@@ -202,12 +231,19 @@ namespace ShiftStoneRandomizer
 			_isEnabled = false;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="icon"></param>
 		public void AddIcon(GameObject icon)
 		{
 			_iconList.Add(icon);
 
 			icon.SetActive(!_isEnabled);
 		}
+		/// <summary>
+		/// 
+		/// </summary>
 		public void ResetIcons()
 		{
 			_iconList.Clear();

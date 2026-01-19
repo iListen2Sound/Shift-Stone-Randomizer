@@ -145,7 +145,9 @@ namespace ShiftStoneRandomizer
 			
 		}
 
-
+		/// <summary>
+		/// 
+		/// </summary>
 		private void SceneReady()
 		{
 
@@ -218,43 +220,9 @@ namespace ShiftStoneRandomizer
 
 			IsFirstMatchLoad = CurrentLoadedScene.Contains("map") && LastLoadedScene == "gym";
 		}
-		/*private void BlackListStones(int[] Hand)
-		{
-			bool hasEnabledEquipedStones = false;
-			foreach (int i in Hand)
-			{
-				if (i > -1 && StoneItem.AllStones[i].IsEnabled)
-				{
-					hasEnabledEquipedStones = true;
-					StoneItem.AllStones[i].IsEnabled = false;
-				}
-			}
-
-			if (hasEnabledEquipedStones)
-				EquipStones(new StoneItem(), new StoneItem());
-			else
-			{
-				foreach (int i in Hand)
-				{
-					if (i > -1)
-						StoneItem.AllStones[i].IsEnabled = true;
-				}
-			}
-
-			string blackListOut = "";
-			Debug.Log("Blacklisted stones: ");
-			foreach (StoneItem stone in StoneItem.AllStones)
-			{
-				if (!stone.IsEnabled)
-				{
-					Debug.Log($"\t{stone.Name}");
-					blackListOut += stone.Name + "\n";
-				}
-			}
-			File.WriteAllText(Path.Combine(USER_DATA, BLACKLIST_FILE), blackListOut);
-			ActivateEffect(true, true);
-		}*/
-
+		/// <summary>
+		/// 
+		/// </summary>
 		public void CycleHandLock()
 		{
 			EnabledHand++;
@@ -283,7 +251,9 @@ namespace ShiftStoneRandomizer
 
 			ShowRandomedHand();
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
 		private void ShowRandomedHand()
 		{
 			//Exit if hands arent initialized
@@ -326,7 +296,11 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="left"></param>
+		/// <param name="right"></param>
 		public static void ActivateEffect(bool left, bool right)
 		{
 
@@ -479,7 +453,11 @@ namespace ShiftStoneRandomizer
 			if (applyEffect)
 				ActivateEffect(leftStone != null, rightStone != null);
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="single"></param>
+		/// <param name="hand"></param>
 		private static void EquipStones(ShiftStonePrefs single, Hands hand)
 		{
 			if (hand == Hands.Left)
@@ -495,7 +473,11 @@ namespace ShiftStoneRandomizer
 				Debug.Log("EquipStones: Single Equip method given invalid hand either neither or both");
 			}
 		}
-		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="left"></param>
+		/// <param name="right"></param>
 		private static void EquipStones(ShiftStonePrefs left, ShiftStonePrefs right)
 		{
 			StoneItem leftStone = null;
@@ -536,6 +518,11 @@ namespace ShiftStoneRandomizer
 
 			EquipStones(leftStone, rightStone);
 		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="excludeStone"></param>
+		/// <returns></returns>
 		private static StoneItem PickRandomStoneExcept(StoneItem excludeStone = null)
 		{
 			//TODO: Create select random enabled stone function

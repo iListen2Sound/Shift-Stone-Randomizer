@@ -15,9 +15,14 @@ using System;
 
 namespace ShiftStoneRandomizer
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	public class LoadoutInteractor
 	{
-		//TODO: Create logic for all loadout interactors in the world to display the same shiftstones
+		/// <summary>
+		/// 
+		/// </summary>
 		#region Slot
 		public class Slot
 		{
@@ -30,6 +35,9 @@ namespace ShiftStoneRandomizer
 			};
 
 			public GameObject Button { get; private set; }
+			/// <summary>
+			/// 
+			/// </summary>
 			public GameObject ActualButton
 			{
 				get
@@ -39,9 +47,15 @@ namespace ShiftStoneRandomizer
 			}
 
 			private GameObject _leftStoneSlot;// = new GameObject("LeftSlot");
+			/// <summary>
+			/// 
+			/// </summary>
 			public GameObject LeftStoneSlot { get { return _leftStoneSlot; } private set { _leftStoneSlot = value; } }
 
 			private StoneItem _leftStoneItem;
+			/// <summary>
+			/// 
+			/// </summary>
 			public StoneItem LeftStoneItem
 			{
 				get { return _leftStoneItem; }
@@ -61,32 +75,22 @@ namespace ShiftStoneRandomizer
 					}
 				}
 			}
+			/// <summary>
+			/// 
+			/// </summary>
 			public MelonPreferences_Entry<string> LeftHandPref { get; set; }
 
 
 			private GameObject _rightStoneSlot;// = new GameObject("Right Slot");
+			/// <summary>
+			/// 
+			/// </summary>
 			public GameObject RightStoneSlot { get { return _rightStoneSlot; } private set { _rightStoneSlot = value; } }
 
 			private StoneItem _rightStoneItem;
-			public StoneItem RightStoneItem
-			{
-				get { return _rightStoneItem; }
-				set
-				{
-					_rightStoneItem = value;
-					GameObject miniStone = GameObject.Instantiate(value.ShiftStone.gameObject);
-					miniStone.transform.SetParent(_rightStoneSlot.transform, false);
-
-					if (value.Name == "Charge")
-					{
-						miniStone.transform.localRotation = Quaternion.Euler(0f, 0f, 270f);
-					}
-					else
-					{
-						miniStone.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
-					}
-				}
-			}
+			/// <summary>
+			/// 
+			/// </summary>
 
 
 			public MelonPreferences_Entry<string> RightHandPref { get; set; }
@@ -152,7 +156,9 @@ namespace ShiftStoneRandomizer
 					});
 				}
 			}
-
+			/// <summary>
+			/// 
+			/// </summary>
 			private void SaveSelectedToLoadout()
 			{
 				Debug.Log("Saving Loadout...");
@@ -178,7 +184,9 @@ namespace ShiftStoneRandomizer
 				UpdateAllDisplays(Quadrant, Selection[0], Selection[1]);
 			}
 
-
+			/// <summary>
+			/// 
+			/// </summary>
 			public void ApplyLoadOut()
 			{
 				Debug.Log("Applying Loadout...");
@@ -308,7 +316,10 @@ namespace ShiftStoneRandomizer
 				rightItem.SetActive(true);
 
 			}
-
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="parent"></param>
 			public static void Infanticide(GameObject parent)
 			{
 
@@ -338,7 +349,11 @@ namespace ShiftStoneRandomizer
 
 
 		#region Game Flow 
+		/// <summary>
+		/// 
+		/// </summary>
 		public static bool IsNextSelectionPrimed { get; set; } = true;
+
 		public static AutomationPrefs AutomationMode { get { return ShiftStoneRandomizer.AutomationMode; } set { ShiftStoneRandomizer.AutomationMode = value; } }
 		public static void OnMatchLoad()
 		{
@@ -369,7 +384,10 @@ namespace ShiftStoneRandomizer
 			IsNextSelectionPrimed = AutomationMode != AutomationPrefs.None; //reset nextselection primed every match end
 			AutoApply(false);
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="isFirstMatchLoad"></param>
 		public static void AutoApply(bool isFirstMatchLoad)
 		{
 			if (!IsNextSelectionPrimed)
@@ -424,13 +442,18 @@ namespace ShiftStoneRandomizer
 
 		public static GameObject[] DisplayedItem = new GameObject[2];
 
-
+		/// <summary>
+		/// 
+		/// </summary>
 		public static void ClearAllSlots()
 		{
 			ClearSlot(Sockets[0]);
 			ClearSlot(Sockets[1]);
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="parent"></param>
 		public static void ClearSlot(GameObject parent)
 		{
 			for (int i = 0; i < parent.transform.childCount; i++)
@@ -451,7 +474,11 @@ namespace ShiftStoneRandomizer
 				}
 			}
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="hand"></param>
 		public static void HighlightItem(ShiftStonePrefs item, Hands hand)
 		{
 			int handIndex = (int)hand;
@@ -513,7 +540,9 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
-
+		/// <summary>
+		/// 
+		/// </summary>
 		public static void HighlightCurrentEquippedStones()
 		{
 			int[] equipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
@@ -528,7 +557,9 @@ namespace ShiftStoneRandomizer
 		{
 			Display?.Invoke(quadrant, left, right);
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
 		public static void UnsubAll()
 		{
 
@@ -537,7 +568,9 @@ namespace ShiftStoneRandomizer
 
 		public static GameObject ClusterSource;
 
-		//Static constructor. Make sure to make no reference to this class before first load
+		/// <summary>
+		/// 
+		/// </summary>
 		static LoadoutInteractor()
 		{
 			ButtonSource = ShiftStoneRandomizer.SmallButtonSource;
@@ -558,6 +591,9 @@ namespace ShiftStoneRandomizer
 		}
 
 		//Add this as a listener to the shift stone interaction for the existing base stones
+		/// <summary>
+		/// 
+		/// </summary>
 		public static void SelectBaseStone()
 		{
 			int[] stonesInHand = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
@@ -566,7 +602,10 @@ namespace ShiftStoneRandomizer
 				Selection[i] = (ShiftStonePrefs)stonesInHand[i];
 			}
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="commandStone"></param>
 		public static void SelectCommandStone(ShiftStonePrefs commandStone)
 		{
 			Hands handTrigger = Hands.Left; /*= determine which hand pressed the button*/
@@ -583,7 +622,11 @@ namespace ShiftStoneRandomizer
 
 
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="command"></param>
+		/// <param name="hand"></param>
 		public static void DisplayCommandOnHand(ShiftStonePrefs command, Hands hand)
 		{
 
@@ -599,19 +642,35 @@ namespace ShiftStoneRandomizer
 		#region Instance Members
 
 		private Slot _map0Host;
+		/// <summary>
+		/// 
+		/// </summary>
 		public Slot Map0Host { get { return _map0Host; } }
 
 		private Slot _map1Host;
+		/// <summary>
+		/// 
+		/// </summary>
 		public Slot Map1Host { get { return _map1Host; } }
 
 		private Slot _map0Client;
+		/// <summary>
+		/// 
+		/// </summary>
 		public Slot Map0Client { get { return _map0Client; } }
 
 		private Slot _map1Client;
+		/// <summary>
+		/// 
+		/// </summary>
 		public Slot Map1Client { get { return _map1Client; } }
-
+		/// <summary>
+		/// 
+		/// </summary>
 		public GameObject Cluster { get; private set; }
-
+		/// <summary>
+		/// 
+		/// </summary>
 		public static List<MelonPreferences_Entry<string>> PrefList = new List<MelonPreferences_Entry<string>>()
 		{
 			ShiftStoneRandomizer.PrefMap0HostLeft,
@@ -624,6 +683,9 @@ namespace ShiftStoneRandomizer
 			ShiftStoneRandomizer.PrefMap1ClientRight,
 		};
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public readonly List<Slot> SlotList;
 		/// <summary>
 		/// 
