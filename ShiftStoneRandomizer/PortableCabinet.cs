@@ -261,8 +261,7 @@ namespace ShiftStoneRandomizer
 				auxPanel.transform.localPosition = interaction.IsPressed ? new Vector3(0.385f, 0.6f, -0.005f) : new Vector3(0.385f, 0.36f, -0.06f);
 
 				LoadoutInteractor.ClearAllSlots();
-				LoadoutInteractor.Selection[0] = ShiftStonePrefs.Invalid;
-				LoadoutInteractor.Selection[1] = ShiftStonePrefs.Invalid;
+				LoadoutInteractor.HighlightCurrentEquippedStones();
 			});
 
 

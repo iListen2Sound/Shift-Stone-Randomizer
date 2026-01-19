@@ -85,9 +85,13 @@ namespace ShiftStoneRandomizer
 
 				}
 			}
-			else
+			else if ((int)stoneEnum >= -4 && (int)stoneEnum <= -1)
 			{
 				return GameObject.Instantiate(Specials[((int)stoneEnum + 4)]);
+			}
+			else 			{
+				Debug.Log($"GetDisplayObject: Invalid stone enum {stoneEnum} index for GetDisplayObject {(int) stoneEnum}", false, 2);
+				return null;
 			}
 		}
 		public static void ResetAllIcons()
