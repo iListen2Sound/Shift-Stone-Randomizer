@@ -120,8 +120,8 @@ namespace ShiftStoneRandomizer
 			bothPos = $"Left Point: {leftPointPos.ToString()} \nRight Point: {rightPointPos.ToString()}";
 			if (IsSceneLoaded)
 			{
-				//Debug.PrintInGame($"{LoadoutInteractor.Selection[0].ToString()} \n{LoadoutInteractor.Selection[1].ToString()}");
-				Debug.PrintInGame($"Automation Mode: {LoadoutInteractor.AutomationMode} \n IsFirstMatchLoad: {IsFirstMatchLoad} \n IsInMatch: {IsInMatch} \n LoadoutIsPrimed: {LoadoutInteractor.IsNextSelectionPrimed}");
+				Debug.PrintInGame($"{LoadoutInteractor.Selection[0].ToString()} \n{LoadoutInteractor.Selection[1].ToString()}");
+				//Debug.PrintInGame($"Automation Mode: {LoadoutInteractor.AutomationMode} \n IsFirstMatchLoad: {IsFirstMatchLoad} \n IsInMatch: {IsInMatch} \n LoadoutIsPrimed: {LoadoutInteractor.IsNextSelectionPrimed}");
 				if (LoadoutInteractor.LeftSocket != null && LoadoutInteractor.RightSocket != null)
 				{
 					try
