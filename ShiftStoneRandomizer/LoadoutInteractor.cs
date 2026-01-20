@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 using System;
 using System.Collections;
-using System.Diagnostics
+using System.Diagnostics;
 
 
 
@@ -418,7 +418,7 @@ namespace ShiftStoneRandomizer
 			}
 		}
 
-		public static IEnumerator ContinuousCopy(ShiftStonePrefs hand)
+		public static IEnumerator ContinuousCopy(Hands hand)
 		{
 			int[] selfEquipped;
 			int[] opponentEquipped;

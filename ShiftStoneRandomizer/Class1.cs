@@ -458,7 +458,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="single"></param>
 		/// <param name="hand"></param>
-		private static void EquipStones(ShiftStonePrefs single, Hands hand)
+		public static void EquipStones(ShiftStonePrefs single, Hands hand)
 		{
 			if (hand == Hands.Left)
 			{
@@ -478,7 +478,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="left"></param>
 		/// <param name="right"></param>
-		private static void EquipStones(ShiftStonePrefs left, ShiftStonePrefs right)
+		public static void EquipStones(ShiftStonePrefs left, ShiftStonePrefs right)
 		{
 			StoneItem leftStone = null;
 			StoneItem rightStone = null;
