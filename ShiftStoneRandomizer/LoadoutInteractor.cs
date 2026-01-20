@@ -9,7 +9,8 @@ using RumbleModdingAPI;
 using System.Collections.Generic;
 
 using System;
-
+using System.Collections;
+using System.Diagnostics
 
 
 
@@ -416,6 +417,55 @@ namespace ShiftStoneRandomizer
 				ShiftStoneRandomizer.RandomizeStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration(), ShiftStoneRandomizer.EnabledHand);
 			}
 		}
+
+		public static IEnumerator ContinuousCopy(ShiftStonePrefs hand)
+		{
+			int[] selfEquipped;
+			int[] opponentEquipped;
+
+			ShiftStonePrefs left = ShiftStonePrefs.Stay;
+			ShiftStonePrefs right = ShiftStonePrefs.Stay;
+			
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+			while(true)
+			{
+				selfEquipped = ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();	
+
+				if(hand == Hands.Left || hand == Hands.Both)
+				{
+					left = opponentEquipped[0] == selfEquipped[0] ? ShiftStonePrefs.Stay : (ShiftStonePrefs) opponentEquipped[0];
+					
+				}
+				else if (hand == Hands.Right || hand == Hands.Both)
+				{
+					right = opponentEquipped[1] == selfEquipped[1] ? ShiftStonePrefs.Stay : (ShiftStonePrefs) opponentEquipped[1];
+					
+				}
+				
+
+				if(sw.ElapsedMilliseconds >= 1000)
+				{
+					//remove shift stone from other hand if already equipped
+					if((ShiftStonePrefs) selfEquipped[1] == left)
+					{
+						ShiftStoneRandomizer.EquipStones(ShiftStonePrefs.Empty, left);
+					}
+					if((ShiftStonePrefs) selfEquipped[0] == right)
+					{
+						ShiftStoneRandomizer.EquipStones(ShiftStonePrefs.Empty, right);
+					}
+
+					ShiftStoneRandomizer.EquipStones(left, right);
+
+					sw.Restart();
+				}
+				yield return null;				
+			}
+
+		}
+
 
 
 		#endregion
