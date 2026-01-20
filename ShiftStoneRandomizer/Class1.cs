@@ -497,7 +497,8 @@ namespace ShiftStoneRandomizer
 			}
 			else
 			{
-				leftStone = StoneItem.AllStones[(int)left];
+				if(left >= ShiftStonePrefs.Empty)
+					leftStone = StoneItem.AllStones[(int)left];
 			}
 			if (right == ShiftStonePrefs.Empty)
 			{
@@ -513,7 +514,8 @@ namespace ShiftStoneRandomizer
 			}
 			else
 			{
-				rightStone = StoneItem.AllStones[(int)right];
+				if(right >= ShiftStonePrefs.Empty)
+					rightStone = StoneItem.AllStones[(int)right];
 			}
 
 			EquipStones(leftStone, rightStone);
