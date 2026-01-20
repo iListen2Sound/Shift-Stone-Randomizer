@@ -9,7 +9,8 @@ using RumbleModdingAPI;
 using System.Collections.Generic;
 
 using System;
-
+using System.Collections;
+using System.Diagnostics
 
 
 
@@ -416,6 +417,36 @@ namespace ShiftStoneRandomizer
 				ShiftStoneRandomizer.RandomizeStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration(), ShiftStoneRandomizer.EnabledHand);
 			}
 		}
+
+		public static IEnumerator ContinuousCopy(ShiftStonePrefs hand)
+		{
+			int[] selfEquipped;
+			int[] opponentEquipped;
+
+			ShiftStonePrefs left = ShiftStonePrefs.Stay;
+			ShiftStonePrefs right = ShiftStonePrefs.Stay;
+			
+			int i = 0;
+			while(true)
+			{
+				selfEquipped = ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();	
+
+				if(hand == Hands.Left || hand == Hands.Both)
+				{
+					left = opponentEquipped[0] == selfEquipped[0] ? ShiftStonePrefs.Stay : (ShiftStonePrefs) opponentEquipped[0];
+				}
+				else if (hand == Hands.Right || hand == Hands.Both)
+				{
+					right = opponentEquipped[1] == selfEquipped[1] ? ShiftStonePrefs.Stay : (ShiftStonePrefs) opponentEquipped[1];
+				}
+				yield return null;
+
+				
+			}
+
+		}
+
 
 
 		#endregion
