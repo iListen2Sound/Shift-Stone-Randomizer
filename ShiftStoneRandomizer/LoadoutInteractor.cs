@@ -384,6 +384,7 @@ namespace ShiftStoneRandomizer
 		{
 			IsNextSelectionPrimed = AutomationMode != AutomationPrefs.None; //reset nextselection primed every match end
 			AutoApply(false);
+			
 		}
 		/// <summary>
 		/// 

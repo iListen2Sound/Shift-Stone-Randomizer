@@ -254,7 +254,7 @@ namespace ShiftStoneRandomizer
 		/// <summary>
 		/// 
 		/// </summary>
-		private void ShowRandomedHand()
+		public void ShowRandomedHand()
 		{
 			//Exit if hands arent initialized
 			if (leftHand == null || rightHand == null)

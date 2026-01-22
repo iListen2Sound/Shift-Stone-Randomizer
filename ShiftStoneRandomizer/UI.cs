@@ -115,6 +115,8 @@ namespace ShiftStoneRandomizer
 			rightHand.transform.localRotation = Quaternion.Euler(90f, 105f, 0f);
 			rightHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
 
+			ShowRandomedHand();
+
 			GameObject RandomButton = GameObject.Instantiate(Button);
 			RandomButton.transform.parent = swapper.transform.GetChild(0);
 			RandomButton.transform.localPosition = new Vector3(-0.096f, 0.064f, -0.025f);
