@@ -78,7 +78,7 @@ namespace ShiftStoneRandomizer
 			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
 
 			//RandomizedHandButton
-			GameObject keepHandButton = GameObject.Instantiate(Button);
+			/*GameObject keepHandButton = GameObject.Instantiate(Button);
 			keepHandButton.transform.SetParent(swapper.transform.GetChild(0), false);
 
 			keepHandButton.transform.localPosition = new Vector3(0.1835f, -0.001f, -0.02f);
@@ -127,6 +127,7 @@ namespace ShiftStoneRandomizer
 			{
 				RandomizeStones(Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration(), EnabledHand);
 			});
+			*/
 
 			PortableCabinet portaStones = new PortableCabinet(swapper);
 
