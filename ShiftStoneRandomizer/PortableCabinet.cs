@@ -10,6 +10,7 @@ using Il2CppRUMBLE.Combat.ShiftStones;
 using Il2CppSmartLocalization.Editor;
 using MelonLoader;
 using Il2CppTMPro;
+using UnityEngine.UI;
 namespace ShiftStoneRandomizer
 {
 	public class PortableCabinet : MelonMod
@@ -82,18 +83,18 @@ namespace ShiftStoneRandomizer
 			switch (hand)
 			{
 				case Hands.Both:
-					ActivateEffect(true, true);
+					ShiftStoneRandomizer.ActivateEffect(true, true);
 					break;
 				case Hands.Left:
-					ActivateEffect(true, false);
+					ShiftStoneRandomizer.ActivateEffect(true, false);
 					break;
 				case Hands.Right:
-					ActivateEffect(false, true);
+					ShiftStoneRandomizer.ActivateEffect(false, true);
 					break;
 			}
 
-			PrefEnabledHand.Value = EnabledHand.ToString();
-			CatSettings.SaveToFile();
+			ShiftStoneRandomizer.PrefEnabledHand.Value = ShiftStoneRandomizer.EnabledHand.ToString();
+			ShiftStoneRandomizer.CatSettings.SaveToFile();
 
 			ShowRandomedHand();
 		}
@@ -304,8 +305,9 @@ namespace ShiftStoneRandomizer
 
 			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				ShiftStoneRandomizer.Instance.CycleHandLock();
+				CycleHandLock();
 			});
+			keepHandButton.SetActive(true);
 
 			GameObject handHolder = new GameObject("Hand Holder");
 			handHolder.transform.SetParent(keepHandButton.transform, false);
