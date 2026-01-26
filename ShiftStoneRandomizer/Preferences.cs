@@ -136,7 +136,7 @@ namespace ShiftStoneRandomizer
 			}
 			if (CurrentScene == "Gym")
 			{
-				ShowRandomedHand();
+				//ShowRandomedHand();
 			}
 		}
 		/// <summary>

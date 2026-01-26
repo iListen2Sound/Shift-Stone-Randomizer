@@ -205,7 +205,7 @@ namespace ShiftStoneRandomizer
 				LoadoutInteractor.OnMatchLoad();
 				CreateButtonsForAll();
 			}
-			ShowRandomedHand();
+			//ShowRandomedHand();
 		}
 		/// <summary>
 		/// 
@@ -219,65 +219,6 @@ namespace ShiftStoneRandomizer
 			CurrentScene = sceneName;
 
 			IsFirstMatchLoad = CurrentLoadedScene.Contains("map") && LastLoadedScene == "gym";
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		public void CycleHandLock()
-		{
-			EnabledHand++;
-			if ((int)EnabledHand > 1)
-			{
-				EnabledHand = (Hands)(-1);
-			}
-			Hands hand = (Hands)EnabledHand;
-			Debug.Log($"Hand lock set to: {hand}", true);
-
-			switch (hand)
-			{
-				case Hands.Both:
-					ActivateEffect(true, true);
-					break;
-				case Hands.Left:
-					ActivateEffect(true, false);
-					break;
-				case Hands.Right:
-					ActivateEffect(false, true);
-					break;
-			}
-
-			PrefEnabledHand.Value = EnabledHand.ToString();
-			CatSettings.SaveToFile();
-
-			ShowRandomedHand();
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		public void ShowRandomedHand()
-		{
-			//Exit if hands arent initialized
-			if (leftHand == null || rightHand == null)
-				return;
-			
-			Hands hand = EnabledHand;
-			Color disabled = new Color(1f, 1f, 1f, 0.25f);
-			Color enabled = new Color(1f, 1f, 1f, 1f);
-			switch (hand)
-			{
-				case Hands.Both:
-					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
-					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
-					break;
-				case Hands.Left:
-					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
-					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
-					break;
-				case Hands.Right:
-					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
-					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
-					break;
-			}
 		}
 
 		private void SignFall()

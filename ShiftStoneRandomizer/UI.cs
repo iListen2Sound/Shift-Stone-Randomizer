@@ -77,46 +77,6 @@ namespace ShiftStoneRandomizer
 		{
 			GameObject Button = swapper.transform.GetChild(0).GetChild(2).gameObject;
 
-			//RandomizedHandButton
-			/*GameObject keepHandButton = GameObject.Instantiate(Button);
-			keepHandButton.transform.SetParent(swapper.transform.GetChild(0), false);
-
-			keepHandButton.transform.localPosition = new Vector3(0.1835f, -0.001f, -0.02f);
-			keepHandButton.transform.localRotation = Quaternion.Euler(43.108f, 348.0498f, 275.3816f);
-			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
-
-			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
-			{
-				ShiftStoneRandomizer.Instance.CycleHandLock();
-			});
-
-			GameObject handHolder = new GameObject("Hand Holder");
-			handHolder.transform.SetParent(keepHandButton.transform, false);
-			//-0.04 0.25 - 0.16
-			handHolder.transform.localPosition = new Vector3(-0.04f, 0.25f, -0.16f);
-			//284.9999 315.0001 150
-			handHolder.transform.localRotation = Quaternion.Euler(285f, 315f, 150f);
-
-			leftHand = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
-
-			rightHand = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(1).gameObject);
-
-			leftHand.transform.SetParent(handHolder.transform, false);
-			//-0.18 0.01 0.05
-			leftHand.transform.localPosition = new Vector3(-0.18f, 0.01f, 0.05f);
-			//90 45 0
-			leftHand.transform.localRotation = Quaternion.Euler(90f, 45f, 0f);
-			leftHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
-
-			rightHand.transform.SetParent(handHolder.transform, false);
-			//-0.14 0.01 - 0.07
-			rightHand.transform.localPosition = new Vector3(-0.14f, 0.01f, -0.07f);
-			//90 105 0
-			rightHand.transform.localRotation = Quaternion.Euler(90f, 105f, 0f);
-			rightHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
-
-			ShowRandomedHand();
-			*/
 			GameObject RandomButton = GameObject.Instantiate(Button);
 			RandomButton.transform.parent = swapper.transform.GetChild(0);
 			RandomButton.transform.localPosition = new Vector3(-0.096f, 0.064f, -0.025f);
@@ -146,24 +106,6 @@ namespace ShiftStoneRandomizer
 			ShiftStoneBoxSource.transform.SetParent(DDOLParent.transform, false);
 			SmallButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
 		}
-
-		private void GrabTemplates()
-		{
-
-		}
-
-		#endregion
-		#region UI Logic
-		Hands FindCulprit(GameObject selectedButton)
-		{
-			float leftDist = Vector3.Distance(leftPoint.transform.position, selectedButton.transform.position);
-			float rightDist = Vector3.Distance(rightPoint.transform.position, selectedButton.transform.position);
-
-			Debug.Log($"LeftDist: {leftDist} RightDist: {rightDist}", true);
-
-			return leftDist < rightDist ? Hands.Left : Hands.Right;
-		}
-
 
 		#endregion
 	}
