@@ -116,18 +116,18 @@ namespace ShiftStoneRandomizer
 			rightHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
 
 			ShowRandomedHand();
-
+			*/
 			GameObject RandomButton = GameObject.Instantiate(Button);
 			RandomButton.transform.parent = swapper.transform.GetChild(0);
 			RandomButton.transform.localPosition = new Vector3(-0.096f, 0.064f, -0.025f);
 			RandomButton.transform.localRotation = Quaternion.Euler(298.0022f, 83.3369f, 359.8999f);
 			RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
-
+			
 			RandomButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
 				RandomizeStones(Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration(), EnabledHand);
 			});
-			*/
+			
 
 			PortableCabinet portaStones = new PortableCabinet(swapper);
 
