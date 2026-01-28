@@ -9,7 +9,8 @@ using RumbleModdingAPI;
 using System.Collections.Generic;
 
 using System;
-
+using System.Collections;
+using System.Diagnostics;
 
 
 
@@ -357,13 +358,6 @@ namespace ShiftStoneRandomizer
 		public static AutomationPrefs AutomationMode { get { return ShiftStoneRandomizer.AutomationMode; } set { ShiftStoneRandomizer.AutomationMode = value; } }
 		public static void OnMatchLoad()
 		{
-			//Debug override. Remove on release
-			//if (AutomationMode == AutomationPrefs.None && Debug.debugMode)
-			//{
-			//	AutomationMode = AutomationPrefs.Auto;
-			//	IsNextSelectionPrimed = true;
-			//	Debug.Log("Overriding automation mode for debug. ");
-			//}
 			//only do matchload shift stone apply on first load into match
 			Debug.Log("LoadoutInteractor: OnMatchLoad called", true);
 			if (ShiftStoneRandomizer.IsFirstMatchLoad)
@@ -383,6 +377,7 @@ namespace ShiftStoneRandomizer
 		{
 			IsNextSelectionPrimed = AutomationMode != AutomationPrefs.None; //reset nextselection primed every match end
 			AutoApply(false);
+			
 		}
 		/// <summary>
 		/// 
@@ -416,6 +411,55 @@ namespace ShiftStoneRandomizer
 				ShiftStoneRandomizer.RandomizeStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration(), ShiftStoneRandomizer.EnabledHand);
 			}
 		}
+
+		public static IEnumerator ContinuousCopy(Hands hand)
+		{
+			int[] selfEquipped;
+			int[] opponentEquipped;
+
+			ShiftStonePrefs left = ShiftStonePrefs.Stay;
+			ShiftStonePrefs right = ShiftStonePrefs.Stay;
+			
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+			while(true)
+			{
+				selfEquipped = ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();	
+
+				if(hand == Hands.Left || hand == Hands.Both)
+				{
+					left = opponentEquipped[0] == selfEquipped[0] ? ShiftStonePrefs.Stay : (ShiftStonePrefs) opponentEquipped[0];
+					
+				}
+				else if (hand == Hands.Right || hand == Hands.Both)
+				{
+					right = opponentEquipped[1] == selfEquipped[1] ? ShiftStonePrefs.Stay : (ShiftStonePrefs) opponentEquipped[1];
+					
+				}
+				
+
+				if(sw.ElapsedMilliseconds >= 1000)
+				{
+					//remove shift stone from other hand if already equipped
+					if((ShiftStonePrefs) selfEquipped[1] == left)
+					{
+						ShiftStoneRandomizer.EquipStones(ShiftStonePrefs.Empty, left);
+					}
+					if((ShiftStonePrefs) selfEquipped[0] == right)
+					{
+						ShiftStoneRandomizer.EquipStones(ShiftStonePrefs.Empty, right);
+					}
+
+					ShiftStoneRandomizer.EquipStones(left, right);
+
+					sw.Restart();
+				}
+				yield return null;				
+			}
+
+		}
+
 
 
 		#endregion
@@ -500,11 +544,6 @@ namespace ShiftStoneRandomizer
 
 				if (Selection[handIndex] != ShiftStonePrefs.Empty)
 				{
-					/*GameObject displayItem = StoneItem.GetDisplayObject(Selection[handIndex]);
-					displayItem.transform.localPosition = new Vector3(0.0f, 0.025f, 0f);
-					displayItem.transform.SetParent(Sockets[handIndex].transform, false);
-					displayItem.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
-					displayItem.SetActive(true);*/
 
 					DisplayedItem[handIndex] = StoneItem.GetDisplayObject(Selection[handIndex]);
 					DisplayedItem[handIndex].transform.localPosition = new Vector3(0.0f, 0.025f, 0f);
@@ -550,8 +589,6 @@ namespace ShiftStoneRandomizer
 			Selection[1] = (ShiftStonePrefs)equipped[1];
 		}
 
-		//Create an action slots could subscribe to. This lets slots from every interactor know that the display should be updated without having to keep a reference to them
-		//Currently, this means that slots are left till listening even after the scene unloads. They are now null safe but it is technically a memory leak
 		public static event Action<Quadrants, ShiftStonePrefs, ShiftStonePrefs> Display;
 		public static void UpdateAllDisplays(Quadrants quadrant, ShiftStonePrefs left, ShiftStonePrefs right)
 		{

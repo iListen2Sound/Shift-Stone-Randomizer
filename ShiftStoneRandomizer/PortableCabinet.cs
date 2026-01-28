@@ -10,6 +10,7 @@ using Il2CppRUMBLE.Combat.ShiftStones;
 using Il2CppSmartLocalization.Editor;
 using MelonLoader;
 using Il2CppTMPro;
+using UnityEngine.UI;
 namespace ShiftStoneRandomizer
 {
 	public class PortableCabinet : MelonMod
@@ -40,6 +41,63 @@ namespace ShiftStoneRandomizer
 		private LoadoutInteractor qssSaveInteractor;
 		private GameObject QssSaveCluster;
 
+		private GameObject leftHand;
+		private GameObject rightHand;
+
+		public void ShowRandomedHand()
+		{
+			//Exit if hands arent initialized
+			if (leftHand == null || rightHand == null)
+				return;
+			
+			Hands hand = ShiftStoneRandomizer.EnabledHand;
+			Color disabled = new Color(1f, 1f, 1f, 0.25f);
+			Color enabled = new Color(1f, 1f, 1f, 1f);
+			switch (hand)
+			{
+				case Hands.Both:
+					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
+					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
+					break;
+				case Hands.Left:
+					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
+					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
+					break;
+				case Hands.Right:
+					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
+					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
+					break;
+			}
+		}
+
+		public void CycleHandLock()
+		{
+			ShiftStoneRandomizer.EnabledHand++;
+			if ((int)ShiftStoneRandomizer.EnabledHand > 1)
+			{
+				ShiftStoneRandomizer.EnabledHand = (Hands)(-1);
+			}
+			Hands hand = (Hands)ShiftStoneRandomizer.EnabledHand;
+			Debug.Log($"Hand lock set to: {hand}", true);
+
+			switch (hand)
+			{
+				case Hands.Both:
+					ShiftStoneRandomizer.ActivateEffect(true, true);
+					break;
+				case Hands.Left:
+					ShiftStoneRandomizer.ActivateEffect(true, false);
+					break;
+				case Hands.Right:
+					ShiftStoneRandomizer.ActivateEffect(false, true);
+					break;
+			}
+
+			ShiftStoneRandomizer.PrefEnabledHand.Value = ShiftStoneRandomizer.EnabledHand.ToString();
+			ShiftStoneRandomizer.CatSettings.SaveToFile();
+
+			ShowRandomedHand();
+		}
 
 
 		public PortableCabinet(GameObject swapper)
@@ -238,7 +296,45 @@ namespace ShiftStoneRandomizer
 
 
 			
+			GameObject keepHandButton = GameObject.Instantiate(Button);
+			keepHandButton.transform.SetParent(swapper.transform.GetChild(0), false);
 
+			keepHandButton.transform.localPosition = new Vector3(0.1835f, -0.001f, -0.02f);
+			keepHandButton.transform.localRotation = Quaternion.Euler(43.108f, 348.0498f, 275.3816f);
+			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().isToggleButton = false;
+
+			keepHandButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
+			{
+				CycleHandLock();
+			});
+			keepHandButton.SetActive(true);
+
+			GameObject handHolder = new GameObject("Hand Holder");
+			handHolder.transform.SetParent(keepHandButton.transform, false);
+			//-0.04 0.25 - 0.16
+			handHolder.transform.localPosition = new Vector3(-0.04f, 0.25f, -0.16f);
+			//284.9999 315.0001 150
+			handHolder.transform.localRotation = Quaternion.Euler(285f, 315f, 150f);
+
+			leftHand = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
+
+			rightHand = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(1).gameObject);
+
+			leftHand.transform.SetParent(handHolder.transform, false);
+			//-0.18 0.01 0.05
+			leftHand.transform.localPosition = new Vector3(-0.18f, 0.01f, 0.05f);
+			//90 45 0
+			leftHand.transform.localRotation = Quaternion.Euler(90f, 45f, 0f);
+			leftHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
+
+			rightHand.transform.SetParent(handHolder.transform, false);
+			//-0.14 0.01 - 0.07
+			rightHand.transform.localPosition = new Vector3(-0.14f, 0.01f, -0.07f);
+			//90 105 0
+			rightHand.transform.localRotation = Quaternion.Euler(90f, 105f, 0f);
+			rightHand.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
+
+			ShowRandomedHand();
 
 
 			//Create replacement swapper button

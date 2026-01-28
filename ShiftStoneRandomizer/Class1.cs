@@ -205,7 +205,7 @@ namespace ShiftStoneRandomizer
 				LoadoutInteractor.OnMatchLoad();
 				CreateButtonsForAll();
 			}
-			ShowRandomedHand();
+			//ShowRandomedHand();
 		}
 		/// <summary>
 		/// 
@@ -219,65 +219,6 @@ namespace ShiftStoneRandomizer
 			CurrentScene = sceneName;
 
 			IsFirstMatchLoad = CurrentLoadedScene.Contains("map") && LastLoadedScene == "gym";
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		public void CycleHandLock()
-		{
-			EnabledHand++;
-			if ((int)EnabledHand > 1)
-			{
-				EnabledHand = (Hands)(-1);
-			}
-			Hands hand = (Hands)EnabledHand;
-			Debug.Log($"Hand lock set to: {hand}", true);
-
-			switch (hand)
-			{
-				case Hands.Both:
-					ActivateEffect(true, true);
-					break;
-				case Hands.Left:
-					ActivateEffect(true, false);
-					break;
-				case Hands.Right:
-					ActivateEffect(false, true);
-					break;
-			}
-
-			PrefEnabledHand.Value = EnabledHand.ToString();
-			CatSettings.SaveToFile();
-
-			ShowRandomedHand();
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		private void ShowRandomedHand()
-		{
-			//Exit if hands arent initialized
-			if (leftHand == null || rightHand == null)
-				return;
-			
-			Hands hand = EnabledHand;
-			Color disabled = new Color(1f, 1f, 1f, 0.25f);
-			Color enabled = new Color(1f, 1f, 1f, 1f);
-			switch (hand)
-			{
-				case Hands.Both:
-					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
-					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
-					break;
-				case Hands.Left:
-					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
-					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
-					break;
-				case Hands.Right:
-					leftHand.transform.GetChild(0).GetComponent<RawImage>().color = disabled;
-					rightHand.transform.GetChild(0).GetComponent<RawImage>().color = enabled;
-					break;
-			}
 		}
 
 		private void SignFall()
@@ -458,7 +399,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="single"></param>
 		/// <param name="hand"></param>
-		private static void EquipStones(ShiftStonePrefs single, Hands hand)
+		public static void EquipStones(ShiftStonePrefs single, Hands hand)
 		{
 			if (hand == Hands.Left)
 			{
@@ -478,7 +419,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		/// <param name="left"></param>
 		/// <param name="right"></param>
-		private static void EquipStones(ShiftStonePrefs left, ShiftStonePrefs right)
+		public static void EquipStones(ShiftStonePrefs left, ShiftStonePrefs right)
 		{
 			StoneItem leftStone = null;
 			StoneItem rightStone = null;
@@ -497,7 +438,8 @@ namespace ShiftStoneRandomizer
 			}
 			else
 			{
-				leftStone = StoneItem.AllStones[(int)left];
+				if(left >= ShiftStonePrefs.Empty)
+					leftStone = StoneItem.AllStones[(int)left];
 			}
 			if (right == ShiftStonePrefs.Empty)
 			{
@@ -513,7 +455,8 @@ namespace ShiftStoneRandomizer
 			}
 			else
 			{
-				rightStone = StoneItem.AllStones[(int)right];
+				if(right >= ShiftStonePrefs.Empty)
+					rightStone = StoneItem.AllStones[(int)right];
 			}
 
 			EquipStones(leftStone, rightStone);

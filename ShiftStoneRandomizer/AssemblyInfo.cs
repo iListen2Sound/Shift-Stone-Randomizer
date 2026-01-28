@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using MelonLoader;
 using ShiftStoneRandomizer;
 
-[assembly: MelonInfo(typeof(ShiftStoneRandomizer.ShiftStoneRandomizer), "ShiftStoneRandomizer", "2.0.0", "iListen2Sound, Darkener")]
+[assembly: MelonInfo(typeof(ShiftStoneRandomizer.ShiftStoneRandomizer), "ShiftStoneRandomizer", "2.0.1", "iListen2Sound, Darkener")]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
 [assembly: MelonAuthorColor(255, 87, 166, 80)]
 [assembly: MelonColor(255, 87, 166, 80)]
@@ -36,5 +36,5 @@ using ShiftStoneRandomizer;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("2.0.0.0")]
+[assembly: AssemblyVersion("2.0.1.0")]
+[assembly: AssemblyFileVersion("2.0.1.0")]
