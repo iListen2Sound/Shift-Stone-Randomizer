@@ -38,5 +38,3 @@ All config options are editable with the in-game UI but...
 | Option | Default | Description |
 |---|---|---|
 | Shift Stone | true | Include in the randomization choices |
-
-### Automation
