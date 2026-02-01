@@ -712,6 +712,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "G:\SteamLibrary\steamapps\common\RUMBLE\UserData\GizmoMods\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "G:\SteamLibrary\steamapps\common\RUMBLE\Mods\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
