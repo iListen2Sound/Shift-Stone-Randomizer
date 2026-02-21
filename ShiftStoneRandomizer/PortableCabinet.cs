@@ -207,7 +207,7 @@ namespace ShiftStoneRandomizer
 					int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 
 					ShiftStoneRandomizer.EquipStones(opponentEquipped[0] == -1 ? new StoneItem() : StoneItem.AllStones[opponentEquipped[0]],
-													 opponentEquipped[1] == -1 ? new StoneItem() : StoneItem.AllStones[opponentEquipped[0]]);
+													 opponentEquipped[1] == -1 ? new StoneItem() : StoneItem.AllStones[opponentEquipped[1]]);
 
 				}
 			});

@@ -356,6 +356,7 @@ namespace ShiftStoneRandomizer
 		public static bool IsNextSelectionPrimed { get; set; } = true;
 
 		public static AutomationPrefs AutomationMode { get { return ShiftStoneRandomizer.AutomationMode; } set { ShiftStoneRandomizer.AutomationMode = value; } }
+		
 		public static void OnMatchLoad()
 		{
 			//only do matchload shift stone apply on first load into match

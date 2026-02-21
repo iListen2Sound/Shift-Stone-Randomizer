@@ -8,6 +8,12 @@ namespace ShiftStoneRandomizer
 	public static class Debug
 	{
 		public static bool debugMode { get; set; } = true;
+		/// <summary>
+		/// Prints a message to the melonloader console with a specified log level and option to only show it in debug mode
+		/// </summary>
+		/// <param name="message">Message</param>
+		/// <param name="debugOnly">If true, the message is skipped when not in debug mode</param>
+		/// <param name="logLevel">0 = standard message, 1 = Warning, 2 = Error</param>
 		public static void Log(string message, bool debugOnly = false, int logLevel = 0)
 		{
 
