@@ -1,7 +1,7 @@
 
 using UnityEngine;
 using RumbleModdingAPI;
-
+using RumbleModdingAPI.RMAPI;
 
 using System.Collections;
 
@@ -22,9 +22,9 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		static PortableCabinet()
 		{
-			qssReplacementBase = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneQuickswapper.FloatingButton.InteractionButtonToggleVariant.GetGameObject());
+			qssReplacementBase = GameObject.Instantiate(GameObjects.Gym.INTERACTABLES.Shiftstones.ShiftstoneQuickswapper.FloatingButton.InteractionButtonToggleVariant.GetGameObject());
 			qssReplacementBase.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform, false);
-			ShiftStoneBoxSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject());
+			ShiftStoneBoxSource = GameObject.Instantiate(GameObjects.Gym.INTERACTABLES.Shiftstones.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject());
 			ShiftStoneBoxSource.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform, false);
 			qssReplacementBase.SetActive(false);
 			ShiftStoneBoxSource.SetActive(false);
@@ -129,7 +129,7 @@ namespace ShiftStoneRandomizer
 
 
 			GameObject automationButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
-			GameObject automationButtonLabel = Calls.Create.NewText($"Auto Mode\n{ShiftStoneRandomizer.AutomationMode.ToString()}", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
+			GameObject automationButtonLabel = Create.NewText($"Auto Mode\n{ShiftStoneRandomizer.AutomationMode.ToString()}", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
 			automationButtonLabel.name = "AutomationLabel";
 			automationButtonLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
 			automationButtonLabel.transform.SetParent(automationButton.transform, false);
@@ -163,7 +163,7 @@ namespace ShiftStoneRandomizer
 			});
 
 			GameObject clearButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
-			GameObject clearLabel = Calls.Create.NewText($"Clear Stones", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
+			GameObject clearLabel = Create.NewText($"Clear Stones", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
 
 			clearLabel.name = "Clear Label";
 			clearLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
@@ -185,7 +185,7 @@ namespace ShiftStoneRandomizer
 			});
 
 			GameObject copyButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
-			GameObject copyLabel = Calls.Create.NewText($"Copy Stones", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
+			GameObject copyLabel = Create.NewText($"Copy Stones", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
 
 			copyLabel.name = "Copy Label";
 			copyLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
@@ -213,7 +213,7 @@ namespace ShiftStoneRandomizer
 			});
 
 			GameObject blackListButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
-			GameObject blackListButtonLabel = Calls.Create.NewText("Blacklist", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
+			GameObject blackListButtonLabel = Create.NewText("Blacklist", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
 			blackListButtonLabel.name = "BlackListLabel";
 			blackListButtonLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
 			blackListButtonLabel.transform.SetParent(blackListButton.transform, false);
@@ -257,7 +257,7 @@ namespace ShiftStoneRandomizer
 					StoneItem.AllStones[i].AddIcon(ShiftStoneRandomizer.CreateBlackListIcons(box));
 				}
 
-				GameObject replacementText = Calls.Create.NewText(currentStonePref.ToString(), 0.2f, Color.white, new Vector3(0.0f, -0.0f, 0f), Quaternion.Euler(0, 0, 0));
+				GameObject replacementText = Create.NewText(currentStonePref.ToString(), 0.2f, Color.white, new Vector3(0.0f, -0.0f, 0f), Quaternion.Euler(0, 0, 0));
 				replacementText.name = "ReplacementLabel";
 				replacementText.transform.SetParent(box.transform, false);
 				replacementText.transform.localPosition = new Vector3(-0.03f, -0.04f, -0.332f);

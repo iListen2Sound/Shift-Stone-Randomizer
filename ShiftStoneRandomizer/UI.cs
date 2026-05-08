@@ -5,7 +5,7 @@ using Il2CppRUMBLE.Combat.ShiftStones;
 using Il2CppRUMBLE.Interactions.InteractionBase;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
-using RumbleModdingAPI;
+using RumbleModdingAPI.RMAPI;
 using System.Linq;
 
 namespace ShiftStoneRandomizer
@@ -100,11 +100,11 @@ namespace ShiftStoneRandomizer
 		private void GrabBoxSource()
 		{
 
-			ShiftStoneBoxSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject());
+			ShiftStoneBoxSource = GameObject.Instantiate(GameObjects.Gym.INTERACTABLES.Shiftstones.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject());
 			ShiftStoneBoxSource.SetActive(false);
 			ShiftStoneBoxSource.name = "ShiftStoneBoxSource";
 			ShiftStoneBoxSource.transform.SetParent(DDOLParent.transform, false);
-			SmallButtonSource = GameObject.Instantiate(Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
+			SmallButtonSource = GameObject.Instantiate(GameObjects.Gym.INTERACTABLES.Telephone20REDUXspecialedition.FriendScreen.FriendScrollBar.PageDownButton.GetGameObject());
 		}
 
 		#endregion

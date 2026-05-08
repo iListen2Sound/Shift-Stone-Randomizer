@@ -1,16 +1,17 @@
 ﻿
-using MelonLoader;
 using Il2CppRUMBLE.Combat.ShiftStones;
 using Il2CppRUMBLE.Interactions.InteractionBase;
+using Il2CppRUMBLE.Managers;
 using Il2CppTMPro;
-using UnityEngine;
-
+using MelonLoader;
 using RumbleModdingAPI;
-using System.Collections.Generic;
-
+using RumbleModdingAPI.RMAPI;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
+using UnityEngine;
+using static Unity.Collections.AllocatorManager;
 
 
 
@@ -560,8 +561,8 @@ namespace ShiftStoneRandomizer
 			{
 
 
-				int[] currentEquipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-
+				//int[] currentEquipped = Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				int[] currentEquipped = PlayerManager.Instance.LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 				if (currentEquipped[otherHandIndex] == itemIndex)
 					return;
 
@@ -585,7 +586,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		public static void HighlightCurrentEquippedStones()
 		{
-			int[] equipped = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+			int[] equipped = PlayerManager.Instance.LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 			Selection[0] = (ShiftStonePrefs)equipped[0];
 			Selection[1] = (ShiftStonePrefs)equipped[1];
 		}
@@ -624,7 +625,7 @@ namespace ShiftStoneRandomizer
 
 			//Assign delegates for match flow
 
-			Calls.onMatchEnded += ReplayPrep;
+			Actions.onMatchEnded += ReplayPrep;
 
 		}
 
@@ -634,7 +635,7 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		public static void SelectBaseStone()
 		{
-			int[] stonesInHand = Calls.Managers.GetPlayerManager().LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+			int[] stonesInHand = PlayerManager.Instance.LocalPlayer.Controller.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 			for (int i = 0; i < 2; i++)
 			{
 				Selection[i] = (ShiftStonePrefs)stonesInHand[i];
@@ -749,7 +750,7 @@ namespace ShiftStoneRandomizer
 				MainInteractor = this;
 			}
 
-			GameObject functionLabel = Calls.Create.NewText(
+			GameObject functionLabel = Create.NewText(
 				isForSaving ? "Save Loadout" : "Apply Loadout",
 				0.4f,
 				Color.white,
@@ -760,25 +761,25 @@ namespace ShiftStoneRandomizer
 			functionLabel.SetActive(true);
 			functionLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
 
-			GameObject posHost = Calls.Create.NewText("Host", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
+			GameObject posHost = Create.NewText("Host", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
 			posHost.transform.SetParent(Cluster.transform, false);
 			posHost.name = "Position Label";
 			posHost.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
 			posHost.transform.localPosition = new Vector3(-0.04f, 0.14f, 0f);
 
-			GameObject posClient = Calls.Create.NewText("Client", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
+			GameObject posClient = Create.NewText("Client", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
 			posClient.transform.SetParent(Cluster.transform, false);
 			posClient.name = "Position Label";
 			posClient.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
 			posClient.transform.localPosition = new Vector3(0.04f, 0.14f, 0f);
 
-			GameObject posRing = Calls.Create.NewText("Ring", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
+			GameObject posRing = Create.NewText("Ring", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
 			posRing.transform.SetParent(Cluster.transform, false);
 			posRing.name = "Position Label";
 			posRing.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
 			posRing.transform.localPosition = new Vector3(0.1f, 0.06f, 0.0f);
 
-			GameObject posPit = Calls.Create.NewText("Pit", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
+			GameObject posPit = Create.NewText("Pit", 0.2f, Color.white, new Vector3(0f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f));
 			posPit.transform.SetParent(Cluster.transform, false);
 			posPit.name = "Position Label";
 			posPit.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;

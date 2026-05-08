@@ -12,6 +12,7 @@ using Il2CppRUMBLE.Players;
 using MelonLoader;
 
 using RumbleModdingAPI;
+using RumbleModdingAPI.RMAPI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -88,8 +89,8 @@ namespace ShiftStoneRandomizer
 		{
 			Instance = this;
 			//CreateCosmetics();
-			Calls.onMapInitialized += SceneReady;
-			Calls.onMatchEnded += CreateButtonsForAll;//CreateButtonsForAll;
+			Actions.onMapInitialized += SceneReady; 
+			Actions.onMatchEnded += CreateButtonsForAll;//CreateButtonsForAll;
 
 
 			InitPreferences();
@@ -148,7 +149,7 @@ namespace ShiftStoneRandomizer
 		/// <summary>
 		/// 
 		/// </summary>
-		private void SceneReady()
+		private void SceneReady(string SceneName)
 		{
 
 
@@ -162,7 +163,7 @@ namespace ShiftStoneRandomizer
 				{
 					DDOLParent = new GameObject("ShiftStoneRandomizer_DDOLParent");
 					GameObject.DontDestroyOnLoad(DDOLParent);
-					IndicatorsBase = GameObject.Instantiate(Calls.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
+					IndicatorsBase = GameObject.Instantiate(AssetBundles.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
 					IndicatorsBase.transform.SetParent(DDOLParent.transform);
 					//GameObject.D=ontDestroyOnLoad(IndicatorsBase);
 					IndicatorsBase.SetActive(false);
@@ -172,7 +173,7 @@ namespace ShiftStoneRandomizer
 
 				//Adds a blacklist icon game object to the the shift stone case. 
 				//Each stone item has a list of icons for every instance of that stone on the scene that this gets added to. 
-				GameObject Cabinet = Calls.GameObjects.Gym.LOGIC.Heinhouserproducts.ShiftstoneCabinet.Cabinet.GetGameObject();
+				GameObject Cabinet = GameObjects.Gym.INTERACTABLES.Shiftstones.ShiftstoneCabinet.Cabinet.GetGameObject();
 				for (int i = 0; i < StoneItem.AllStones.Length; i++)
 				{
 					StoneItem.AllStones[i].AddIcon(CreateBlackListIcons(Cabinet.transform.GetChild(i).gameObject));
