@@ -15,7 +15,7 @@ using static Unity.Collections.AllocatorManager;
 
 
 
-namespace ShiftStoneRandomizer
+namespace ShiftStoneManager
 {
 	/// <summary>
 	/// 
@@ -164,7 +164,7 @@ namespace ShiftStoneRandomizer
 			private void SaveSelectedToLoadout()
 			{
 				Debug.Log("Saving Loadout...");
-				int[] stonesInHand = ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				int[] stonesInHand = ShiftStoneManager.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 
 				//Templogic for not adding listeners to stone case yet
 				for (int i = 0; i < 2; i++)
@@ -182,7 +182,7 @@ namespace ShiftStoneRandomizer
 				//DisplayShiftStones(LoadoutInteractor.Selection[0], LoadoutInteractor.Selection[1]);
 				LeftHandPref.Value = Selection[0].ToString();
 				RightHandPref.Value = Selection[1].ToString();
-				ShiftStoneRandomizer.Instance.SavePrefs();
+				ShiftStoneManager.Instance.SavePrefs();
 				UpdateAllDisplays(Quadrant, Selection[0], Selection[1]);
 			}
 
@@ -201,16 +201,16 @@ namespace ShiftStoneRandomizer
 
 				ShiftStonePrefs[] eachHand = { left, right };
 
-				int[] currentEquipped = ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				int[] currentEquipped = ShiftStoneManager.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 				//If both are random, use standard randomization method
 				if (left == ShiftStonePrefs.Random && right == ShiftStonePrefs.Random)
 				{
-					ShiftStoneRandomizer.RandomizeStones(currentEquipped);
+					ShiftStoneManager.RandomizeStones(currentEquipped);
 
 				}
 				else
 				{
-					ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
+					ShiftStoneManager.EquipStones(new StoneItem(), new StoneItem());
 
 
 					for (int i = 0; i < 2; i++)
@@ -220,46 +220,46 @@ namespace ShiftStoneRandomizer
 						switch (eachHand[i])
 						{
 							case ShiftStonePrefs.Random:
-								ShiftStoneRandomizer.RandomizeStones(currentEquipped, (Hands)i);
+								ShiftStoneManager.RandomizeStones(currentEquipped, (Hands)i);
 								break;
 
 							case ShiftStonePrefs.Mirror:
-								if (ShiftStoneRandomizer.IsInMatch)
+								if (ShiftStoneManager.IsInMatch)
 								{
-									if (ShiftStoneRandomizer.Player1 != null)
+									if (ShiftStoneManager.Player1 != null)
 									{
-										/*int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+										/*int[] opponentEquipped = ShiftStoneManager.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 										NextSelection[0] = (ShiftStonePrefs)opponentEquipped[0];
 										NextSelection[1] = (ShiftStonePrefs)opponentEquipped[1];*/
-										int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+										int[] opponentEquipped = ShiftStoneManager.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 										
 
 										if (currentHand == Hands.Left)
 										{
-											ShiftStoneRandomizer.EquipStones(opponentEquipped[(int)Hands.Left] >= 0 ? StoneItem.AllStones[opponentEquipped[(int)Hands.Left]] : new StoneItem(), null);
+											ShiftStoneManager.EquipStones(opponentEquipped[(int)Hands.Left] >= 0 ? StoneItem.AllStones[opponentEquipped[(int)Hands.Left]] : new StoneItem(), null);
 										}
 										else if (currentHand == Hands.Right)
 										{
-											ShiftStoneRandomizer.EquipStones(null, opponentEquipped[(int)Hands.Right] >= 0 ? StoneItem.AllStones[opponentEquipped[(int)Hands.Right]] : new StoneItem());
+											ShiftStoneManager.EquipStones(null, opponentEquipped[(int)Hands.Right] >= 0 ? StoneItem.AllStones[opponentEquipped[(int)Hands.Right]] : new StoneItem());
 										}
 									}
 								}
 								break;
 
 							case ShiftStonePrefs.Stay:
-								ShiftStoneRandomizer.EquipStones(
+								ShiftStoneManager.EquipStones(
 									currentHand == Hands.Left ? StoneItem.AllStones[(int)currentEquipped[i]] : null,
 									currentHand == Hands.Right ? StoneItem.AllStones[(int)currentEquipped[i]] : null);
 								break;
 							case ShiftStonePrefs.Empty:
-								ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
+								ShiftStoneManager.EquipStones(new StoneItem(), new StoneItem());
 								break;
 							default:
 								if (i == 0)
 
-									ShiftStoneRandomizer.EquipStones(StoneItem.AllStones[(int)eachHand[i]], null);
+									ShiftStoneManager.EquipStones(StoneItem.AllStones[(int)eachHand[i]], null);
 								else if (i == 1)
-									ShiftStoneRandomizer.EquipStones(null, StoneItem.AllStones[(int)eachHand[i]]);
+									ShiftStoneManager.EquipStones(null, StoneItem.AllStones[(int)eachHand[i]]);
 								break;
 
 						}
@@ -356,13 +356,13 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		public static bool IsNextSelectionPrimed { get; set; } = true;
 
-		public static AutomationPrefs AutomationMode { get { return ShiftStoneRandomizer.AutomationMode; } set { ShiftStoneRandomizer.AutomationMode = value; } }
+		public static AutomationPrefs AutomationMode { get { return ShiftStoneManager.AutomationMode; } set { ShiftStoneManager.AutomationMode = value; } }
 		
 		public static void OnMatchLoad()
 		{
 			//only do matchload shift stone apply on first load into match
 			Debug.Log("LoadoutInteractor: OnMatchLoad called", true);
-			if (ShiftStoneRandomizer.IsFirstMatchLoad)
+			if (ShiftStoneManager.IsFirstMatchLoad)
 			{
 				AutoApply(true);
 				Debug.Log("LoadoutInteractor: OnMatchLoad applying stones for first match load", true);
@@ -392,25 +392,25 @@ namespace ShiftStoneRandomizer
 
 			if (AutomationMode == AutomationPrefs.Auto)
 			{
-				int hostStartIndex = ShiftStoneRandomizer.IsHost ? 2 : 0; //Invert host/client selection when in between matches to prepare for next match
+				int hostStartIndex = ShiftStoneManager.IsHost ? 2 : 0; //Invert host/client selection when in between matches to prepare for next match
 				if (isFirstMatchLoad) //Reverse selection if call is for first mapload
-					hostStartIndex = ShiftStoneRandomizer.IsHost ? 0 : 2;
+					hostStartIndex = ShiftStoneManager.IsHost ? 0 : 2;
 
-				int mapIndex = ShiftStoneRandomizer.CurrentLoadedScene == "map0" ? 0 : 1;
+				int mapIndex = ShiftStoneManager.CurrentLoadedScene == "map0" ? 0 : 1;
 
 				MainInteractor.SlotList[hostStartIndex + mapIndex].ApplyLoadOut();
 			}
 			else if (AutomationMode == AutomationPrefs.Mirror)
 			{
-				if (ShiftStoneRandomizer.Player1 != null)
+				if (ShiftStoneManager.Player1 != null)
 				{
-					int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-					ShiftStoneRandomizer.EquipStones(opponentEquipped[0] >= 0 ? StoneItem.AllStones[opponentEquipped[0]] : new StoneItem(), opponentEquipped[1] >= 0 ? StoneItem.AllStones[opponentEquipped[1]] : new StoneItem());
+					int[] opponentEquipped = ShiftStoneManager.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+					ShiftStoneManager.EquipStones(opponentEquipped[0] >= 0 ? StoneItem.AllStones[opponentEquipped[0]] : new StoneItem(), opponentEquipped[1] >= 0 ? StoneItem.AllStones[opponentEquipped[1]] : new StoneItem());
 				}
 			}
 			else if (AutomationMode == AutomationPrefs.Random)
 			{
-				ShiftStoneRandomizer.RandomizeStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration(), ShiftStoneRandomizer.EnabledHand);
+				ShiftStoneManager.RandomizeStones(ShiftStoneManager.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration(), ShiftStoneManager.EnabledHand);
 			}
 		}
 
@@ -426,8 +426,8 @@ namespace ShiftStoneRandomizer
 			sw.Start();
 			while(true)
 			{
-				selfEquipped = ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
-				opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();	
+				selfEquipped = ShiftStoneManager.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+				opponentEquipped = ShiftStoneManager.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();	
 
 				if(hand == Hands.Left || hand == Hands.Both)
 				{
@@ -446,14 +446,14 @@ namespace ShiftStoneRandomizer
 					//remove shift stone from other hand if already equipped
 					if((ShiftStonePrefs) selfEquipped[1] == left)
 					{
-						ShiftStoneRandomizer.EquipStones(ShiftStonePrefs.Empty, left);
+						ShiftStoneManager.EquipStones(ShiftStonePrefs.Empty, left);
 					}
 					if((ShiftStonePrefs) selfEquipped[0] == right)
 					{
-						ShiftStoneRandomizer.EquipStones(ShiftStonePrefs.Empty, right);
+						ShiftStoneManager.EquipStones(ShiftStonePrefs.Empty, right);
 					}
 
-					ShiftStoneRandomizer.EquipStones(left, right);
+					ShiftStoneManager.EquipStones(left, right);
 
 					sw.Restart();
 				}
@@ -537,7 +537,7 @@ namespace ShiftStoneRandomizer
 			if (item <= ShiftStonePrefs.Empty)
 			{
 				//Unequip shift stones when selecting indicators
-				ShiftStoneRandomizer.EquipStones(
+				ShiftStoneManager.EquipStones(
 					hand == Hands.Left ? new StoneItem() : null,
 					hand == Hands.Right ? new StoneItem() : null,
 					false);
@@ -569,7 +569,7 @@ namespace ShiftStoneRandomizer
 				StoneItem toEquip = currentEquipped[handIndex] == itemIndex ? new StoneItem() : StoneItem.AllStones[itemIndex];
 
 
-				ShiftStoneRandomizer.EquipStones(
+				ShiftStoneManager.EquipStones(
 					hand == Hands.Left ? toEquip : null,
 					hand == Hands.Right ? toEquip : null,
 					false);
@@ -612,16 +612,16 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		static LoadoutInteractor()
 		{
-			ButtonSource = ShiftStoneRandomizer.SmallButtonSource;
+			ButtonSource = ShiftStoneManager.SmallButtonSource;
 			ButtonSource.transform.GetChild(0).GetComponent<InteractionButton>().enabled = true;
 
 			ButtonSource.transform.localRotation = Quaternion.Euler(0f, 270f, 90f);
 			ButtonSource.transform.localPosition = Vector3.zero;
 			ButtonSource.SetActive(false);
-			ButtonSource.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform, false);
+			ButtonSource.transform.SetParent(ShiftStoneManager.DDOLParent.transform, false);
 
 			ClusterSource = new GameObject("Loadout Cluster");
-			ClusterSource.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform, false);
+			ClusterSource.transform.SetParent(ShiftStoneManager.DDOLParent.transform, false);
 
 			//Assign delegates for match flow
 
@@ -712,14 +712,14 @@ namespace ShiftStoneRandomizer
 		/// </summary>
 		public static List<MelonPreferences_Entry<string>> PrefList = new List<MelonPreferences_Entry<string>>()
 		{
-			ShiftStoneRandomizer.PrefMap0HostLeft,
-			ShiftStoneRandomizer.PrefMap0HostRight,
-			ShiftStoneRandomizer.PrefMap1HostLeft,
-			ShiftStoneRandomizer.PrefMap1HostRight,
-			ShiftStoneRandomizer.PrefMap0ClientLeft,
-			ShiftStoneRandomizer.PrefMap0ClientRight,
-			ShiftStoneRandomizer.PrefMap1ClientLeft,
-			ShiftStoneRandomizer.PrefMap1ClientRight,
+			ShiftStoneManager.PrefMap0HostLeft,
+			ShiftStoneManager.PrefMap0HostRight,
+			ShiftStoneManager.PrefMap1HostLeft,
+			ShiftStoneManager.PrefMap1HostRight,
+			ShiftStoneManager.PrefMap0ClientLeft,
+			ShiftStoneManager.PrefMap0ClientRight,
+			ShiftStoneManager.PrefMap1ClientLeft,
+			ShiftStoneManager.PrefMap1ClientRight,
 		};
 
 		/// <summary>

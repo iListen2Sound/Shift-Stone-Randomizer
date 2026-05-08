@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ShiftStoneRandomizer
+namespace ShiftStoneManager
 {
 	/// <summary>
 	/// Represents an item associated with a shift stone, providing functionality to manage its state and behavior.
@@ -16,10 +16,10 @@ namespace ShiftStoneRandomizer
 	/// globally through <see cref="BlackListCount"/>.</remarks>
 	public class StoneItem
 	{
-		private static GameObject ObjMirror = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(3).gameObject);
-		private static GameObject ObjStay = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(4).gameObject);
-		private static GameObject ObjRandom = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(5).gameObject);
-		private static GameObject ObjEmpty = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(6).gameObject);
+		private static GameObject ObjMirror = GameObject.Instantiate(ShiftStoneManager.IndicatorsBase.transform.GetChild(3).gameObject);
+		private static GameObject ObjStay = GameObject.Instantiate(ShiftStoneManager.IndicatorsBase.transform.GetChild(4).gameObject);
+		private static GameObject ObjRandom = GameObject.Instantiate(ShiftStoneManager.IndicatorsBase.transform.GetChild(5).gameObject);
+		private static GameObject ObjEmpty = GameObject.Instantiate(ShiftStoneManager.IndicatorsBase.transform.GetChild(6).gameObject);
 
 		public readonly static GameObject[] Specials = new GameObject[] {
 			ObjMirror, 
@@ -45,7 +45,7 @@ namespace ShiftStoneRandomizer
 			{
 				obj.transform.localScale = Vector3.one * 0.00015f;
 				obj.transform.localRotation = Quaternion.Euler(90f, 90f, 0);
-				obj.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform);
+				obj.transform.SetParent(ShiftStoneManager.DDOLParent.transform);
 				//GameObject.D=ontDestroyOnLoad(obj);
 				obj.SetActive(false);
 

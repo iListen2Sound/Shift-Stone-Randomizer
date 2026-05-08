@@ -11,7 +11,7 @@ using Il2CppSmartLocalization.Editor;
 using MelonLoader;
 using Il2CppTMPro;
 using UnityEngine.UI;
-namespace ShiftStoneRandomizer
+namespace ShiftStoneManager
 {
 	public class PortableCabinet : MelonMod
 	{
@@ -23,9 +23,9 @@ namespace ShiftStoneRandomizer
 		static PortableCabinet()
 		{
 			qssReplacementBase = GameObject.Instantiate(GameObjects.Gym.INTERACTABLES.Shiftstones.ShiftstoneQuickswapper.FloatingButton.InteractionButtonToggleVariant.GetGameObject());
-			qssReplacementBase.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform, false);
+			qssReplacementBase.transform.SetParent(ShiftStoneManager.DDOLParent.transform, false);
 			ShiftStoneBoxSource = GameObject.Instantiate(GameObjects.Gym.INTERACTABLES.Shiftstones.ShiftstoneCabinet.Cabinet.ShiftstoneBox___________.GetGameObject());
-			ShiftStoneBoxSource.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform, false);
+			ShiftStoneBoxSource.transform.SetParent(ShiftStoneManager.DDOLParent.transform, false);
 			qssReplacementBase.SetActive(false);
 			ShiftStoneBoxSource.SetActive(false);
 		}
@@ -50,7 +50,7 @@ namespace ShiftStoneRandomizer
 			if (leftHand == null || rightHand == null)
 				return;
 			
-			Hands hand = ShiftStoneRandomizer.EnabledHand;
+			Hands hand = ShiftStoneManager.EnabledHand;
 			Color disabled = new Color(1f, 1f, 1f, 0.25f);
 			Color enabled = new Color(1f, 1f, 1f, 1f);
 			switch (hand)
@@ -72,29 +72,29 @@ namespace ShiftStoneRandomizer
 
 		public void CycleHandLock()
 		{
-			ShiftStoneRandomizer.EnabledHand++;
-			if ((int)ShiftStoneRandomizer.EnabledHand > 1)
+			ShiftStoneManager.EnabledHand++;
+			if ((int)ShiftStoneManager.EnabledHand > 1)
 			{
-				ShiftStoneRandomizer.EnabledHand = (Hands)(-1);
+				ShiftStoneManager.EnabledHand = (Hands)(-1);
 			}
-			Hands hand = (Hands)ShiftStoneRandomizer.EnabledHand;
+			Hands hand = (Hands)ShiftStoneManager.EnabledHand;
 			Debug.Log($"Hand lock set to: {hand}", true);
 
 			switch (hand)
 			{
 				case Hands.Both:
-					ShiftStoneRandomizer.ActivateEffect(true, true);
+					ShiftStoneManager.ActivateEffect(true, true);
 					break;
 				case Hands.Left:
-					ShiftStoneRandomizer.ActivateEffect(true, false);
+					ShiftStoneManager.ActivateEffect(true, false);
 					break;
 				case Hands.Right:
-					ShiftStoneRandomizer.ActivateEffect(false, true);
+					ShiftStoneManager.ActivateEffect(false, true);
 					break;
 			}
 
-			ShiftStoneRandomizer.PrefEnabledHand.Value = ShiftStoneRandomizer.EnabledHand.ToString();
-			ShiftStoneRandomizer.CatSettings.SaveToFile();
+			ShiftStoneManager.PrefEnabledHand.Value = ShiftStoneManager.EnabledHand.ToString();
+			ShiftStoneManager.CatSettings.SaveToFile();
 
 			ShowRandomedHand();
 		}
@@ -129,7 +129,7 @@ namespace ShiftStoneRandomizer
 
 
 			GameObject automationButton = GameObject.Instantiate(LoadoutInteractor.ButtonSource);
-			GameObject automationButtonLabel = Create.NewText($"Auto Mode\n{ShiftStoneRandomizer.AutomationMode.ToString()}", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
+			GameObject automationButtonLabel = Create.NewText($"Auto Mode\n{ShiftStoneManager.AutomationMode.ToString()}", 0.2f, Color.white, new Vector3(0.0f, 0.0f, 0f), Quaternion.Euler(0, 0, 0));
 			automationButtonLabel.name = "AutomationLabel";
 			automationButtonLabel.GetComponent<TextMeshPro>().alignment = TextAlignmentOptions.Center;
 			automationButtonLabel.transform.SetParent(automationButton.transform, false);
@@ -144,20 +144,20 @@ namespace ShiftStoneRandomizer
 			automationButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
 			automationButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				int nextAutomationMode = (int)ShiftStoneRandomizer.AutomationMode + 1;
+				int nextAutomationMode = (int)ShiftStoneManager.AutomationMode + 1;
 				if (nextAutomationMode > (int)AutomationPrefs.Mirror)
 				{
-					ShiftStoneRandomizer.AutomationMode = AutomationPrefs.None;
+					ShiftStoneManager.AutomationMode = AutomationPrefs.None;
 				}
 				else
 				{
-					ShiftStoneRandomizer.AutomationMode = (AutomationPrefs)nextAutomationMode;
+					ShiftStoneManager.AutomationMode = (AutomationPrefs)nextAutomationMode;
 				}
-				ShiftStoneRandomizer.PrefAutomation.Value = ShiftStoneRandomizer.AutomationMode.ToString();
-				ShiftStoneRandomizer.CatSettings.SaveToFile();
+				ShiftStoneManager.PrefAutomation.Value = ShiftStoneManager.AutomationMode.ToString();
+				ShiftStoneManager.CatSettings.SaveToFile();
 				Debug.PrintInGame($"Automation Mode: {LoadoutInteractor.AutomationMode}");
 
-				automationButtonLabel.GetComponent<TextMeshPro>().text = $"Auto Mode\n{ShiftStoneRandomizer.AutomationMode.ToString()}";
+				automationButtonLabel.GetComponent<TextMeshPro>().text = $"Auto Mode\n{ShiftStoneManager.AutomationMode.ToString()}";
 
 
 			});
@@ -180,7 +180,7 @@ namespace ShiftStoneRandomizer
 			clearButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
 			clearButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				ShiftStoneRandomizer.EquipStones(new StoneItem(), new StoneItem());
+				ShiftStoneManager.EquipStones(new StoneItem(), new StoneItem());
 
 			});
 
@@ -202,11 +202,11 @@ namespace ShiftStoneRandomizer
 			copyButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
 
-				if (ShiftStoneRandomizer.Player1 != null)
+				if (ShiftStoneManager.Player1 != null)
 				{
-					int[] opponentEquipped = ShiftStoneRandomizer.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
+					int[] opponentEquipped = ShiftStoneManager.Player1.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration();
 
-					ShiftStoneRandomizer.EquipStones(opponentEquipped[0] == -1 ? new StoneItem() : StoneItem.AllStones[opponentEquipped[0]],
+					ShiftStoneManager.EquipStones(opponentEquipped[0] == -1 ? new StoneItem() : StoneItem.AllStones[opponentEquipped[0]],
 													 opponentEquipped[1] == -1 ? new StoneItem() : StoneItem.AllStones[opponentEquipped[1]]);
 
 				}
@@ -228,8 +228,8 @@ namespace ShiftStoneRandomizer
 			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().enabled = true;
 			blackListButton.transform.GetChild(0).gameObject.GetComponent<InteractionButton>().onPressed.AddListener((System.Action)delegate
 			{
-				ShiftStoneRandomizer.ToggleStones(ShiftStoneRandomizer.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
-				ShiftStoneRandomizer.ActivateEffect(true, true);
+				ShiftStoneManager.ToggleStones(ShiftStoneManager.Player0.GetComponent<PlayerShiftstoneSystem>().GetCurrentShiftStoneConfiguration());
+				ShiftStoneManager.ActivateEffect(true, true);
 			});
 
 
@@ -254,7 +254,7 @@ namespace ShiftStoneRandomizer
 
 				if (i < 8)
 				{
-					StoneItem.AllStones[i].AddIcon(ShiftStoneRandomizer.CreateBlackListIcons(box));
+					StoneItem.AllStones[i].AddIcon(ShiftStoneManager.CreateBlackListIcons(box));
 				}
 
 				GameObject replacementText = Create.NewText(currentStonePref.ToString(), 0.2f, Color.white, new Vector3(0.0f, -0.0f, 0f), Quaternion.Euler(0, 0, 0));
@@ -316,9 +316,9 @@ namespace ShiftStoneRandomizer
 			//284.9999 315.0001 150
 			handHolder.transform.localRotation = Quaternion.Euler(285f, 315f, 150f);
 
-			leftHand = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(2).gameObject);
+			leftHand = GameObject.Instantiate(ShiftStoneManager.IndicatorsBase.transform.GetChild(2).gameObject);
 
-			rightHand = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(1).gameObject);
+			rightHand = GameObject.Instantiate(ShiftStoneManager.IndicatorsBase.transform.GetChild(1).gameObject);
 
 			leftHand.transform.SetParent(handHolder.transform, false);
 			//-0.18 0.01 0.05
@@ -365,8 +365,8 @@ namespace ShiftStoneRandomizer
 		}
 		Hands FindCulprit(GameObject selectedButton)
 		{
-			float leftDist = Vector3.Distance(ShiftStoneRandomizer.leftPoint.transform.position, selectedButton.transform.position);
-			float rightDist = Vector3.Distance(ShiftStoneRandomizer.rightPoint.transform.position, selectedButton.transform.position);
+			float leftDist = Vector3.Distance(ShiftStoneManager.leftPoint.transform.position, selectedButton.transform.position);
+			float rightDist = Vector3.Distance(ShiftStoneManager.rightPoint.transform.position, selectedButton.transform.position);
 
 			Debug.Log($"LeftDist: {leftDist} RightDist: {rightDist}", true);
 

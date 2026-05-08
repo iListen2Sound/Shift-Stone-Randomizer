@@ -21,13 +21,13 @@ using UnityEngine.UI;
 using Action = System.Action;
 using Type = Il2CppSystem.Type;
 
-namespace ShiftStoneRandomizer
+namespace ShiftStoneManager
 {
 	
-	public partial class ShiftStoneRandomizer : MelonMod
+	public partial class ShiftStoneManager : MelonMod
 	{
-		public static ShiftStoneRandomizer Instance { get; private set; }
-		//private const string USER_DATA = "Userdata/ShiftStoneRandomizer/";
+		public static ShiftStoneManager Instance { get; private set; }
+		//private const string USER_DATA = "Userdata/ShiftStoneManager/";
 
 
 		private const string BLACKLIST_FILE = "blacklist.txt";
@@ -163,7 +163,7 @@ namespace ShiftStoneRandomizer
 				{
 					DDOLParent = new GameObject("ShiftStoneRandomizer_DDOLParent");
 					GameObject.DontDestroyOnLoad(DDOLParent);
-					IndicatorsBase = GameObject.Instantiate(AssetBundles.LoadAssetFromStream<GameObject>(this, "ShiftStoneRandomizer.assets.randomizer", "ShiftstoneRandomizer"));
+					IndicatorsBase = GameObject.Instantiate(AssetBundles.LoadAssetFromStream<GameObject>(this, "ShiftStoneManager.assets.randomizer", "ShiftstoneRandomizer"));
 					IndicatorsBase.transform.SetParent(DDOLParent.transform);
 					//GameObject.D=ontDestroyOnLoad(IndicatorsBase);
 					IndicatorsBase.SetActive(false);

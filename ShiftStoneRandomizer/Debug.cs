@@ -4,7 +4,7 @@ using RumbleModdingAPI;
 using RumbleModdingAPI.RMAPI;
 using UnityEngine;
 
-namespace ShiftStoneRandomizer
+namespace ShiftStoneManager
 {
 	public static class Debug
 	{
@@ -24,13 +24,13 @@ namespace ShiftStoneRandomizer
 			switch (logLevel)
 			{
 				case 1:
-					Melon<ShiftStoneRandomizer>.Logger.Warning("Warn: " + message);
+					Melon<ShiftStoneManager>.Logger.Warning("Warn: " + message);
 					break;
 				case 2:
-					Melon<ShiftStoneRandomizer>.Logger.Error("Error: " + message);
+					Melon<ShiftStoneManager>.Logger.Error("Error: " + message);
 					break;
 				default:
-					Melon<ShiftStoneRandomizer>.Logger.Msg(message);
+					Melon<ShiftStoneManager>.Logger.Msg(message);
 					break;
 			}
 

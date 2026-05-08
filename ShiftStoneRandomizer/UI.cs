@@ -8,12 +8,12 @@ using UnityEngine.InputSystem.Utilities;
 using RumbleModdingAPI.RMAPI;
 using System.Linq;
 
-namespace ShiftStoneRandomizer
+namespace ShiftStoneManager
 {
 	/// <summary>
 	/// 
 	/// </summary>
-	public partial class ShiftStoneRandomizer : MelonMod
+	public partial class ShiftStoneManager : MelonMod
 	{
 		#region UI
 

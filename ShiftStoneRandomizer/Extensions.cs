@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace ShiftStoneRandomizer
+namespace ShiftStoneManager
 {
 	public static class Extensions
 	{

@@ -3,12 +3,12 @@ using MelonLoader;
 
 using System.IO;
 
-namespace ShiftStoneRandomizer
+namespace ShiftStoneManager
 {
 
-	public partial class ShiftStoneRandomizer : MelonMod
+	public partial class ShiftStoneManager : MelonMod
 	{
-		private const string USER_DATA = "UserData/ShiftStoneRandomizer/";
+		private const string USER_DATA = "UserData/ShiftStoneManager/";
 		private const string CONFIG_FILE = "config.cfg";
 
 		public static MelonPreferences_Category CatSettings;

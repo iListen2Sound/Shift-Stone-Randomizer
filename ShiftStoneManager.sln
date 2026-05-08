@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.6.11723.189 insiders
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftStoneRandomizer", "ShiftStoneRandomizer\ShiftStoneRandomizer.csproj", "{F1B108B0-EC9A-4B69-ACCA-82B8509EA7B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftStoneManager", "ShiftStoneRandomizer\ShiftStoneManager.csproj", "{F1B108B0-EC9A-4B69-ACCA-82B8509EA7B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
