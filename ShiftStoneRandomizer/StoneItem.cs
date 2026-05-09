@@ -77,7 +77,12 @@ namespace ShiftStoneManager
 				//null ref
 				try
 				{
-					return GameObject.Instantiate(AllStones[(int)stoneEnum].ShiftStone.gameObject);
+					GameObject stone = GameObject.Instantiate(AllStones[(int)stoneEnum].ShiftStone.gameObject);
+					MeshRenderer mesh = stone.transform.GetChild(0).GetComponent<MeshRenderer>();
+					mesh.forceRenderingOff = false;
+					mesh.enabled = true;
+
+					return stone;
 				}
 				catch (System.Exception ex)
 				{
@@ -214,7 +219,7 @@ namespace ShiftStoneManager
 		/// <param name="shiftStone"></param>
 		public StoneItem(ShiftStone shiftStone)
 		{
-			shiftStone.gameObject.SetActive(false);// Disable the stone so it doesn't show up in the game
+			//shiftStone.gameObject.SetActive(false);// Disable the stone so it doesn't show up in the game
 			ShiftStone = shiftStone;
 			_isEnabled = true;
 		}
