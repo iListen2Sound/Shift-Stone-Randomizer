@@ -260,7 +260,8 @@ namespace ShiftStoneManager
 				GameObject replacementText = Create.NewText(currentStonePref.ToString(), 0.2f, Color.white, new Vector3(0.0f, -0.0f, 0f), Quaternion.Euler(0, 0, 0));
 				replacementText.name = "ReplacementLabel";
 				replacementText.transform.SetParent(box.transform, false);
-				replacementText.transform.localPosition = new Vector3(-0.03f, -0.04f, -0.332f);
+				//-0.02 -0.04 0.002
+				replacementText.transform.localPosition = new Vector3(-0.02f, -0.03f, 0.002f);
 				replacementText.transform.localRotation = Quaternion.Euler(0, 90, 0);
 
 				GameObject boxDisplay = StoneItem.GetDisplayObject(currentStonePref);
