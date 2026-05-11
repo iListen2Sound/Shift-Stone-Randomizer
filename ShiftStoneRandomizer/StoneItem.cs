@@ -50,17 +50,22 @@ namespace ShiftStoneManager
 				obj.SetActive(false);
 
 			}
+
+			foreach (StoneItem stone in AllStones)
+			{
+				stone.ShiftStone.gameObject.SetActive(false);
+			}
 		}
 
 		public static StoneItem[] AllStones = new StoneItem[] {
-				new StoneItem(PoolManager.Instance.GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
+				new StoneItem(PoolManager.Instance.GetPooledObject("AdamantStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("ChargeStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("FlowStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("GuardStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("StubbornStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("SurgeStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("VigorStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("VolatileStone").gameObject.GetComponent<ShiftStone>())
 			};
 
 
@@ -114,14 +119,14 @@ namespace ShiftStoneManager
 		public static StoneItem[] RecreateStoneItems()
 		{
 			StoneItem[] NewStones = new StoneItem[] {
-				new StoneItem(PoolManager.Instance.GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
-				new StoneItem(PoolManager.Instance.GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
+				new StoneItem(PoolManager.Instance.GetPooledObject("AdamantStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("ChargeStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("FlowStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("GuardStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("StubbornStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("SurgeStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("VigorStone").gameObject.GetComponent<ShiftStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("VolatileStone").gameObject.GetComponent<ShiftStone>())
 			};
 			AllStones = NewStones;
 			return NewStones;
@@ -220,7 +225,10 @@ namespace ShiftStoneManager
 		public StoneItem(ShiftStone shiftStone)
 		{
 			//shiftStone.gameObject.SetActive(false);// Disable the stone so it doesn't show up in the game
-			ShiftStone = shiftStone;
+			ShiftStone = GameObject.Instantiate(shiftStone).GetComponent<ShiftStone>();
+			shiftStone.ReturnToPool();
+			ShiftStone.returnToPoolTimed = false;
+			GameObject.DontDestroyOnLoad(ShiftStone.gameObject);
 			_isEnabled = true;
 		}
 		/// <summary>
