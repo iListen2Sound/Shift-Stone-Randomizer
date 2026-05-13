@@ -24,9 +24,6 @@
 	<ItemGroup>
 		<EmbeddedResource Include="assets\randomizer" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="src\" />
-	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<!--Copy to mods folder-->

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace ShiftStoneManager
+namespace ShiftStoneManager.src.Helpers
 {
 	public static class Extensions
 	{

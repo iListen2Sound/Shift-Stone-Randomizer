@@ -4,7 +4,7 @@ using RumbleModdingAPI;
 using RumbleModdingAPI.RMAPI;
 using UnityEngine;
 
-namespace ShiftStoneManager
+namespace ShiftStoneManager.src.Helpers
 {
 	public static class Debug
 	{
@@ -15,7 +15,7 @@ namespace ShiftStoneManager
 		/// <param name="message">Message</param>
 		/// <param name="debugOnly">If true, the message is skipped when not in debug mode</param>
 		/// <param name="logLevel">0 = standard message, 1 = Warning, 2 = Error</param>
-		public static void Log(string message, bool debugOnly = false, int logLevel = 0)
+		public static void Log(string message, bool debugOnly = true, int logLevel = 0)
 		{
 
 			if (debugOnly && !debugMode)
@@ -24,13 +24,13 @@ namespace ShiftStoneManager
 			switch (logLevel)
 			{
 				case 1:
-					Melon<ShiftStoneManager>.Logger.Warning("Warn: " + message);
+					Melon<Core>.Logger.Warning("Warn: " + message);
 					break;
 				case 2:
-					Melon<ShiftStoneManager>.Logger.Error("Error: " + message);
+					Melon<Core>.Logger.Error("Error: " + message);
 					break;
 				default:
-					Melon<ShiftStoneManager>.Logger.Msg(message);
+					Melon<Core>.Logger.Msg(message);
 					break;
 			}
 
