@@ -4,7 +4,7 @@ using RumbleModdingAPI;
 using RumbleModdingAPI.RMAPI;
 using UnityEngine;
 
-namespace ShiftStoneManager.src.Helpers
+namespace ShiftStoneManager
 {
 	public static class Debug
 	{

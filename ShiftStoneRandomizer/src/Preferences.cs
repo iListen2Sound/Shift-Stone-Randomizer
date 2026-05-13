@@ -50,7 +50,7 @@ namespace ShiftStoneManager
 
 			CatSettings = MelonPreferences.CreateCategory("ShiftStoneManager_General", "Preferences");
 			CatSettings.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-			PrefDebugMode = CatSettings.CreateEntry("Debug Mode", false, "Enable Debug Mode", "Enable for more verbose logging");
+			PrefDebugMode = CatSettings.CreateEntry("Debug Mode", true, "Enable Debug Mode", "Enable for more verbose logging");
 			PrefEnabledHand = CatSettings.CreateEntry("RandomHand", Hands.Both, "Randomized Hand", "Hand where randomization is Enabled");
 			PrefAutomation = CatSettings.CreateEntry("AutoMode", AutomationPrefs.None, "Auto-Equip Mode", "Random: Randomize every match | Auto: Based on Map automation config | Mirror: Copy opponent's shift stones | None: No action");
 

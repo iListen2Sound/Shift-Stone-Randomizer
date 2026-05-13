@@ -35,4 +35,13 @@ namespace ShiftStoneManager
 		Mirror
 
 	}
+	
+	public enum Scenes
+	{
+		Loader = 0,
+		Gym = 1,
+		Park = 2,
+		Map0 = 3,
+		Map1 = 4,
+	}
 }
