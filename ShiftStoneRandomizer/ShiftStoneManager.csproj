@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	  <TargetFramework>net6.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    
+    <AssemblyTitle>ShiftStoneRandomizer</AssemblyTitle>
+    <Product>ShiftStoneRandomizer</Product>
+    <Copyright>Copyright ©  2025</Copyright>
+  </PropertyGroup>
+	<ItemGroup>
+		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net6\**\*.dll" Private="false" />
+		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net35\**\*.dll" Private="false" />
+		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\Il2CppAssemblies\**\*.dll" Private="false" />
+		<Reference Include="OBS_Control_API">
+			<HintPath>G:\SteamLibrary\steamapps\common\RUMBLE\Mods\OBS_Control_API.dll</HintPath>
+		</Reference>
+		<Reference Include="RumbleModdingAPI">
+			<HintPath>G:\SteamLibrary\steamapps\common\RUMBLE\Mods\RumbleModdingAPI.dll</HintPath>
+		</Reference>
+		<Reference Include="OBS_Control_API">
+			<HintPath>G:\SteamLibrary\steamapps\common\RUMBLE\Mods\UIFramework.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="assets\glasses" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="assets\randomizer" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="copy &quot;$(TargetPath)&quot; &quot;G:\SteamLibrary\steamapps\common\RUMBLE\Mods\$(TargetFileName)&quot;" />
+	</Target>
+</Project>

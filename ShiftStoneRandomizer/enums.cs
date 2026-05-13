@@ -1,6 +1,6 @@
 ﻿
 
-namespace ShiftStoneRandomizer
+namespace ShiftStoneManager
 {
 	public enum Hands
 	{

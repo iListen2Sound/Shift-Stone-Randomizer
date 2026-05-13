@@ -1,13 +1,20 @@
 ﻿using MelonLoader;
 using Il2CppTMPro;
 using RumbleModdingAPI;
+using RumbleModdingAPI.RMAPI;
 using UnityEngine;
 
-namespace ShiftStoneRandomizer
+namespace ShiftStoneManager
 {
 	public static class Debug
 	{
 		public static bool debugMode { get; set; } = true;
+		/// <summary>
+		/// Prints a message to the melonloader console with a specified log level and option to only show it in debug mode
+		/// </summary>
+		/// <param name="message">Message</param>
+		/// <param name="debugOnly">If true, the message is skipped when not in debug mode</param>
+		/// <param name="logLevel">0 = standard message, 1 = Warning, 2 = Error</param>
 		public static void Log(string message, bool debugOnly = false, int logLevel = 0)
 		{
 
@@ -17,13 +24,13 @@ namespace ShiftStoneRandomizer
 			switch (logLevel)
 			{
 				case 1:
-					Melon<ShiftStoneRandomizer>.Logger.Warning("Warn: " + message);
+					Melon<ShiftStoneManager>.Logger.Warning("Warn: " + message);
 					break;
 				case 2:
-					Melon<ShiftStoneRandomizer>.Logger.Error("Error: " + message);
+					Melon<ShiftStoneManager>.Logger.Error("Error: " + message);
 					break;
 				default:
-					Melon<ShiftStoneRandomizer>.Logger.Msg(message);
+					Melon<ShiftStoneManager>.Logger.Msg(message);
 					break;
 			}
 
@@ -33,7 +40,7 @@ namespace ShiftStoneRandomizer
 		public static TextMeshPro DebugUiText { get; private set; }
 		public static GameObject CreateDebugUi(GameObject PlayerUi)
 		{
-			DebugUi = Calls.Create.NewText("Placeholder text.", 1f, Color.white, new Vector3(0f, 0.1f, 1f), Quaternion.Euler(0, 0, 0));
+			DebugUi = Create.NewText("Placeholder text.", 1f, Color.white, new Vector3(0f, 0.1f, 1f), Quaternion.Euler(0, 0, 0));
 			DebugUi.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
 			DebugUi.transform.localPosition = new Vector3(0f, 0.1f, 0.96f);
 			DebugUi.transform.SetParent(PlayerUi.transform, false);

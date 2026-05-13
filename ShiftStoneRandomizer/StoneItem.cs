@@ -1,11 +1,12 @@
 
 using Il2CppRUMBLE.Combat.ShiftStones;
+using Il2CppRUMBLE.Managers;
 using RumbleModdingAPI;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ShiftStoneRandomizer
+namespace ShiftStoneManager
 {
 	/// <summary>
 	/// Represents an item associated with a shift stone, providing functionality to manage its state and behavior.
@@ -15,10 +16,10 @@ namespace ShiftStoneRandomizer
 	/// globally through <see cref="BlackListCount"/>.</remarks>
 	public class StoneItem
 	{
-		private static GameObject ObjMirror = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(3).gameObject);
-		private static GameObject ObjStay = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(4).gameObject);
-		private static GameObject ObjRandom = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(5).gameObject);
-		private static GameObject ObjEmpty = GameObject.Instantiate(ShiftStoneRandomizer.IndicatorsBase.transform.GetChild(6).gameObject);
+		private static GameObject ObjMirror = GameObject.Instantiate(ShiftStoneManager.IndicatorsBase.transform.GetChild(3).gameObject);
+		private static GameObject ObjStay = GameObject.Instantiate(ShiftStoneManager.IndicatorsBase.transform.GetChild(4).gameObject);
+		private static GameObject ObjRandom = GameObject.Instantiate(ShiftStoneManager.IndicatorsBase.transform.GetChild(5).gameObject);
+		private static GameObject ObjEmpty = GameObject.Instantiate(ShiftStoneManager.IndicatorsBase.transform.GetChild(6).gameObject);
 
 		public readonly static GameObject[] Specials = new GameObject[] {
 			ObjMirror, 
@@ -44,22 +45,27 @@ namespace ShiftStoneRandomizer
 			{
 				obj.transform.localScale = Vector3.one * 0.00015f;
 				obj.transform.localRotation = Quaternion.Euler(90f, 90f, 0);
-				obj.transform.SetParent(ShiftStoneRandomizer.DDOLParent.transform);
+				obj.transform.SetParent(ShiftStoneManager.DDOLParent.transform);
 				//GameObject.D=ontDestroyOnLoad(obj);
 				obj.SetActive(false);
 
 			}
+
+			foreach (StoneItem stone in AllStones)
+			{
+				stone.ShiftStone.gameObject.SetActive(false);
+			}
 		}
 
 		public static StoneItem[] AllStones = new StoneItem[] {
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
+				new StoneItem(PoolManager.Instance.GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
 			};
 
 
@@ -76,7 +82,12 @@ namespace ShiftStoneRandomizer
 				//null ref
 				try
 				{
-					return GameObject.Instantiate(AllStones[(int)stoneEnum].ShiftStone.gameObject);
+					GameObject stone = GameObject.Instantiate(AllStones[(int)stoneEnum].ShiftStone.gameObject);
+					MeshRenderer mesh = stone.transform.GetChild(0).GetComponent<MeshRenderer>();
+					mesh.forceRenderingOff = false;
+					mesh.enabled = true;
+
+					return stone;
 				}
 				catch (System.Exception ex)
 				{
@@ -108,14 +119,14 @@ namespace ShiftStoneRandomizer
 		public static StoneItem[] RecreateStoneItems()
 		{
 			StoneItem[] NewStones = new StoneItem[] {
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
-				new StoneItem(Calls.Managers.GetPoolManager().GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
+				new StoneItem(PoolManager.Instance.GetPooledObject("AdamantStone").gameObject.GetComponent<UnyieldingStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("ChargeStone").gameObject.GetComponent<ChargeStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("FlowStone").gameObject.GetComponent<FlowStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("GuardStone").gameObject.GetComponent<GuardStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("StubbornStone").gameObject.GetComponent<StubbornStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("SurgeStone").gameObject.GetComponent<CounterStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("VigorStone").gameObject.GetComponent<VigorStone>()),
+				new StoneItem(PoolManager.Instance.GetPooledObject("VolatileStone").gameObject.GetComponent<VolatileStone>())
 			};
 			AllStones = NewStones;
 			return NewStones;
@@ -213,7 +224,7 @@ namespace ShiftStoneRandomizer
 		/// <param name="shiftStone"></param>
 		public StoneItem(ShiftStone shiftStone)
 		{
-			shiftStone.gameObject.SetActive(false);// Disable the stone so it doesn't show up in the game
+			//shiftStone.gameObject.SetActive(false);// Disable the stone so it doesn't show up in the game
 			ShiftStone = shiftStone;
 			_isEnabled = true;
 		}
