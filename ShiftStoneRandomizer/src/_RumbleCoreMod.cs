@@ -16,12 +16,13 @@ namespace ShiftStoneManager
 	
 	public class Core : MelonMod
 	{
-		public Core Instance => this;
+		public static Core Instance;
 
 		internal static Scenes Scene;
 		internal static bool IsFirstLoad = true;
 		public override void OnInitializeMelon()
 		{
+			Instance = this;
 			Preferences.InitPreferences();
 
 			UI.RegisterMelon(this, Preferences.CatEnabledStones, Preferences.CatSettings, Preferences.CatMap0, Preferences.CatMap1);
@@ -39,7 +40,19 @@ namespace ShiftStoneManager
 		}
 		public void OnMapInitialized(string scene)
 		{
+			if (IsFirstLoad)
+				FirstLoad();
+		}
 
+		public void FirstLoad()
+		{
+
+			if(Scene == Scenes.Gym)
+			{
+				Prefabs.InitializePrefabs();
+			}
+
+			IsFirstLoad = false;
 		}
 	}
 }
