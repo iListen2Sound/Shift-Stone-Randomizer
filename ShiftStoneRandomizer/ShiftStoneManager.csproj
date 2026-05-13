@@ -14,12 +14,8 @@
 		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net6\**\*.dll" Private="false" />
 		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net35\**\*.dll" Private="false" />
 		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\Il2CppAssemblies\**\*.dll" Private="false" />
-		<Reference Include="OBS_Control_API">
-			<HintPath>G:\SteamLibrary\steamapps\common\RUMBLE\Mods\OBS_Control_API.dll</HintPath>
-		</Reference>
-		<Reference Include="RumbleModdingAPI">
-			<HintPath>G:\SteamLibrary\steamapps\common\RUMBLE\Mods\RumbleModdingAPI.dll</HintPath>
-		</Reference>
+		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\Mods\RumbleModdingAPI.dll" Private ="false" />
+		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\Mods\UIFramework.dll" Private ="false" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="assets\randomizer" />

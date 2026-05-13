@@ -2,7 +2,7 @@
 using MelonLoader;
 using ShiftStoneManager.src.Helpers;
 using System.IO;
-
+using UIFramework;
 namespace ShiftStoneManager
 {
 
@@ -80,6 +80,7 @@ namespace ShiftStoneManager
 			PrefMap1ClientLeft = CatMap1.CreateEntry("PitLeftClient: ", ShiftStonePrefs.Random, "Pit Left Hand for Client: ", "[Preferred Stone] | Random | Mirror | Empty");
 			PrefMap1ClientRight = CatMap1.CreateEntry("PitRightClient: ", ShiftStonePrefs.Random, "Pit Right Hand for Client: ", "[Preferred Stone] | Random | Mirror | Empty");
 
+			
 		}
 	}
 }
