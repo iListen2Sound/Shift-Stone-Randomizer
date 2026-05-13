@@ -8,13 +8,13 @@ namespace ShiftStoneManager
 
 	public class Preferences : MelonMod
 	{
-		private const string USER_DATA = "UserData/Core/";
-		private const string CONFIG_FILE = "config.cfg";
+		private const string USER_DATA = "UserData/ShiftStoneManager/";
+		private const string CONFIG_FILE = "Manager.cfg";
 
 		public static MelonPreferences_Category CatSettings;
 		public static MelonPreferences_Entry<bool> CatDebugMode;
-		public static MelonPreferences_Entry<string> PrefEnabledHand;
-		public static MelonPreferences_Entry<string> PrefAutomation;
+		public static MelonPreferences_Entry<Hands> PrefEnabledHand;
+		public static MelonPreferences_Entry<AutomationPrefs> PrefAutomation;
 
 
 		private static MelonPreferences_Category CatEnabledStones;
@@ -28,18 +28,16 @@ namespace ShiftStoneManager
 		public static MelonPreferences_Entry<bool> PrefVolitile;
 
 		private static MelonPreferences_Category CatMap0;
-		public static MelonPreferences_Entry<string> PrefMap0HostLeft { get; private set; }
-		public static MelonPreferences_Entry<string> PrefMap0HostRight { get; private set; }
-		public static MelonPreferences_Entry<string> PrefMap0ClientLeft { get; private set; }
-		public static MelonPreferences_Entry<string> PrefMap0ClientRight { get; private set; }
+		public static MelonPreferences_Entry<ShiftStonePrefs> PrefMap0HostLeft { get; private set; }
+		public static MelonPreferences_Entry<ShiftStonePrefs> PrefMap0HostRight { get; private set; }
+		public static MelonPreferences_Entry<ShiftStonePrefs> PrefMap0ClientLeft { get; private set; }
+		public static MelonPreferences_Entry<ShiftStonePrefs> PrefMap0ClientRight { get; private set; }
 
 		private static MelonPreferences_Category CatMap1;
-		public static MelonPreferences_Entry<string> PrefMap1HostLeft { get; private set; }
-		public static MelonPreferences_Entry<string> PrefMap1HostRight { get; private set; }
-		public static MelonPreferences_Entry<string> PrefMap1ClientLeft { get; private set; }
-		public static MelonPreferences_Entry<string> PrefMap1ClientRight { get; private set; }
-
-		public static AutomationPrefs AutomationMode;
+		public static MelonPreferences_Entry<ShiftStonePrefs> PrefMap1HostLeft { get; private set; }
+		public static MelonPreferences_Entry<ShiftStonePrefs> PrefMap1HostRight { get; private set; }
+		public static MelonPreferences_Entry<ShiftStonePrefs> PrefMap1ClientLeft { get; private set; }
+		public static MelonPreferences_Entry<ShiftStonePrefs> PrefMap1ClientRight { get; private set; }
 
 
 		private static void InitPreferences()
@@ -53,8 +51,8 @@ namespace ShiftStoneManager
 			CatSettings = MelonPreferences.CreateCategory("Preferences");
 			CatSettings.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
 			CatDebugMode = CatSettings.CreateEntry("Enable Debug Mode", false, null, "Enable for more verbose logging");
-			PrefEnabledHand = CatSettings.CreateEntry("Randomized Hand", "Both", null, "Hand where randomization is Enabled");
-			PrefAutomation = CatSettings.CreateEntry("Auto-Equip Mode", "Random", null, "Random: Randomize every match | Auto: Based on Map automation config | Mirror: Copy opponent's shift stones | None: No action");
+			PrefEnabledHand = CatSettings.CreateEntry("Randomized Hand", Hands.Both, null, "Hand where randomization is Enabled");
+			PrefAutomation = CatSettings.CreateEntry("Auto-Equip Mode", AutomationPrefs.None, null, "Random: Randomize every match | Auto: Based on Map automation config | Mirror: Copy opponent's shift stones | None: No action");
 
 			CatEnabledStones = MelonPreferences.CreateCategory("Enabled Stones", "Black List");
 			CatEnabledStones.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
@@ -70,17 +68,17 @@ namespace ShiftStoneManager
 
 			CatMap0 = MelonPreferences.CreateCategory("Ring Automation Settings");
 			CatMap0.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-			PrefMap0HostLeft = CatMap0.CreateEntry("Ring Left Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
-			PrefMap0HostRight = CatMap0.CreateEntry("Ring Right Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
-			PrefMap0ClientLeft = CatMap0.CreateEntry("Ring Left Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
-			PrefMap0ClientRight = CatMap0.CreateEntry("Ring Right Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap0HostLeft = CatMap0.CreateEntry("Ring Left Hand for Host: ", ShiftStonePrefs.Random, null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap0HostRight = CatMap0.CreateEntry("Ring Right Hand for Host: ", ShiftStonePrefs.Random, null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap0ClientLeft = CatMap0.CreateEntry("Ring Left Hand for Client: ", ShiftStonePrefs.Random, null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap0ClientRight = CatMap0.CreateEntry("Ring Right Hand for Client: ", ShiftStonePrefs.Random, null, "[Preferred Stone] | Random | Mirror | Empty");
 
 			CatMap1 = MelonPreferences.CreateCategory("Pit Automation Settings");
 			CatMap1.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-			PrefMap1HostLeft = CatMap1.CreateEntry("Pit Left Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
-			PrefMap1HostRight = CatMap1.CreateEntry("Pit Right Hand for Host: ", "Random", null, "[Preferred Stone] | Random | Mirror| Empty");
-			PrefMap1ClientLeft = CatMap1.CreateEntry("Pit Left Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
-			PrefMap1ClientRight = CatMap1.CreateEntry("Pit Right Hand for Client: ", "Random", null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap1HostLeft = CatMap1.CreateEntry("Pit Left Hand for Host: ", ShiftStonePrefs.Random, null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap1HostRight = CatMap1.CreateEntry("Pit Right Hand for Host: ", ShiftStonePrefs.Random, null, "[Preferred Stone] | Random | Mirror| Empty");
+			PrefMap1ClientLeft = CatMap1.CreateEntry("Pit Left Hand for Client: ", ShiftStonePrefs.Random, null, "[Preferred Stone] | Random | Mirror | Empty");
+			PrefMap1ClientRight = CatMap1.CreateEntry("Pit Right Hand for Client: ", ShiftStonePrefs.Random, null, "[Preferred Stone] | Random | Mirror | Empty");
 
 			Debug.debugMode = CatDebugMode.Value;
 		}
