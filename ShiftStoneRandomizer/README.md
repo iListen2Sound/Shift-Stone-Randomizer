@@ -1,3 +1,8 @@
+# I'm rewriting Shift Stone Randomizer. 
+## This is the old version that people can have in the meantime. 
+
+Should work about as well as the last one. 
+
 # Shift Stone ~~Randomizer 2.0~~ Automator
 Adds more buttons to the shift stone quick swapper to allow to save loadouts and settings for shift stones. Also allows for automatic management and selection of stones depending on client/host status and maps.
 

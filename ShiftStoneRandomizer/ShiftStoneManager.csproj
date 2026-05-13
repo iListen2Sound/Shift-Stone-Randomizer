@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-	  <TargetFramework>net6.0</TargetFramework>
-    <OutputType>Library</OutputType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    
-    <AssemblyTitle>ShiftStoneRandomizer</AssemblyTitle>
-    <Product>ShiftStoneRandomizer</Product>
-    <Copyright>Copyright ©  2025</Copyright>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<OutputType>Library</OutputType>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+		<AssemblyTitle>ShiftStoneRandomizer</AssemblyTitle>
+		<Product>ShiftStoneRandomizer</Product>
+		<Copyright>Copyright ©  2025</Copyright>
+
+		<RumblePath>G:\SteamLibrary\steamapps\common\RUMBLE</RumblePath>
+	</PropertyGroup>
 	<ItemGroup>
 		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net6\**\*.dll" Private="false" />
 		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net35\**\*.dll" Private="false" />
@@ -18,22 +20,16 @@
 		<Reference Include="RumbleModdingAPI">
 			<HintPath>G:\SteamLibrary\steamapps\common\RUMBLE\Mods\RumbleModdingAPI.dll</HintPath>
 		</Reference>
-		<Reference Include="OBS_Control_API">
-			<HintPath>G:\SteamLibrary\steamapps\common\RUMBLE\Mods\UIFramework.dll</HintPath>
-		</Reference>
 	</ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="assets\glasses" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="assets\randomizer" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<EmbeddedResource Include="assets\randomizer" />
+	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="copy &quot;$(TargetPath)&quot; &quot;G:\SteamLibrary\steamapps\common\RUMBLE\Mods\$(TargetFileName)&quot;" />
+		<!--Copy to mods folder-->
+		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(RumblePath)\Mods&quot;" />
+		<!--Copy to thunderstore package-->
+		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(ProjectDir)_Misc\ModPackage\Mods&quot;" />
+		<Exec Command="COPY &quot;$(ProjectDir)README.md&quot; &quot;$(ProjectDir)_Misc\ModPackage\Mods&quot;" />
 	</Target>
 </Project>

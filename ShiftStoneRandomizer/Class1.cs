@@ -17,7 +17,7 @@ using UnityEngine.UI;
 using Action = System.Action;
 using Type = Il2CppSystem.Type;
 
-[assembly: MelonInfo(typeof(ShiftStoneManager.ShiftStoneManager), "ShiftStoneManager", "3.0.0", "iListen2Sound, Darkener")]
+[assembly: MelonInfo(typeof(ShiftStoneManager.ShiftStoneManager), "ShiftStoneManager", "2.1.0", "iListen2Sound, Darkener")]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
 [assembly: MelonAuthorColor(255, 87, 166, 80)]
 [assembly: MelonColor(255, 87, 166, 80)]
