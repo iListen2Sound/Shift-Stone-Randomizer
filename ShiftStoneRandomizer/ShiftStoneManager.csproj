@@ -30,6 +30,6 @@
 		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(RumblePath)\Mods&quot;" />
 		<!--Copy to thunderstore package-->
 		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(ProjectDir)_Misc\ModPackage\Mods&quot;" />
-		<Exec Command="COPY &quot;$(ProjectDir)README.md&quot; &quot;$(ProjectDir)_Misc\ModPackage\Mods&quot;" />
+		<Exec Command="COPY &quot;$(ProjectDir)README.md&quot; &quot;$(ProjectDir)_Misc\ModPackage&quot;" />
 	</Target>
 </Project>

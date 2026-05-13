@@ -1,10 +1,10 @@
 {
-	"name": "ShiftStoneRandomizer",
+	"name": "ShiftStoneManager",
 	"version_number": "2.1.0",
 	"website_url": "",
 	"description": "Automate Your Shift Stones",
 	"dependencies": [
 		"LavaGang-MelonLoader-0.7.2",
-		"\tUlvakSkillz-RumbleModdingAPI-5.2.2"
+		"UlvakSkillz-RumbleModdingAPI-5.2.2"
 	]
 }
