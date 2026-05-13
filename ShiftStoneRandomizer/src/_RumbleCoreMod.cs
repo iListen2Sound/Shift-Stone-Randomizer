@@ -24,8 +24,11 @@ using Type = Il2CppSystem.Type;
 namespace ShiftStoneManager
 {
 	
-	public partial class Core : MelonMod
+	public class Core : MelonMod
 	{
-
+		public override void OnInitializeMelon()
+		{
+			Preferences.InitPreferences();
+		}
 	}
 }
