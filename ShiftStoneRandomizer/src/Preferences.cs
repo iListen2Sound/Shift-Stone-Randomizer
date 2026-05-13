@@ -12,7 +12,7 @@ namespace ShiftStoneManager
 		private const string CONFIG_FILE = "Manager.cfg";
 
 		public static MelonPreferences_Category CatSettings;
-		public static MelonPreferences_Entry<bool> CatDebugMode;
+		public static MelonPreferences_Entry<bool> PrefDebugMode;
 		public static MelonPreferences_Entry<Hands> PrefEnabledHand;
 		public static MelonPreferences_Entry<AutomationPrefs> PrefAutomation;
 
@@ -50,7 +50,7 @@ namespace ShiftStoneManager
 
 			CatSettings = MelonPreferences.CreateCategory("Preferences");
 			CatSettings.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-			CatDebugMode = CatSettings.CreateEntry("Enable Debug Mode", false, null, "Enable for more verbose logging");
+			PrefDebugMode = CatSettings.CreateEntry("Enable Debug Mode", false, null, "Enable for more verbose logging");
 			PrefEnabledHand = CatSettings.CreateEntry("Randomized Hand", Hands.Both, null, "Hand where randomization is Enabled");
 			PrefAutomation = CatSettings.CreateEntry("Auto-Equip Mode", AutomationPrefs.None, null, "Random: Randomize every match | Auto: Based on Map automation config | Mirror: Copy opponent's shift stones | None: No action");
 
@@ -80,7 +80,6 @@ namespace ShiftStoneManager
 			PrefMap1ClientLeft = CatMap1.CreateEntry("Pit Left Hand for Client: ", ShiftStonePrefs.Random, null, "[Preferred Stone] | Random | Mirror | Empty");
 			PrefMap1ClientRight = CatMap1.CreateEntry("Pit Right Hand for Client: ", ShiftStonePrefs.Random, null, "[Preferred Stone] | Random | Mirror | Empty");
 
-			Debug.debugMode = CatDebugMode.Value;
 		}
 	}
 }

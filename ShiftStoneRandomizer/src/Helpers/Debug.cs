@@ -8,7 +8,7 @@ namespace ShiftStoneManager.src.Helpers
 {
 	public static class Debug
 	{
-		public static bool debugMode { get; set; } = true;
+		public static bool debugMode { get => Preferences.PrefDebugMode?.Value ?? true; }
 		/// <summary>
 		/// Prints a message to the melonloader console with a specified log level and option to only show it in debug mode
 		/// </summary>
