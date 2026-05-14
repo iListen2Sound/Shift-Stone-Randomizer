@@ -26,8 +26,6 @@ namespace ShiftStoneManager
 		{
 			GameObject _indicatorsBase;
 			_indicatorsBase = GameObject.Instantiate(AssetBundles.LoadAssetFromStream<GameObject>(Core.Instance, "ShiftStoneManager.assets.randomizer", "ShiftStoneRandomizer"));
-			_indicatorsBase.transform.SetParent(IndicatorAssets.transform);
-			//GameObject.DontDestroyOnLoad(_indicatorsBase);
 			_indicatorsBase.SetActive(false);
 
 			return _indicatorsBase;
