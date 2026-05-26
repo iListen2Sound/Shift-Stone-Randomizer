@@ -24,6 +24,12 @@
 	<ItemGroup>
 		<EmbeddedResource Include="assets\randomizer" />
 	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Roslynator.Analyzers" Version="4.15.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<!--Copy to mods folder-->
